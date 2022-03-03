@@ -25,7 +25,7 @@ Basic Deployment::
 
     1. git clone git@github.com:Edgebricks/eb-test.git
     2. cd eb-test
-    3.  python3 -m pip install -r requirements.txt
+    3. python3 -m pip install -r requirements.txt
     4. export PYTHONDONTWRITEBYTECODE=1
 
 To deploy zstest in an isolated/virtual environment without conflicts with existing envrionment.
@@ -37,7 +37,7 @@ Isolated Deployment::
     3. cd zstest
     4. virtualenv venv
     5. source venv/bin/activate
-    6.  python3 -m pip install -r requirements.txt
+    6. python3 -m pip install -r requirements.txt
     7. export PYTHONDONTWRITEBYTECODE=1
 
 
