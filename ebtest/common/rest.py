@@ -62,7 +62,7 @@ class RestClient(object):
         elog.logging.debug('URL = %s' % url)
         return requests.get(url=url, headers=self.headers, timeout=timeout)
 
-    def put(self, url, payload=None, timeout=30):
+    def put(self, url, payload={}, timeout=30):
         """
         implements PUT rest api.
 
@@ -96,7 +96,7 @@ class RestClient(object):
         return requests.put(url=url, headers=self.headers,
                             data=payload, timeout=timeout)
 
-    def post(self, url, payload=None, timeout=30):
+    def post(self, url, payload={}, timeout=30):
         """
         implements POST rest api.
 
@@ -130,7 +130,7 @@ class RestClient(object):
         return requests.post(url=url, headers=self.headers,
                              data=payload, timeout=timeout)
 
-    def patch(self, url, payload=None, timeout=30):
+    def patch(self, url, payload={}, timeout=30):
         """
         implements PATCH rest api.
 
@@ -164,7 +164,7 @@ class RestClient(object):
         return requests.patch(url=url, headers=self.headers,
                              data=payload, timeout=timeout)
 
-    def delete(self, url, timeout=30):
+    def delete(self, url, payload={}, timeout=30):
         """
         implements DELETE rest api.
 
@@ -186,6 +186,8 @@ class RestClient(object):
             elog.logging.error('token not found')
             return None
 
+        payload = json.dumps(payload)
         elog.logging.debug('URL = %s' % url)
-        return requests.delete(url=url, headers=self.headers, timeout=timeout)
+        return requests.delete(url=url, headers=self.headers,
+                              data=payload, timeout=timeout)
 

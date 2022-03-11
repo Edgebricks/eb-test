@@ -17,11 +17,14 @@ class Projects(Token):
     def __init__(self, domainName, projAdmin, projAdminPass):
         super(Projects, self).__init__('domain', domainName, projAdmin,
                                        projAdminPass)
-        self.client     = RestClient(self.getToken())
-        self.apiURL     = self.getApiURL()
-        self.clusterID  = self.getClusterID()
-        self.clusterURL = self.apiURL + '/v2/clusters/' + self.clusterID
-        self.projectURL = self.clusterURL + '/projects'
+        self.client      = RestClient(self.getToken())
+        self.apiURL      = self.getApiURL()
+        self.clusterID   = self.getClusterID()
+        self.clusterURL  = self.apiURL + '/v2/clusters/' + self.clusterID
+        self.projectURL  = self.clusterURL + '/projects'
+        serviceURL       = self.getServiceURL()
+        keystoneVer      = '/keystone/v3'
+        self.keystoneURL = serviceURL + keystoneVer
 
     def createProject(self, projName, domainID, metadata='', compQuota='',
                       strQuota='', netQuota='', duration=False):
@@ -64,3 +67,29 @@ class Projects(Token):
                   % (eutil.bcolor(projName), eutil.bcolor(projID)))
 
         return projID
+
+    def deleteProject(self, projID):
+        elog.logging.info('deleting project %s' % eutil.bcolor(projID))
+        response = self.client.delete(self.projectURL+ '/' + projID)
+        if not response.ok:
+            elog.logging.error('failed to delete project: %s'
+                       % eutil.rcolor(response.status_code))
+            elog.logging.error(response.text)
+            return False
+
+        elog.logging.info('deleting project %s: %s OK'
+                  % (eutil.bcolor(projID),
+                     eutil.gcolor(response.status_code)))
+        return True
+
+    def getProject(self, userID='', domainID=''):
+        requestURL = self.keystoneURL + '/users' + '/%s/projects?domain_id=%s' % (userID, domainID)
+        response   = self.client.get(requestURL)
+        if not response.ok:
+            elog.logging.error('failed to get projects from domain %s: %s'
+                       % (eutil.bcolor(domainID),
+                          eutil.rcolor(response.status_code)))
+            elog.logging.error(response.text)
+            return None
+
+        return json.loads(response.content)
