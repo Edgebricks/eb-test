@@ -14,12 +14,12 @@ from ebtest.lib.keystone import Token
 
 
 class NovaBase(Token):
-    def __init__(self, projectID, scope='project'):
+    def __init__(self, projectID, scope='domain'):
         super(NovaBase, self).__init__(scope)
         self.client     = RestClient(self.getToken())
         self.projectID  = projectID
         self.serviceURL = self.getServiceURL()
-        self.novaURL    = self.serviceURL + '/nova/v2.1/' + self.projectID
+        self.novaURL    = self.serviceURL + '/nova/v2/' + self.projectID
 
 
 class Servers(NovaBase):
@@ -183,6 +183,22 @@ class Servers(NovaBase):
             return False
 
         elog.logging.info('resuming vm %s: %s OK'
+                  % (eutil.bcolor(serverID),
+                     eutil.gcolor(response.status_code)))
+        return True
+
+    def rebootServer(self, serverID):
+        requestURL = self.serversURL + '/' + serverID + '/action'
+        payload    = {"reboot":{"type":"SOFT"}}
+        response   = self.client.post(requestURL, payload)
+        if not response.ok:
+            elog.logging.error('reboot vm %s: %s'
+                       % (eutil.bcolor(serverID),
+                          eutil.rcolor(response.status_code)))
+            elog.logging.error(response.text)
+            return False
+
+        elog.logging.info('reboot vm %s: %s OK'
                   % (eutil.bcolor(serverID),
                      eutil.gcolor(response.status_code)))
         return True

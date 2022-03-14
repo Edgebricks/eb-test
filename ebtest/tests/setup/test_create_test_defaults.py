@@ -13,113 +13,112 @@ from ebtest.lib.keystone import Users
 from ebtest.lib.edgebricks import Projects
 
 
-def test_create_domain_users_project():
+class TestCreateDeleteBasic:
+    domainID         = ''
+    adminUserID      = ''
+    userID           = ''
+    projID           = ''
+    roleID           = ''
     testConfig       = ConfigParser()
     domainName       = testConfig.getDomainName()
     projectName      = testConfig.getProjectName()
     projectAdmin     = testConfig.getProjectAdmin()
     projectAdminPass = testConfig.getProjectAdminPassword()
 
-    ##### Create Domain ####
-    domainObj = Domains()
-    global domainID
-    domainID = domainObj.createDomain(domainName)
-    assert domainID
-    testConfig.setDomainID(domainID)
+    def test_create_domain_users_project(cls):
 
-    ##### Create User ####
-    userObj = Users()
-    global userID  
-    userID = userObj.createUser(domainID, projectAdmin, projectAdminPass)
-    assert userID
+        ##### Create Domain ####
+        domainObj = Domains()
+        TestCreateDeleteBasic.domainID = domainObj.createDomain(cls.domainName)
+        assert TestCreateDeleteBasic.domainID
+        cls.testConfig.setDomainID(TestCreateDeleteBasic.domainID)
 
-    ##### Get User ####
-    adminUserID = ''
-    content = userObj.getUsers()
-    for user in content['users']:
-        if user['name'] == testConfig.getCloudAdmin():
-            adminUserID = user['id']
-            break
+        ##### Create User ####
+        userObj = Users()
+        TestCreateDeleteBasic.userID = userObj.createUser(
+            TestCreateDeleteBasic.domainID, cls.projectAdmin, cls.projectAdminPass)
+        assert TestCreateDeleteBasic.userID
 
-    assert adminUserID
-    
-    ##### Get Roles ####
-    roleObj = Roles()
-    content = roleObj.getRoles()
-    roleID = ''
-    for role in content['roles']:
-        if role['name'] == 'admin':
-            roleID = role['id']
-            break
+        ##### Get User ####
+        content = userObj.getUsers()
+        for user in content['users']:
+            if user['name'] == cls.testConfig.getCloudAdmin():
+                TestCreateDeleteBasic.adminUserID = user['id']
+                break
 
-    assert roleID
+        assert TestCreateDeleteBasic.adminUserID
 
-    # assign admin role to created user
-    assert roleObj.assignRole(domainID, userID, roleID)
-    # assert roleObj.assignRole(domainID, adminUserID, roleID)
+        ##### Get Roles ####
+        roleObj = Roles()
+        content = roleObj.getRoles()
+        for role in content['roles']:
+            if role['name'] == 'admin':
+                TestCreateDeleteBasic.roleID = role['id']
+                break
 
-    ##### Create Project ####
-    projObj = Projects(domainName, projectAdmin, projectAdminPass)
+        assert TestCreateDeleteBasic.roleID
 
-    metadata = {
-        "templateId": "Large",
-        "custom_template": "true"
-    }
+        # assign admin role to created user
+        assert roleObj.assignRole(TestCreateDeleteBasic.domainID,
+                                  TestCreateDeleteBasic.userID, TestCreateDeleteBasic.roleID)
+        # assert roleObj.assignRole(domainID, adminUserID, roleID)
 
-    compQuota = {
-        "cores": 128,
-        "injected_file_content_bytes":-1,
-        "injected_file_path_bytes":-1,
-        "injected_files":-1,
-        "instances": 64,
-        "key_pairs": -1,
-        "metadata_items":-1,
-        "ram": 262144
-    }
+        ##### Create Project ####
+        projObj = Projects(cls.domainName, cls.projectAdmin,
+                           cls.projectAdminPass)
 
-    strQuota = {
-        "snapshots": 640,
-        "backup_gigabytes":-1,
-        "backups":-1,
-        "volumes": 640,
-        "gigabytes": 25600
-    }
+        metadata = {
+            "templateId": "Large",
+            "custom_template": "true"
+        }
 
-    netQuota = {
-        "router": 30,
-        "subnet":-1,
-        "network": 30,
-        "port":-1,
-        "floatingip": 64,
-        "pool":-1
-    }
+        compQuota = {
+            "cores": 128,
+            "injected_file_content_bytes": -1,
+            "injected_file_path_bytes": -1,
+            "injected_files": -1,
+            "instances": 64,
+            "key_pairs": -1,
+            "metadata_items": -1,
+            "ram": 262144
+        }
 
-    global projID
-    projID = projObj.createProject(projectName, domainID, metadata,
-                                   compQuota, strQuota, netQuota)
-    assert projID
-    testConfig.setProjectID(projID)
+        strQuota = {
+            "snapshots": 640,
+            "backup_gigabytes": -1,
+            "backups": -1,
+            "volumes": 640,
+            "gigabytes": 25600
+        }
 
+        netQuota = {
+            "router": 30,
+            "subnet": -1,
+            "network": 30,
+            "port": -1,
+            "floatingip": 64,
+            "pool": -1
+        }
 
-def test_delete_domain_users_project():
-    testConfig       = ConfigParser()
-    domainName       = testConfig.getDomainName()
-    projectName      = testConfig.getProjectName()
-    projectAdmin     = testConfig.getProjectAdmin()
-    projectAdminPass = testConfig.getProjectAdminPassword()
+        TestCreateDeleteBasic.projID = projObj.createProject(cls.projectName, TestCreateDeleteBasic.domainID, metadata,
+                                                             compQuota, strQuota, netQuota)
+        assert TestCreateDeleteBasic.projID
+        cls.testConfig.setProjectID(TestCreateDeleteBasic.projID)
 
-    ##### Delete Project ####    
-    projObj = Projects(domainName, projectAdmin, projectAdminPass)
-    content = projObj.getProject(userID, domainID)
+    def test_delete_domain_users_project(cls):
 
-    projID = ''
-    for project in content['projects']:
-        if project['name'] == projectName:
-            projID = project['id']
-            break
-    assert projObj.deleteProject(projID)
+        ##### Delete Project ####
+        projObj = Projects(cls.domainName, cls.projectAdmin,
+                           cls.projectAdminPass)
+        content = projObj.getProject(
+            TestCreateDeleteBasic.userID, TestCreateDeleteBasic.domainID)
+        for project in content['projects']:
+            if project['name'] == cls.projectName:
+                TestCreateDeleteBasic.projID = project['id']
+                break
+        assert projObj.deleteProject(TestCreateDeleteBasic.projID)
 
-    ##### Delete Domain ####    
-    domainObj = Domains()
-    assert domainObj.updateDomain(domainID)
-    assert domainObj.deleteDomain(domainID)
+        ##### Delete Domain ####
+        domainObj = Domains()
+        assert domainObj.updateDomain(TestCreateDeleteBasic.domainID)
+        assert domainObj.deleteDomain(TestCreateDeleteBasic.domainID)

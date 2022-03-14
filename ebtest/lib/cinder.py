@@ -19,7 +19,7 @@ class CinderBase(Token):
         self.cinderURL  = self.serviceURL + '/cinder/v2/' + self.projectID
 
 
-class Voldumes(CinderBase):
+class Volumes(CinderBase):
     """
     class that implements CRUD opertation for Volume/Block Storage
     """
