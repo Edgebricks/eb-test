@@ -70,7 +70,7 @@ class Projects(Token):
 
     def deleteProject(self, projID):
         elog.logging.info('deleting project %s' % eutil.bcolor(projID))
-        response = self.client.delete(self.projectURL+ '/' + projID)
+        response = self.client.deleteWithPayload(self.projectURL+ '/' + projID)
         if not response.ok:
             elog.logging.error('failed to delete project: %s'
                        % eutil.rcolor(response.status_code))

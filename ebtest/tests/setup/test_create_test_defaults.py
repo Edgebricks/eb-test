@@ -4,6 +4,7 @@
 # (c) 2022 Edgebricks
 
 
+from time import sleep
 import pytest
 
 from ebtest.common.config import ConfigParser
@@ -11,6 +12,10 @@ from ebtest.lib.keystone import Domains
 from ebtest.lib.keystone import Roles
 from ebtest.lib.keystone import Users
 from ebtest.lib.edgebricks import Projects
+from ebtest.lib.nova import VMs
+from ebtest.lib.nova import Flavors
+from ebtest.lib.neutron import Networks
+from ebtest.lib.glance import Images
 
 
 class TestCreateDeleteBasic:
@@ -105,6 +110,40 @@ class TestCreateDeleteBasic:
         assert TestCreateDeleteBasic.projID
         cls.testConfig.setProjectID(TestCreateDeleteBasic.projID)
 
+    def test_create_delete_vm(cls):
+
+        flavorObj = Flavors(TestCreateDeleteBasic.projID)
+        matchflavorID = flavorObj.getBestMatchingFlavor(numCPU = 2, memMB = 4096)
+
+        networkObj = Networks(TestCreateDeleteBasic.projID)
+        netID = networkObj.createInternalNetwork(netName = "Auto-Net1", subnetName = "Auto-SubNet1")
+
+        imageObj = Images(TestCreateDeleteBasic.projID)
+        imgID = imageObj.createCirrosImageByURL(imageName="Auto-Cirros-Image", netID=netID)
+        sleep (35)
+        imgDetails = imageObj.getImagesbyOwner(owner=TestCreateDeleteBasic.projID)
+        actualImageID = imgDetails['images'][0]['id']
+        
+        sleep (20)
+
+        vmObj = VMs(TestCreateDeleteBasic.projID)
+        vmObj.createVM(vmName = "AutoVM", flavorID = matchflavorID, networkID = netID, imageID = actualImageID)
+
+        sleep (35)
+
+        content = vmObj.getAllVMs()
+        for key, value in content.items():
+            if value == 'AutoVM':
+                vmID = key
+                break
+        vmObj.deleteVM (vmID)
+        sleep (35)
+        imageObj.deleteImage(actualImageID)
+        sleep (20)
+        networkObj.deleteInternalNetwork(netID)
+        sleep (20)
+
+
     def test_delete_domain_users_project(cls):
 
         ##### Delete Project ####
@@ -117,6 +156,7 @@ class TestCreateDeleteBasic:
                 TestCreateDeleteBasic.projID = project['id']
                 break
         assert projObj.deleteProject(TestCreateDeleteBasic.projID)
+        sleep (15)
 
         ##### Delete Domain ####
         domainObj = Domains()

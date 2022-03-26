@@ -51,10 +51,10 @@ def getReleaseVersion():
         return None, None
 
     data     = json.loads(response.content)
-    platform = data['clusters'][0]['star']['short']
+    star     = data['clusters'][0]['star']['short']
     sky      = data['sky_version']['sky']['short']
 
-    return sky, platform
+    return sky, star
 
 
 def pytest_configure(config):
@@ -65,7 +65,7 @@ def pytest_configure(config):
     testConfig          = ConfigParser()
     setup               = testConfig.getConfig('setupName')
     apiURL              = testConfig.getConfig('apiURL')
-    sky, platform       = getReleaseVersion()
+    sky, star           = getReleaseVersion()
 
     if not setup:
         setup = os.environ.get('SETUP_NAME')
@@ -78,10 +78,10 @@ def pytest_configure(config):
     if not sky:
         sky = 'Unknown'
 
-    if not platform:
-        platform = 'Unknown'
+    if not star:
+        star = 'Unknown'
 
-    config._metadata['API URL']     = apiURL
-    config._metadata['Platform']    = platform
-    config._metadata['Setup Name']  = setup
-    config._metadata['Sky Version'] = sky
+    config._metadata['API URL']       = apiURL
+    config._metadata['Star Version']  = star
+    config._metadata['Setup Name']    = setup
+    config._metadata['Sky Version']   = sky

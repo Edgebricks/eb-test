@@ -164,7 +164,33 @@ class RestClient(object):
         return requests.patch(url=url, headers=self.headers,
                              data=payload, timeout=timeout)
 
-    def delete(self, url, payload={}, timeout=30):
+    def delete(self, url, timeout=30):
+        """
+        implements DELETE rest api.
+
+        Returns:
+            a `response content <https://goo.gl/NeMqL8>`_
+
+        Args:
+            url (string): request URL.
+
+            timeout(int): default 30 seconds.
+
+        Examples:
+            ::
+
+                client   = RestClient(token)
+                response = client.delete(requestURL)
+        """
+        if not self.token:
+            elog.logging.error('token not found')
+            return None
+
+        elog.logging.debug('URL = %s' % url)
+        return requests.delete(url=url, headers=self.headers,
+                              timeout=timeout)
+
+    def deleteWithPayload(self, url, payload={}, timeout=30):
         """
         implements DELETE rest api.
 

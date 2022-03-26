@@ -14,11 +14,14 @@ from ebtest.lib.keystone import Token
 
 
 class NeutronBase(Token):
-    def __init__(self, scope='project'):
+    def __init__(self, scope='domain'):
         super(NeutronBase, self).__init__(scope)
         self.client     = RestClient(self.getToken())
         self.serviceURL = self.getServiceURL()
         self.neutronURL = self.serviceURL + '/neutron/v2.0'
+        self.apiURL     = self.getApiURL()
+        self.clusterID  = self.getClusterID()
+        self.clusterURL = self.apiURL + '/v2/clusters/' + self.clusterID
 
 
 class Networks(NeutronBase):
@@ -65,6 +68,63 @@ class Networks(NeutronBase):
             return None
 
         return self._getNetworks(response)
+
+    def createInternalNetwork(self, netName = '', subnetName = ''):
+        payload = {
+            "admin_state_up": True,
+            "name": netName,
+            "subnets": [
+                {
+                    "name": subnetName,
+                    "enable_dhcp": True,
+                    "gateway_ip": "192.168.150.1",
+                    "ip_version": 4,
+                    "cidr": "192.168.150.0/24",
+                    "allocation_pools": [
+                        {
+                            "start": "192.168.150.2",
+                            "end": "192.168.150.254"
+                        }
+                    ],
+                    "dns_nameservers": [
+                        "8.8.8.8"
+                    ],
+                    "tenant_id": self.projectID
+                }
+            ],
+            "tenant_id": self.projectID,
+            "visibility": "private",
+            "project_id": self.projectID
+        }
+        elog.logging.info('creating internal private network %s' % eutil.bcolor(netName))
+        response = self.client.post(self.clusterURL + '/networks', payload)
+        if not response.ok:
+            elog.logging.error('failed to create network: %s'
+                       % eutil.rcolor(response.status_code))
+            elog.logging.error(response.text)
+            return None
+
+        content  = json.loads(response.content)
+        networkID = content['id']
+        elog.logging.info('network %s created successfully: %s'
+                  % (eutil.bcolor(netName),
+                     eutil.bcolor(networkID)))
+        return networkID
+
+    def deleteInternalNetwork(self, networkID):
+        requestURL = self.clusterURL + '/networks/' + networkID
+        response   = self.client.deleteWithPayload(requestURL)
+        if not response.ok:
+            elog.logging.error('deleting network %s failed: %s'
+                       % (eutil.rcolor(networkID),
+                          eutil.rcolor(response.status_code)))
+            elog.logging.error(response.text)
+            return False
+
+        elog.logging.info('deleting network %s success: %s'
+                  % (eutil.bcolor(networkID),
+                     eutil.gcolor(response.status_code)))
+        return True
 
     def getNetwork(self, networkID):
         requestURL = self.networksURL + '/' + networkID
