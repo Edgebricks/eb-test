@@ -140,6 +140,9 @@ class ConfigParser(object):
     def getApiURL(self):
         return self.getConfig('apiURL')
 
+    def getCustURL(self):
+        return self.getConfig('custID')
+
     def getAcctID(self):
         return self.getConfig('acctID')
 
@@ -191,6 +194,9 @@ class ConfigParser(object):
 
     def setApiURL(self, value):
         return self.setConfig('apiURL', value)
+    
+    def setCustURL(self, value):
+        return self.setConfig('custID', value)
 
     def setAcctID(self, value):
         return self.setConfig('acctID', value)

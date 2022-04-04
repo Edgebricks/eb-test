@@ -7,6 +7,7 @@
 import json
 import os
 import pytest
+import requests
 
 from ebtest.common.config import ConfigParser
 from ebtest.common.rest import RestClient
@@ -27,6 +28,28 @@ def isDefaultTestConfigsSet():
     if notset:
         pytest.skip('default test configs not set')
 
+
+def getAcctAndClusterID():
+    testConfig     = ConfigParser()
+    apiURL         = testConfig.getConfig('apiURL')
+    custID         = testConfig.getConfig('custID')
+    headers        = {"Accept": "application/json",
+                      "Content-Type": "application/json;charset=UTF-8"}
+
+    if not apiURL or not custID:
+        return None, None
+
+    url      = apiURL + '/v1/account_ops/get_clusters?login_name=' + custID
+    response = requests.get(url=url, headers=headers)
+
+    if not response.ok:
+        return None, None
+
+    data       = json.loads(response.content)
+    acctID     = data['clusters'][0]['acct_id']
+    clusterID  = data['clusters'][0]['id']
+
+    return acctID, clusterID
 
 def getReleaseVersion():
     testConfig     = ConfigParser()
@@ -64,25 +87,26 @@ def pytest_configure(config):
     config._environment = {}
     # read values passed from the cli as parameters
     _apiURL             = config.getoption("--apiurl")
-    _acctID             = config.getoption("--acctid")
-    _clusterID          = config.getoption("--clusterid")
+    _custID             = config.getoption("--custid")
     _cloudAdmin         = config.getoption("--cloudadmin")
     _cloudAdminPass     = config.getoption("--cloudadminpassword")
     testConfig          = ConfigParser()
     if _apiURL is not None:
         testConfig.setApiURL(_apiURL)
-    if _acctID is not None:
-        testConfig.setAcctID(_acctID)
-    if _clusterID is not None:
-        testConfig.setClusterID(_clusterID)
+    if _custID is not None:
+        testConfig.setCustURL(_custID)
     if _cloudAdmin is not None:
         testConfig.setCloudAdmin(_cloudAdmin)
     if _cloudAdminPass is not None:
         testConfig.setCloudAdminPassword(_cloudAdminPass)
-    setup               = testConfig.getConfig('setupName')
-    sky, star           = getReleaseVersion()
-    print (sky, star)
-    apiURL              = testConfig.getConfig('apiURL')
+    _acctID, _clusterID   = getAcctAndClusterID()
+    if _acctID is not None:
+        testConfig.setAcctID(_acctID)
+    if _clusterID is not None:
+        testConfig.setClusterID(_clusterID)
+    setup                 = testConfig.getConfig('setupName')
+    sky, star             = getReleaseVersion()
+    apiURL                = testConfig.getConfig('apiURL')
 
     if not setup:
         setup = os.environ.get('SETUP_NAME')
@@ -113,16 +137,10 @@ def pytest_addoption(parser):
         help="API URL of the cluster e.g. http://vpn.edgebricks.in:11002"
     )
     parser.addoption(
-        "--acctid",
+        "--custid",
         action="store",
         default=None,
-        help="Account ID of the cluster e.g. e40a2198-a07c-41cd-8ac1-344cbf7c58dc"
-    )
-    parser.addoption(
-        "--clusterid",
-        action="store",
-        default=None,
-        help="Cluster ID of the existing cluster e.g. 72cf112d-a161-4982-a8fa-d1039c0b8dae"
+        help="Customer ID of the cluster e.g. CPYyNDUmy0"
     )
     parser.addoption(
         "--cloudadmin",
