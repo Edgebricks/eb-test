@@ -23,6 +23,9 @@ class KeystoneBase(ConfigParser):
         serviceURL       = self.getServiceURL()
         keystoneVer      = '/keystone/v3'
         self.keystoneURL = serviceURL + keystoneVer
+        self.apiURL      = self.getApiURL()
+        self.clusterID   = self.getClusterID()
+        self.clusterURL  = self.apiURL + '/v2/clusters/' + self.clusterID
 
 
 class Token(KeystoneBase):
@@ -283,6 +286,7 @@ class Domains(Token):
         testConfig     = ConfigParser()
         cloudAdmin     = testConfig.getCloudAdmin()
         cloudAdminPass = testConfig.getCloudAdminPassword()
+        self.acctID    = testConfig.getAcctID()
         super(Domains, self).__init__('system', 'admin.local', cloudAdmin,
                                       cloudAdminPass)
         self.client    = RestClient(self.getToken())
@@ -333,6 +337,52 @@ class Domains(Token):
                      eutil.gcolor(response.status_code)))
         return True
 
+    def updateDomainQuota(self, domainID=''):
+        payload = {
+            "acct_id": self.acctID,
+            "cluster_id": self.clusterID,
+            "entity_id": domainID,
+            "entity_type": "domain",
+            "quota_sets": {
+                "compute_quota": {
+                    "cores": 10,
+                    "instances": 10,
+                    "ram": 10240,
+                    "key_pairs": -1,
+                    "fixed_ips": -1
+                },
+                "network_quota": {
+                    "network": 10,
+                    "security_group": -1,
+                    "security_group_rule": -1,
+                    "router": 10,
+                    "floatingip": 10
+                },
+                "storage_quota": {
+                    "gigabytes": 10,
+                    "volumes": 10,
+                    "snapshots": 10,
+                    "gigabytes_relhighiops_type": 10,
+                    "gigabytes_relhighcap_type": 10,
+                    "gigabytes_highcap_type": 10,
+                    "gigabytes_highiops_type": 10
+                },
+                "selectedTemplate": "Custom"
+            }
+        }
+        elog.logging.info('Updating quota of domain %s' % eutil.bcolor(domainID))
+        response = self.client.put(self.clusterURL+ '/domains/' + domainID + '/quotas', payload)
+        if not response.ok:
+            elog.logging.error('failed to update quota of domain: %s'
+                       % eutil.rcolor(response.status_code))
+            elog.logging.error(response.text)
+            return False
+
+        elog.logging.info('updating quota of domain %s: %s OK'
+                  % (eutil.bcolor(domainID),
+                     eutil.gcolor(response.status_code)))
+        return True
+
     def deleteDomain(self, domainID):
         elog.logging.info('deleting domain %s' % eutil.bcolor(domainID))
         response = self.client.delete(self.domainURL+ '/' + domainID)
@@ -346,3 +396,14 @@ class Domains(Token):
                   % (eutil.bcolor(domainID),
                      eutil.gcolor(response.status_code)))
         return True
+
+    def getDomain(self, domainID=''):
+        response   = self.client.get(self.domainURL+ '/' + domainID)
+        if not response.ok:
+            elog.logging.error('failed to get domain detail %s: %s'
+                       % (eutil.bcolor(domainID),
+                          eutil.rcolor(response.status_code)))
+            elog.logging.error(response.text)
+            return None
+
+        return json.loads(response.content)
