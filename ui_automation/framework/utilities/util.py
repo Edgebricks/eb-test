@@ -19,7 +19,7 @@ import traceback
 import random, string
 import logging
 
-import framework.utilities.customLogger as cl
+import ui_automation.framework.utilities.customLogger as cl
 
 class Util(object):
 

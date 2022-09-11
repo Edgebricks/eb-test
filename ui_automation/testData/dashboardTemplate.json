@@ -1,0 +1,8 @@
+{
+  "dashboardTemplate": {
+                       "buText"                 : "Business Units",
+                       "overViewText"           : "Overview",
+                       "tabsInMonitoring"       : "2",
+                       "noOfBUs"                : "1"
+                      }
+}

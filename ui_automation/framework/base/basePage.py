@@ -5,8 +5,8 @@
 # (c) 2018 ZeroStack
 
 
-from framework.base.baseActions import BaseActions
-from framework.utilities.util import Util
+from ui_automation.framework.base.baseActions import BaseActions
+from ui_automation.framework.utilities.util import Util
 
 class BasePage(BaseActions):
       """

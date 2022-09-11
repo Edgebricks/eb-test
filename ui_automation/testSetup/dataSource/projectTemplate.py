@@ -4,7 +4,7 @@
 # (c) 2018 ZeroStack
 
 
-from framework.testDataProvider.testCaseDataProvider import TestCaseDataProvider
+from ui_automation.framework.testDataProvider.testCaseDataProvider import TestCaseDataProvider
 
 
 class ProjectTemplate(object):
@@ -13,7 +13,7 @@ class ProjectTemplate(object):
       """
 
       def __init__(self):
-          self.dataproviderObj = TestCaseDataProvider('projectTemplate.json')
+          self.dataproviderObj = TestCaseDataProvider('C:/Users/User/eb-test/ui_automation/testData/projectTemplate.json')
 
       @property
       def projectName(self):

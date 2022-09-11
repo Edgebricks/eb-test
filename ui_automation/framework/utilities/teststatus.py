@@ -16,8 +16,8 @@ Example:
 """
 import logging
 
-import framework.utilities.customLogger as cl
-from framework.base.baseActions import BaseActions
+import ui_automation.framework.utilities.customLogger as cl
+from ui_automation.framework.base.baseActions import BaseActions
 
 class TestStatus(BaseActions):
 
@@ -27,7 +27,7 @@ class TestStatus(BaseActions):
         """
         Inits CheckPoint class
         """
-        super(TestStatus, self).__init__(driver)
+        super().__init__(driver)
         self.resultList = []
 
     def setResult(self, result, resultMessage):
@@ -53,6 +53,7 @@ class TestStatus(BaseActions):
         """
         Mark the result of the verification point in a test case
         """
+        self.log.info(f'result = {result}')
         self.setResult(result, resultMessage)
 
     def markFinal(self, testName, result, resultMessage):
@@ -62,7 +63,6 @@ class TestStatus(BaseActions):
         This should be final test status of the test case
         """
         self.setResult(result, resultMessage)
-
         if "FAIL" in self.resultList:
             self.log.error(testName +  " ### TEST FAILED")
             self.resultList.clear()

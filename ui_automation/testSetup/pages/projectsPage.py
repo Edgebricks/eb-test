@@ -15,9 +15,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from framework.base.basePage import BasePage
-from testSetup.pages.buPage import BUPage
-import framework.utilities.customLogger as cl
+from ui_automation.framework.base.basePage import BasePage
+from ui_automation.testSetup.pages.buPage import BUPage
+import ui_automation.framework.utilities.customLogger as cl
 
 class ProjectsPage(BasePage):
   """
@@ -31,6 +31,8 @@ class ProjectsPage(BasePage):
 
   #locators
   createProjectLocator = "//button[text()='Create Project']"
+  # Added by S
+  createProjectLocator1 = "/html/body/div[1]/div[1]/div[5]/div/div/data-ui-view/form/div[3]/div[1]/button"
   projectNameLocator = "//input[@placeholder='Enter Project Name']"
   createDefaultKeypairLocator = "//span[text()='Create Default Key Pair for this project']"
   projectTemplateDropdown = "//a[@class='chosen-single' or @class = 'chosen-single chosen-default']"
@@ -48,6 +50,15 @@ class ProjectsPage(BasePage):
   doneButton = "//button[@ng-click='close()' and text()='Done']"
   searchProjectTextboxLocator = "//input[@placeholder='Search Projects']"
   projectLocator = "//div[@class='title ng-binding' and text()= '{}']"
+  enterCreateProjectEmail = "/html/body/div[1]/div[1]/div[5]/div/div/data-ui-view/form/div[2]/div[7]/div/div[3]/div/table/tbody/tr/td[1]/input"
+
+  # Added by S
+  def clickCreateProject1(self):
+      self.waitForElement(self.createProjectLocator1, locatorType="xpath",
+                          timeout= 120, pollFrequency=0.2)
+
+      self.elementClick(self.createProjectLocator1 , locatorType="xpath")
+  #############################
 
   def clickCreateProject(self):
       self.waitForElement(self.createProjectLocator, locatorType="xpath",
@@ -60,6 +71,12 @@ class ProjectsPage(BasePage):
                           timeout= 120, pollFrequency=0.2)
 
       self.sendKeys(projectName, self.projectNameLocator, locatorType="xpath")
+
+  def enterEmail(self, email):
+       self.waitForElement(self.enterCreateProjectEmail, locatorType="xpath",
+                           timeout= 120, pollFrequency=0.2)
+
+       self.sendKeys(email, self.enterCreateProjectEmail, locatorType="xpath")
 
   def selectCreateDefaultKeypair(self):
       self.waitForElement(self.createDefaultKeypairLocator,
@@ -172,18 +189,25 @@ class ProjectsPage(BasePage):
          self.log.error("FAILED TO VERIFY PROJECT CREATION")
          return False
 
-  def createProject(self, projectName, projectTemplate, cidr):
+  #def createProject(self, projectName, projectTemplate, cidr)
+  def createProject(self, projectName, projectTemplate, cidr, email):
       self.clickCreateProject()
       self.enterProjectName(projectName)
       self.selectCreateDefaultKeypair()
       self.selectProjectTemplate(projectTemplate)
       self.selectProjectHasFiniteDuration()
+      # By S
+      self.enterEmail(email)
       self.clickCreateProject()
+      ########################
       self.clickCustomizeProject()
-      self.selectUserRole()
+      # There is no option for this
+      #self.selectUserRole()
       self.clickNextConfigureNetworks()
-      #self.clickSkipNetworkCreation()
-      self.enterCIDR(cidr)
+
+      # you can either use clickSkipNetworkCreation or enterCIDR
+      self.clickSkipNetworkCreation()
+      #self.enterCIDR(cidr)
       self.clickNextConfigureSecurity()
       self.clickNextProjectDetails()
       self.clickDone()

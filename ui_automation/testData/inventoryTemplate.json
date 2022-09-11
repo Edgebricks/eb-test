@@ -1,0 +1,7 @@
+{
+  "inventoryTemplate": {
+                            "discoveredHosts" : "Discovered Hosts",
+                            "costAnalysis"    : "Cost Analysis"
+
+                      }
+}

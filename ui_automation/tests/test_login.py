@@ -10,9 +10,9 @@ import unittest2 as unittest
 import time
 
 from selenium import webdriver
-from testSetup.dataSource.login import Login
-from framework.utilities.teststatus import TestStatus
-from testSetup.pages.loginPage import LoginPage
+from ui_automation.testSetup.dataSource.login import Login
+from ui_automation.framework.utilities.teststatus import TestStatus
+from ui_automation.testSetup.pages.loginPage import LoginPage
 
 @pytest.mark.usefixtures("oneTimeSetUp")
 
@@ -28,6 +28,7 @@ class LoginTest(unittest.TestCase):
       self.businessunit = self.loginConfig.businessUnit
       self.username = self.loginConfig.userName
       self.password = self.loginConfig.password
+      self.region   = self.loginConfig.region
 
   @pytest.mark.usefixtures("objectSetUp")
   def test_login(self):
@@ -37,7 +38,7 @@ class LoginTest(unittest.TestCase):
       if result1 == False:
          self.driver.quit()
       self.lp.signinAfterLogout(self.customerid, self.businessunit,
-                                 self.username, self.password)
+                                 self.username, self.password, self.region)
       result2 = self.lp.verifyLoginStatus()
       self.ts.markFinal("test_login", result2, "Login Verification")
       if result2 == False:

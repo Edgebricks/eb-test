@@ -8,9 +8,9 @@
 import pytest
 import logging
 
-from framework.base.basePage import BasePage
-from testSetup.pages.navigationPage import NavigationPage
-import framework.utilities.customLogger as cl
+from ui_automation.framework.base.basePage import BasePage
+from ui_automation.testSetup.pages.navigationPage import NavigationPage
+import ui_automation.framework.utilities.customLogger as cl
 
 class BUPage(BasePage):
   """
@@ -37,7 +37,8 @@ class BUPage(BasePage):
   doneButton = "//button[text()='Done']"
   cancelButton = "//button[text()='Cancel']"
   buLocator = "//div[@class='title ng-binding' and text()= '{}']"
-  searchBUlocator = "//input[@placeholder='Search Business Units']"
+  #searchBUlocator = "//input[@placeholder='Search Business Units']"
+  searchBUlocator = "/html/body/div[1]/div[1]/div[5]/div/div/div/div[1]/div[2]/div[3]/input"
 
   def createBusinessUnit(self):
       self.waitForElement(self.createBusinessUnitLocator,
@@ -47,9 +48,12 @@ class BUPage(BasePage):
                        locatorType="xpath")
 
   def enterBusinessUnitName(self, businessUnitName):
+      """
       self.waitForElement(self.businessUnitNameLocator,
                           locatorType="xpath",timeout=120, pollFrequency=0.2)
-
+      """
+      self.waitForElement(self.businessUnitNameLocator,
+                          locatorType="id",timeout=120, pollFrequency=0.2)
       self.sendKeys(businessUnitName, self.businessUnitNameLocator)
 
   def enterUserName(self, username):
@@ -130,8 +134,13 @@ class BUPage(BasePage):
       if verifyElement == True:
          self.elementClick(verifyBUlocator, locatorType="xpath")
          self.log.info("BU CREATION WAS SUCCESSFUL")
+         # Fixed by Sweta
+         return True
       else:
          self.log.error("FAILED TO VERIFY BU CREATION")
+         return False
+
+
 
 
   def createLocalBuWithNoQuota(self, businessUnitName, username, email,
@@ -141,7 +150,7 @@ class BUPage(BasePage):
       self.createBusinessUnit()
       self.enterBusinessUnitName(businessUnitName)
       self.selectNoQuotaLimits()
-      self.selectBULocalRadiobutton()
+      #self.selectBULocalRadiobutton()
       self.enterUserName(username)
       self.enterEmail(email)
       self.enterPassword(password)

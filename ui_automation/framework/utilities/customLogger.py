@@ -22,7 +22,7 @@ def customLogger(logLevel=logging.DEBUG):
 
     #File mode is choosen as "append" instead of "write" so that the logs of
     #one file are not overwritten by the other
-    fileHandler = logging.FileHandler("tests.log", mode='a')
+    fileHandler = logging.FileHandler("tests.log", mode='w+')
     fileHandler.setLevel(logLevel)
 
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s: %(message)s',

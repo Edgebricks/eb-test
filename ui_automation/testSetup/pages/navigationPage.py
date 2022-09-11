@@ -4,12 +4,19 @@
 # Author: priyanshi@zerostack.com
 # (c) 2018 ZeroStack
 
+## by S
+from selenium.webdriver.common.by import By
+from traceback import print_stack
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import *
+###
 
 import pytest
 import logging
 
-from framework.base.basePage import BasePage
-import framework.utilities.customLogger as cl
+from ui_automation.framework.base.basePage import BasePage
+import ui_automation.framework.utilities.customLogger as cl
 
 class NavigationPage(BasePage):
       """
@@ -25,7 +32,8 @@ class NavigationPage(BasePage):
       #locators
       dashboardLink = "Dashboard"
       infrastructureLink = "Infrastructure"
-      businessUnitLink = "Business Units"
+      #businessUnitLink = "Business Units"
+      businessUnitLink = "/html/body/div[1]/nav/ul/li[3]"
       usersLink = "//li/a/span/i[@class='ico ico-users']"
       appsLink  = "//li/a/span/i[@class='ico ico-app-store']"
       costManagementLink = "Cost Management"
@@ -43,7 +51,11 @@ class NavigationPage(BasePage):
                             locatorType="link")
 
       def navigateToBusinessUnit(self):
-          self.elementClick(locator= self.businessUnitLink, locatorType="link")
+          #self.elementClick(locator= self.businessUnitLink, locatorType="link")
+          self.waitForElement(self.businessUnitLink, locatorType="xpath",
+                              timeout=60, pollFrequency=0.2)
+          self.elementClick(locator= self.businessUnitLink, locatorType="xpath")
+
 
       def navigateToUsers(self):
           self.elementClick(locator= self.usersLink, locatorType="xpath")
@@ -70,7 +82,7 @@ class NavigationPage(BasePage):
           self.elementClick(locator= goToCloudServiceIcon)
 
       def navigateToRegionSelector(self):
-          self.waitForElement(self.regionSelectorIcon, locatorType="xpath",
-                              timeout=120, pollFrequency=0.2)
-
-          self.elementClick(locator= self.regionSelectorIcon)
+          self.waitForElement(self.regionSelectorIcon, locatorType="id",
+                              timeout=60, pollFrequency=0.2)
+          self.elementClick(locator= self.regionSelectorIcon, locatorType="id")
+          self.log.info(f'Navigation successful')

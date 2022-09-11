@@ -4,7 +4,7 @@
 # (c) 2018 ZeroStack
 
 
-from framework.testDataProvider.testCaseDataProvider import TestCaseDataProvider
+from ui_automation.framework.testDataProvider.testCaseDataProvider import TestCaseDataProvider
 
 
 class BUquota(object):
@@ -13,7 +13,7 @@ class BUquota(object):
       """
 
       def __init__(self):
-          self.dataproviderObj = TestCaseDataProvider('buQuota.json')
+          self.dataproviderObj = TestCaseDataProvider('C:/Users/User/eb-test/ui_automation/testData/buQuota.json')
 
       @property
       def buName(self):

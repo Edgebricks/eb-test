@@ -17,27 +17,36 @@ Example:
 """
 import traceback
 import os
+import logging
 
 from selenium import webdriver
-from testSetup.dataSource.login import Login
+from ui_automation.testSetup.dataSource.login import Login
 
+import ui_automation.framework.utilities.customLogger as cl
+log = cl.customLogger(logging.DEBUG)
 
 class WebDriver():
 
     def __init__(self, browser):
         self.browser = browser
+        print(f'browser = {self.browser}')
         self.config = Login()
         self.baseURL = self.config.baseURL
 
     def getDriverPath(self):
         fpath = os.path.abspath(__file__)
+        log.info(f'driverpath = {fpath}')
         while True:
               fpath, fname = os.path.split(fpath)
-              if fname == 'zstest':
+              log.info(f'fpath, fname = {fpath}, {fname}')
+              #if fname == 'zstest':
+              if fname == 'eb-test':
+                 fpath = os.path.join(fpath, fname)
                  break
         for root, _, files in os.walk(fpath):
+
             for fname in files:
-                if fname == "chromedriver":
+                if fname == "chromedriver.exe":
                    return os.path.join(root, fname)
 
         return None
@@ -51,16 +60,22 @@ class WebDriver():
             'WebDriver Instance'
         """
         path = self.getDriverPath()
-
+        log.info(f'path = {path}')
         if self.browser == "iexplorer":
             # Set ie driver
             driver = webdriver.Ie()
         elif self.browser == "firefox":
             driver = webdriver.Firefox()
         elif self.browser == "chrome":
-            driver = webdriver.Chrome(path)
+            options = webdriver.ChromeOptions()
+            options.add_experimental_option('excludeSwitches', ['enable-logging'])
+
+            driver = webdriver.Chrome(path, options = options)
         else:
-            driver = webdriver.Chrome(path)
+            options = webdriver.ChromeOptions()
+            options.add_experimental_option('excludeSwitches', ['enable-logging'])
+
+            driver = webdriver.Chrome(path, options = options)
 
         # Maximize the window
         driver.maximize_window()

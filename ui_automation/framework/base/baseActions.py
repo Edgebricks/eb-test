@@ -15,7 +15,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import *
 
-import framework.utilities.customLogger as cl
+import ui_automation.framework.utilities.customLogger as cl
 
 
 class BaseActions():
@@ -100,7 +100,9 @@ class BaseActions():
 
     def isElementPresent(self, locator, locatorType="id"):
         try:
-            element = self.getElement(locator, locatorType)
+            self.wait   = WebDriverWait(self.driver, 100)
+            element = self.wait.until(EC.visibility_of_element_located((locatorType,locator)))
+            #element = self.getElement(locator, locatorType)
             if element is not None:
                 self.log.info("Element Found")
                 return True
@@ -131,16 +133,32 @@ class BaseActions():
             byType = self.getByType(locatorType)
             self.log.info("Waiting for maximum :: " + str(timeout) +
                   " :: seconds for element to be clickable")
-            wait = WebDriverWait(self.driver, 10, poll_frequency=1,
+            wait = WebDriverWait(self.driver, timeout, pollFrequency,
                                  ignored_exceptions=[NoSuchElementException,
                                                      ElementNotVisibleException,
                                                      ElementNotSelectableException])
-            element = wait.until(EC.element_to_be_clickable((byType,
-                                                             "stopFilter_stops-0")))
+            #element = wait.until(EC.element_to_be_clickable((byType,"stopFilter_stops-0")))
+            element = wait.until(EC.element_to_be_clickable((byType,locator)))
             self.log.info("Element appeared on the web page")
-        except:
+        except Exception as e:
             self.log.info("Element not appeared on the web page")
         return element
+
+
+    def waitForElements(self, locator, locatorType="id",
+                               timeout=10, pollFrequency=0.5):
+        elements = None
+        try:
+            byType = self.getByType(locatorType)
+            wait = WebDriverWait(self.driver, timeout, pollFrequency,
+                                 ignored_exceptions=[NoSuchElementException,
+                                                     ElementNotVisibleException,
+                                                     ElementNotSelectableException])
+            elements = wait.until(EC.visibility_of_all_elements_located((byType,locator)))
+            self.log.info("Elements appeared on the web page")
+        except Exception as e:
+            self.log.info("Elements not appeared on the web page")
+        return elements
 
     def screenShots(self, resultMessage):
         """

@@ -17,15 +17,19 @@ class TestCaseDataProvider(object):
     """
 
     def __init__(self, filename):
-        self._fname   = self._getFile(filename)
-
+        #self._fname   = self._getFile(filename)
+        self._fname = filename
     def _getFile(self, filename):
-        fpath = os.path.abspath(__file__)
+        #fpath = os.path.abspath(__file__)
+        #by sweta
+        fpath = os.path.abspath(self._fname)
+
+        """
         while True:
             fpath, fname = os.path.split(fpath)
             if fname == 'zstest':
                break
-
+        """
         for root, _, files in os.walk(fpath):
            for fname in files:
                 if fname == filename:

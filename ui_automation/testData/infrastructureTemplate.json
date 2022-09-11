@@ -1,0 +1,7 @@
+{
+  "infrastructureTemplate": {
+                            "discoveredHosts" : "Discovered Hosts",
+                            "costAnalysis"    : "Cost Analysis"
+
+                      }
+}

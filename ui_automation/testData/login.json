@@ -1,9 +1,10 @@
 {
   "login" : {
-     "baseURL" : "http://trunk0-console.dev.zerostack.net/",
-     "customerid" : "DEV101APRIL23",
+     "baseURL" : "https://console.staging.edgebricks.com/",
+     "customerid" : "DEVOPS",
+     "region"   : "EBNUC1",
      "businessunit" : "admin.local",
-     "username" : "admin1",
-     "password" : "test123"
+     "username" : "ebadmin",
+     "password" : "ebadmin"
  }
 }

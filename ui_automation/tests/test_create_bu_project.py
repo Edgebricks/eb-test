@@ -3,26 +3,22 @@
 
 # Author: priyanshi@zerostack.com
 # (c) 2018 ZeroStack
-
-
 import pytest
 import unittest2 as unittest
 
-from testSetup.pages.loginPage import LoginPage
-from testSetup.pages.buPage import BUPage
-from testSetup.pages.buSummaryPage import BUSummaryPage
-from testSetup.pages.projectsPage import ProjectsPage
-from testSetup.pages.navigationPage import NavigationPage
-from framework.utilities.teststatus import TestStatus
-from framework.utilities.util import  Util
-from testSetup.dataSource.buQuota import BUquota
-from testSetup.dataSource.projectTemplate import ProjectTemplate
+from ui_automation.testSetup.pages.loginPage import LoginPage
+from ui_automation.testSetup.pages.buPage import BUPage
+from ui_automation.testSetup.pages.buSummaryPage import BUSummaryPage
+from ui_automation.testSetup.pages.projectsPage import ProjectsPage
+from ui_automation.testSetup.pages.navigationPage import NavigationPage
+from ui_automation.framework.utilities.teststatus import TestStatus
+from ui_automation.framework.utilities.util import  Util
+from ui_automation.testSetup.dataSource.buQuota import BUquota
+from ui_automation.testSetup.dataSource.projectTemplate import ProjectTemplate
 
 @pytest.mark.usefixtures("oneTimeSetUp")
 
 class CreateBUProject(unittest.TestCase):
-
-
   @pytest.fixture()
   def objectSetUp(self,oneTimeSetUp):
       self.bu = BUPage(self.driver)
@@ -52,10 +48,14 @@ class CreateBUProject(unittest.TestCase):
                                        self.confirmpassword)
 
       result = self.bu.verifyBUCreated(self.businessUnitName)
+
       self.ts.mark(result , "BU CREATION VERIFICATION")
       self.buSummary.navigateToProjects()
-      self.projects.createProject(self.projectName, self.projectTemplate)
-      self.projects.customizeProject(self.cidr)
+      #self.projects.createProject(self.projectName, self.projectTemplate, self.cidr)
+      self.projects.createProject(self.projectName, self.projectTemplate, self.cidr, self.email)
+
+      # there is no such attribute in ProjectsPage
+      #self.projects.customizeProject(self.cidr)
 
       result = self.projects.verifyProjectCreated(self.projectName)
       self.ts.markFinal("test_create_bu_project", result,
