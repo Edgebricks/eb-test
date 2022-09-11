@@ -34,6 +34,8 @@ class LoginTest(unittest.TestCase):
   def test_login(self):
 
       self.lp.logout()
+      # testing git commit
+      #now trying second time
       result1 = self.lp.verifyLoginTitle()
       self.ts.mark(result1,"Title Verification")
       if result1 == False:
@@ -45,4 +47,3 @@ class LoginTest(unittest.TestCase):
       if result2 == False:
          self.driver.quit()
 
-     
