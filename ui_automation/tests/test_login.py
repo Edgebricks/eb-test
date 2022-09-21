@@ -32,8 +32,8 @@ class LoginTest(unittest.TestCase):
 
   @pytest.mark.usefixtures("objectSetUp")
   def test_login(self):
+
       self.lp.logout()
-      # testing git commit
       result1 = self.lp.verifyLoginTitle()
       self.ts.mark(result1,"Title Verification")
       if result1 == False:
@@ -44,3 +44,5 @@ class LoginTest(unittest.TestCase):
       self.ts.markFinal("test_login", result2, "Login Verification")
       if result2 == False:
          self.driver.quit()
+
+     

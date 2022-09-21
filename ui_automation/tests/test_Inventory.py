@@ -22,6 +22,7 @@ class Inventory(unittest.TestCase):
 
     @pytest.mark.usefixtures("objectSetUp")
     def test_inventory(self):
+
         self.ip.clickInventory()
         result1 = self.ip.verifyClickInventory()
         self.ts.mark(result1 , "INVENTORY - CLICK ON INVENTORY TAB VERIFICATION")
@@ -38,4 +39,27 @@ class Inventory(unittest.TestCase):
         result4 = self.ip.verifyClickOnProjctsTab()
         self.ts.mark(result4 , "INVENTORY - PROJECTS TAB - CLICK ON PROJECTS TAB VERIFICATION")
 
-        self.ts.markFinal("test_Inventory", result4 , "INVENTORY - PROJECTS - CLICK ON PROJECTS TAB VERIFICATION")
+        self.ip.clickOnSyncProjects()
+        result5 = self.ip.verifyClickOnSyncProjects()
+        self.ts.mark(result5 , "INVENTORY - PROJECTS TAB - CLICK ON SYNC PROJECTS VERIFICATION")
+
+        self.ip.clickOnImagesTab()
+        result6 = self.ip.verifyClickOnImagesTab()
+        self.ts.mark(result6 , "INVENTORY - CLICK ON IMAGES TAB VERIFICATION")
+
+        time.sleep(2)
+        self.ip.clickOnVolumesTab()
+        result7 = self.ip.verifyClickOnVolumesTab()
+        self.ts.mark(result7 , "INVENTORY - CLICK ON VOLUMES TAB VERIFICATION")
+
+        self.ip.clickOnNetworksTab()
+        result8 = self.ip.verifyClickOnNetworksTab()
+        self.ts.mark(result8 , "INVENTORY - CLICK ON NETWORKS TAB VERIFICATION")
+
+        self.ip.clickOnInternalNetworksTab()
+        result9 = self.ip.verifyClickOnInternalNetworksTab()
+        self.ts.mark(result9 , "INVENTORY - CLICK ON INTERNAL NETWORKS TAB VERIFICATION")
+
+
+
+        self.ts.markFinal("test_Inventory", result9 , "INVENTORY - NETWORKS - CLICK ON INTERNAL NETWORKS TAB VERIFICATION")

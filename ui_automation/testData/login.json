@@ -1,10 +1,19 @@
 {
   "login" : {
      "baseURL" : "https://console.staging.edgebricks.com/",
-     "customerid" : "DEVOPS",
-     "region"   : "EBNUC1",
+     "customerid" : "EDGEBRICKS",
+     "region"   : "EBGPU",
      "businessunit" : "admin.local",
      "username" : "ebadmin",
      "password" : "ebadmin"
+ },
+ "buLogin":{
+     "baseURL" : "https://console.staging.edgebricks.com/",
+     "customerid" : "EDGEBRICKS",
+     "region"   : "EBGPU",
+     "businessunit" : "swetaTest",
+     "username" : "sweta",
+     "password" : "ebadmin"
+
  }
 }

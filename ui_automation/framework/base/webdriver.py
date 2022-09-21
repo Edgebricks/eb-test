@@ -29,16 +29,13 @@ class WebDriver():
 
     def __init__(self, browser):
         self.browser = browser
-        print(f'browser = {self.browser}')
         self.config = Login()
         self.baseURL = self.config.baseURL
 
     def getDriverPath(self):
         fpath = os.path.abspath(__file__)
-        log.info(f'driverpath = {fpath}')
         while True:
               fpath, fname = os.path.split(fpath)
-              log.info(f'fpath, fname = {fpath}, {fname}')
               #if fname == 'zstest':
               if fname == 'eb-test':
                  fpath = os.path.join(fpath, fname)
@@ -60,7 +57,6 @@ class WebDriver():
             'WebDriver Instance'
         """
         path = self.getDriverPath()
-        log.info(f'path = {path}')
         if self.browser == "iexplorer":
             # Set ie driver
             driver = webdriver.Ie()
@@ -69,12 +65,12 @@ class WebDriver():
         elif self.browser == "chrome":
             options = webdriver.ChromeOptions()
             options.add_experimental_option('excludeSwitches', ['enable-logging'])
-
+            #options.add_argument("--headless")
             driver = webdriver.Chrome(path, options = options)
         else:
             options = webdriver.ChromeOptions()
             options.add_experimental_option('excludeSwitches', ['enable-logging'])
-
+            #options.add_argument("--headless")
             driver = webdriver.Chrome(path, options = options)
 
         # Maximize the window
