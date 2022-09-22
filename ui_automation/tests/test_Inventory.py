@@ -11,6 +11,8 @@ from ui_automation.framework.utilities.util import  Util
 from ui_automation.testSetup.pages.inventoryPage import InventoryPage
 from ui_automation.testSetup.dataSource.inventoryTemplate import InventoryTemplate
 
+# testing commit
+
 @pytest.mark.usefixtures("oneTimeSetUp")
 
 class Inventory(unittest.TestCase):
