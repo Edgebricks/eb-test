@@ -46,6 +46,8 @@ class BaseActions():
             return By.CLASS_NAME
         elif locatorType == "link":
             return By.LINK_TEXT
+        elif locatorType == "partial-link":
+            return By.PARTIAL_LINK_TEXT
         else:
             self.log.info("Locator type " + locatorType + " not correct/supported")
         return False
@@ -79,7 +81,8 @@ class BaseActions():
     def elementClick(self, locator, locatorType="id"):
         try:
             element = self.getElement(locator, locatorType)
-            element.click()
+            #element.click()
+            self.driver.execute_script("arguments[0].click()", element)
             self.log.info("Clicked on element with locator: " + locator +
             " locatorType: " + locatorType)
         except:

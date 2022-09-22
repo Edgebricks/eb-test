@@ -1,3 +1,4 @@
 **/__pycache__
 ui_automation/framework/framework/screenshots/
 ui_automation/tests/tests.log
+ui_automation/tests/test-result.html

@@ -87,7 +87,7 @@ class InventoryPage(BasePage):
     def clickOnInternalNetworksTab(self):
         self.clickOnNetworksTab()
         self.waitForElement(self.internalNetworksTabLocator,
-                            locatorType="xpath",timeout=200, pollFrequency=0.2)
+                            locatorType="xpath",timeout=60, pollFrequency=0.2)
         self.elementClick(self.internalNetworksTabLocator , locatorType="xpath")
 
     def verifyClickInventory(self):
@@ -195,6 +195,9 @@ class InventoryPage(BasePage):
            return False
 
     def verifyClickOnInternalNetworksTab(self):
+        # clicking again as page is not loading properly on clicking once
+        self.waitForElement(self.privateTextLocator,
+                            locatorType="xpath",timeout=200, pollFrequency=0.2)
         verifyElement = self.isElementPresent(self.privateTextLocator,
                          locatorType="xpath")
 

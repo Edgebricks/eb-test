@@ -15,7 +15,6 @@ from ui_automation.framework.utilities.teststatus import TestStatus
 from ui_automation.framework.utilities.util import  Util
 from ui_automation.testSetup.dataSource.buQuota import BUquota
 from ui_automation.testSetup.dataSource.projectTemplate import ProjectTemplate
-
 @pytest.mark.usefixtures("oneTimeSetUp")
 
 class CreateBUProject(unittest.TestCase):
