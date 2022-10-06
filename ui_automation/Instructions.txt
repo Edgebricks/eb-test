@@ -1,8 +1,10 @@
-1. To run tests from \eb-test\ui_automation\tests
+1. Clone the eb-test repo, go to \eb-test\ui_automation\tests folder on local machine
+	
+2. To run tests from \eb-test\ui_automation\tests folder, use following command 
 	 pytest -v --browser {browserName} {testName}
 	 Ex: pytest -v --browser chrome .\test_create_bu_project.py
 
-2. Verify Login Information in  \eb-test\ui_automation\testData\login.json
+3. Verify Login Information in  \eb-test\ui_automation\testData\login.json
 
-3. To run browser in headed mode
+4. To run browser in headed mode
       delete line "options.add_argument("--headless")" in "C:\Users\User\eb-test\ui_automation\framework\base\webdriver.py"
