@@ -4,6 +4,16 @@
              "username" : "user1",
              "email" : "user1@email.com",
              "password" : "test123",
-             "confirmpassword" : "test123"
+             "confirmpassword" : "test123",
+             "cores"           : "1",
+             "instances"       : "1",
+             "RAM"             : "1",
+             "networks"        : "1",
+             "routers"         : "1",
+             "externalIP"      : "1",
+             "storage"         : "1",
+             "volumes"         : "1",
+             "snapshots"       : "1",
+             "SSD"             : "1"
             }
 }

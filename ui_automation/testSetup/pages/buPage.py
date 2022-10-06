@@ -7,11 +7,13 @@
 
 import pytest
 import logging
-
+import time
 from ui_automation.framework.base.basePage import BasePage
 from ui_automation.testSetup.pages.navigationPage import NavigationPage
 import ui_automation.framework.utilities.customLogger as cl
-
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 class BUPage(BasePage):
   """
   Class contains all the web elements needed for creating a BU
@@ -39,6 +41,20 @@ class BUPage(BasePage):
   buLocator = "//div[@class='title ng-binding' and text()= '{}']"
   #searchBUlocator = "//input[@placeholder='Search Business Units']"
   searchBUlocator = "/html/body/div[1]/div[1]/div[5]/div/div/div/div[1]/div[2]/div[3]/input"
+  buCreationSuccessfulPopUpLocator = '/html/body/div[1]/div[1]/div[4]/div[2]/div/div/div[4]'
+  templateDropDown  = "/html/body/div[1]/div[1]/div[5]/div/div/form/div/div[2]/div[4]/bu-quota-info/div[2]/div[2]/div[3]/div/div[1]"
+  coresLocator             = "/html/body/div[1]/div[1]/div[5]/div/div/form/div/div[2]/div[4]/bu-quota-info/div[4]/div[1]/div[2]/div[1]/input"
+  instancesLocator         = "/html/body/div[1]/div[1]/div[5]/div/div/form/div/div[2]/div[4]/bu-quota-info/div[4]/div[1]/div[2]/div[2]/input"
+  RAMLocator               = "/html/body/div[1]/div[1]/div[5]/div/div/form/div/div[2]/div[4]/bu-quota-info/div[4]/div[1]/div[2]/div[3]/input"
+  networksLocator          = "/html/body/div[3]/div[1]/div[5]/div/div/form/div/div[2]/div[4]/bu-quota-info/div[4]/div[2]/div[2]/div[1]/input"
+  routersLocator           = "/html/body/div[1]/div[1]/div[5]/div/div/form/div/div[2]/div[4]/bu-quota-info/div[4]/div[2]/div[2]/div[2]/input"
+  externalIPLocator        = "/html/body/div[1]/div[1]/div[5]/div/div/form/div/div[2]/div[4]/bu-quota-info/div[4]/div[2]/div[2]/div[3]/input"
+  storageLocator           = "/html/body/div[1]/div[1]/div[5]/div/div/form/div/div[2]/div[4]/bu-quota-info/div[4]/div[3]/div[2]/div[1]/input"
+  volumesLocator           = "/html/body/div[1]/div[1]/div[5]/div/div/form/div/div[2]/div[4]/bu-quota-info/div[4]/div[3]/div[2]/div[2]/input"
+  snapshotsLocator         = "/html/body/div[1]/div[1]/div[5]/div/div/form/div/div[2]/div[4]/bu-quota-info/div[4]/div[3]/div[2]/div[3]/input"
+  SSDLocator               = "/html/body/div[1]/div[1]/div[5]/div/div/form/div/div[2]/div[4]/bu-quota-info/div[4]/div[3]/div[3]/div/div/input"
+
+
 
   def createBusinessUnit(self):
       self.waitForElement(self.createBusinessUnitLocator,
@@ -140,8 +156,45 @@ class BUPage(BasePage):
          self.log.error("FAILED TO VERIFY BU CREATION")
          return False
 
+  def selectBUTemplate(self, template):
+    self.wait   = WebDriverWait(self.driver, 120)
+    drop_down = self.wait.until(EC.visibility_of_element_located(('xpath', self.templateDropDown)))
+    drop_down.click()
+    time.sleep(2)
+    options_list = self.wait.until(EC.visibility_of_all_elements_located(('xpath','/html/body/div[1]/div[1]/div[5]/div/div/form/div/div[2]/div[4]/bu-quota-info/div[2]/div[2]/div[3]/div/div[1]/div/ul/li')))
+    i = 1
+    while(i < len(options_list)+1):
+        path = f'/html/body/div[1]/div[1]/div[5]/div/div/form/div/div[2]/div[4]/bu-quota-info/div[2]/div[2]/div[3]/div/div[1]/div/ul/li[{i}]'
+        option = self.driver.find_element(By.XPATH, path)
+        attribute = option.text
+        if (attribute == template):
+            option = self.driver.find_element(By.XPATH, path)
+            option.click()
+            break
+        i += 1
 
-
+  def enterQuotaValues(self, cores, instances, RAM, networks,
+                       routers, externalIP, storage, volumes, snapshots, SSD):
+      self.sendKeys(cores, self.coresLocator,
+                   locatorType="xpath")
+      self.sendKeys(instances, self.instancesLocator,
+                   locatorType="xpath")
+      self.sendKeys(RAM, self.RAMLocator,
+                   locatorType="xpath")
+      self.sendKeys(networks, self.networksLocator,
+                   locatorType="xpath")
+      self.sendKeys(routers, self.routersLocator,
+                   locatorType="xpath")
+      self.sendKeys(externalIP, self.externalIPLocator,
+                   locatorType="xpath")
+      self.sendKeys(storage, self.storageLocator,
+                   locatorType="xpath")
+      self.sendKeys(volumes, self.volumesLocator,
+                   locatorType="xpath")
+      self.sendKeys(snapshots, self.snapshotsLocator,
+                   locatorType="xpath")
+      self.sendKeys(SSD, self.SSDLocator,
+                   locatorType="xpath")
 
   def createLocalBuWithNoQuota(self, businessUnitName, username, email,
      			       password, confirmpassword):
@@ -151,6 +204,65 @@ class BUPage(BasePage):
       self.enterBusinessUnitName(businessUnitName)
       self.selectNoQuotaLimits()
       #self.selectBULocalRadiobutton()
+      self.enterUserName(username)
+      self.enterEmail(email)
+      self.enterPassword(password)
+      self.enterPasswordAgain(confirmpassword)
+      self.clickDone()
+
+  def createLocalBuWithQuotaLarge(self, businessUnitName, username, email,
+                     password, confirmpassword):
+
+    self.np.navigateToBusinessUnit()
+    self.createBusinessUnit()
+    self.enterBusinessUnitName(businessUnitName)
+    self.selectQuotalimits()
+    self.selectBUTemplate('Large')
+    self.enterUserName(username)
+    self.enterEmail(email)
+    self.enterPassword(password)
+    self.enterPasswordAgain(confirmpassword)
+    self.clickDone()
+
+  def createLocalBuWithQuotaMedium(self, businessUnitName, username, email,
+                   password, confirmpassword):
+
+      self.np.navigateToBusinessUnit()
+      self.createBusinessUnit()
+      self.enterBusinessUnitName(businessUnitName)
+      self.selectQuotalimits()
+      self.selectBUTemplate('Medium')
+      self.enterUserName(username)
+      self.enterEmail(email)
+      self.enterPassword(password)
+      self.enterPasswordAgain(confirmpassword)
+      self.clickDone()
+
+  def createLocalBuWithQuotaSmall(self, businessUnitName, username, email,
+                   password, confirmpassword):
+
+      self.np.navigateToBusinessUnit()
+      self.createBusinessUnit()
+      self.enterBusinessUnitName(businessUnitName)
+      self.selectQuotalimits()
+      self.selectBUTemplate('Small')
+      self.enterUserName(username)
+      self.enterEmail(email)
+      self.enterPassword(password)
+      self.enterPasswordAgain(confirmpassword)
+      self.clickDone()
+
+  def createLocalBuWithQuotaCustom(self, businessUnitName, username, email,
+                   password, confirmpassword, cores, instances, RAM, networks,
+                   routers, externalIP, storage, volumes, snapshots, SSD):
+
+      self.np.navigateToBusinessUnit()
+      self.createBusinessUnit()
+      self.enterBusinessUnitName(businessUnitName)
+      self.selectQuotalimits()
+      self.selectBUTemplate('Custom')
+      self.enterQuotaValues(cores, instances, RAM, networks,
+      routers, externalIP, storage, volumes, snapshots, SSD)
       self.enterUserName(username)
       self.enterEmail(email)
       self.enterPassword(password)

@@ -65,11 +65,13 @@ class WebDriver():
         elif self.browser == "chrome":
             options = webdriver.ChromeOptions()
             options.add_experimental_option('excludeSwitches', ['enable-logging'])
+            # To run in headless browser
             options.add_argument("--headless")
             driver = webdriver.Chrome(path, options = options)
         else:
             options = webdriver.ChromeOptions()
             options.add_experimental_option('excludeSwitches', ['enable-logging'])
+            # To run in headless browser
             options.add_argument("--headless")
             driver = webdriver.Chrome(path, options = options)
 

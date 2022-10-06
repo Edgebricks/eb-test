@@ -243,7 +243,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
 }
 </script>
     <h1>test-result.html</h1>
-    <p>Report generated on 22-Sep-2022 at 23:47:02 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.1.1</p>
+    <p>Report generated on 06-Oct-2022 at 22:57:39 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.1.1</p>
     <h2>Environment</h2>
     <table id="environment">
       <tr>
@@ -259,8 +259,8 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <td>Python</td>
         <td>3.10.7</td></tr></table>
     <h2>Summary</h2>
-    <p>1 tests ran in 339.56 seconds. </p>
-    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">0 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">1 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
+    <p>1 tests ran in 43.48 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">1 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">0 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
     <h2>Results</h2>
     <table id="results-table">
       <thead id="results-table-head">
@@ -271,15 +271,15 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
           <th class="sortable links" col="links">Links</th></tr>
         <tr hidden="true" id="not-found-message">
           <th colspan="4">No results found. Try to check the filters</th></tr></thead>
-      <tbody class="failed results-table-row">
+      <tbody class="passed results-table-row">
         <tr>
-          <td class="col-result">Failed</td>
-          <td class="col-name">ui_automation/tests/test_Inventory.py::Inventory::test_inventory</td>
-          <td class="col-duration">339.33</td>
+          <td class="col-result">Passed</td>
+          <td class="col-name">ui_automation/tests/test_create_bu_project.py::CreateBUProject::test_create_bu_quota_custom</td>
+          <td class="col-duration">43.18</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log">self = &lt;ui_automation.tests.test_Inventory.Inventory testMethod=test_inventory&gt;<br/><br/>    @pytest.mark.usefixtures(&quot;objectSetUp&quot;)<br/>    def test_inventory(self):<br/>    <br/>        self.ip.clickInventory()<br/>        result1 = self.ip.verifyClickInventory()<br/>        self.ts.mark(result1 , &quot;INVENTORY - CLICK ON INVENTORY TAB VERIFICATION&quot;)<br/>        &quot;&quot;&quot;<br/>        self.ip.clickOnVMs()<br/>        result2 = self.ip.verifyClickOnVMs()<br/>        self.ts.mark(result2 , &quot;INVENTORY - CLICK ON VMs TAB VERIFICATION&quot;)<br/>    <br/>        self.ip.clickOnSyncVMs()<br/>        result3 = self.ip.verifyClickOnSyncVMs()<br/>        self.ts.mark(result3 , &quot;INVENTORY - VMs - CLICK ON SYNC VMs VERIFICATION&quot;)<br/>    <br/>        self.ip.clickOnProjectsTab()<br/>        result4 = self.ip.verifyClickOnProjctsTab()<br/>        self.ts.mark(result4 , &quot;INVENTORY - PROJECTS TAB - CLICK ON PROJECTS TAB VERIFICATION&quot;)<br/>    <br/>        self.ip.clickOnSyncProjects()<br/>        result5 = self.ip.verifyClickOnSyncProjects()<br/>        self.ts.mark(result5 , &quot;INVENTORY - PROJECTS TAB - CLICK ON SYNC PROJECTS VERIFICATION&quot;)<br/>    <br/>        self.ip.clickOnImagesTab()<br/>        result6 = self.ip.verifyClickOnImagesTab()<br/>        self.ts.mark(result6 , &quot;INVENTORY - CLICK ON IMAGES TAB VERIFICATION&quot;)<br/>        &quot;&quot;&quot;<br/>        time.sleep(2)<br/>        self.ip.clickOnVolumesTab()<br/>        result7 = self.ip.verifyClickOnVolumesTab()<br/>        self.ts.mark(result7 , &quot;INVENTORY - CLICK ON VOLUMES TAB VERIFICATION&quot;)<br/>    <br/>        time.sleep(2)<br/>        self.ip.clickOnNetworksTab()<br/>        result8 = self.ip.verifyClickOnNetworksTab()<br/>        self.ts.mark(result8 , &quot;INVENTORY - CLICK ON NETWORKS TAB VERIFICATION&quot;)<br/>    <br/>        time.sleep(2)<br/>        self.ip.clickOnInternalNetworksTab()<br/>        result9 = self.ip.verifyClickOnInternalNetworksTab()<br/>        self.ts.mark(result9 , &quot;INVENTORY - CLICK ON INTERNAL NETWORKS TAB VERIFICATION&quot;)<br/>    <br/>    <br/>    <br/>&gt;       self.ts.markFinal(&quot;test_Inventory&quot;, result9 , &quot;INVENTORY - NETWORKS - CLICK ON INTERNAL NETWORKS TAB VERIFICATION&quot;)<br/><br/>test_Inventory.py:67: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>self = &lt;ui_automation.framework.utilities.teststatus.TestStatus object at 0x000001FBBE4DFE80&gt;<br/>testName = &#x27;test_Inventory&#x27;, result = False<br/>resultMessage = &#x27;INVENTORY - NETWORKS - CLICK ON INTERNAL NETWORKS TAB VERIFICATION&#x27;<br/><br/>    def markFinal(self, testName, result, resultMessage):<br/>        &quot;&quot;&quot;<br/>        Mark the final result of the verification point in a test case<br/>        This needs to be called at least once in a test case<br/>        This should be final test status of the test case<br/>        &quot;&quot;&quot;<br/>        self.setResult(result, resultMessage)<br/>        if &quot;FAIL&quot; in self.resultList:<br/>            self.log.error(testName +  &quot; ### TEST FAILED&quot;)<br/>            self.resultList.clear()<br/>&gt;           assert True == False<br/><span class="error">E           AssertionError</span><br/><br/>..\framework\utilities\teststatus.py:69: AssertionError<br/> ------------------------------Captured stderr call------------------------------ <br/>  File &quot;C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.2032.0_x64__qbz5n2kfra8p0\lib\runpy.py&quot;, line 196, in _run_module_as_main
+            <div class="log"> ------------------------------Captured stderr call------------------------------ <br/>  File &quot;C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.2032.0_x64__qbz5n2kfra8p0\lib\runpy.py&quot;, line 196, in _run_module_as_main
     return _run_code(code, main_globals, None,
   File &quot;C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.10_3.10.2032.0_x64__qbz5n2kfra8p0\lib\runpy.py&quot;, line 86, in _run_code
     exec(code, run_globals)
@@ -341,10 +341,12 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
     return self.run(*args, **kwds)
   File &quot;C:\Users\User\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\unittest2\case.py&quot;, line 352, in run
     testMethod()
-  File &quot;C:\Users\User\eb-test\ui_automation\tests\test_Inventory.py&quot;, line 61, in test_inventory
-    self.ip.clickOnInternalNetworksTab()
-  File &quot;C:\Users\User\eb-test\ui_automation\testSetup\pages\inventoryPage.py&quot;, line 91, in clickOnInternalNetworksTab
-    self.elementClick(self.internalNetworksTabLocator , locatorType=&quot;xpath&quot;)
-  File &quot;C:\Users\User\eb-test\ui_automation\framework\base\baseActions.py&quot;, line 91, in elementClick
+  File &quot;C:\Users\User\eb-test\ui_automation\tests\test_create_bu_project.py&quot;, line 108, in test_create_bu_quota_custom
+    self.bu.createLocalBuWithQuotaCustom(self.businessUnitName, self.username,
+  File &quot;C:\Users\User\eb-test\ui_automation\testSetup\pages\buPage.py&quot;, line 264, in createLocalBuWithQuotaCustom
+    self.enterQuotaValues(cores, instances, RAM, networks,
+  File &quot;C:\Users\User\eb-test\ui_automation\testSetup\pages\buPage.py&quot;, line 184, in enterQuotaValues
+    self.sendKeys(networks, self.networksLocator,
+  File &quot;C:\Users\User\eb-test\ui_automation\framework\base\baseActions.py&quot;, line 102, in sendKeys
     print_stack()
 <br/></div></td></tr></tbody></table></body></html>
