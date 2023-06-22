@@ -17,3 +17,7 @@ Click [here](https://github.com/Edgebricks/eb-test/tree/master/api_automation#re
 UI Automation
 =============
 Click [here](https://github.com/Edgebricks/eb-test/tree/master/ui_automation#readme) for details.
+
+Documentation
+=============
+Click [here](https://github.com/Edgebricks/eb-test/blob/master/doc/README.md) for details.

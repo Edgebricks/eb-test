@@ -11,7 +11,7 @@ If not, download [get-pip.py](https://bootstrap.pypa.io/get-pip.py)
 
 Install it by running::
 
-    $ sudo apt install -y python3-pip
+    $ sudo apt install -y python3-pip python3-virtualenv
 
 This will install pip on the target machine.
 

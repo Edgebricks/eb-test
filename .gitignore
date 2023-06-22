@@ -1,8 +1,15 @@
 # build artifacts
-api_automation/ebtestdocs
+ebtestdocs/
+ebapi/.tox/
 
-# test conf
-test.conf
+# virtual envs
+ebapi/venv
+ebui/venv
+
+# test artifacts
+ebapi/test.conf
+ebapi/assets/
+ebapi/test-result.html
 
 # pycache files
 **/__pycache__/

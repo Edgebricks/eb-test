@@ -38,7 +38,7 @@ class ConfigParser(object):
         fpath = os.path.abspath(__file__)
         while True:
             fpath, fname = os.path.split(fpath)
-            if fname == 'ebtest':
+            if fname == 'ebapi':
                 break
 
         for root, _, files in os.walk(fpath):
@@ -194,7 +194,7 @@ class ConfigParser(object):
 
     def setApiURL(self, value):
         return self.setConfig('apiURL', value)
-    
+
     def setCustURL(self, value):
         return self.setConfig('custID', value)
 

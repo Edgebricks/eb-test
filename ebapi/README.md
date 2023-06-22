@@ -2,7 +2,6 @@
 
 API Automation
 ==============
-
 Requirements
 ============
 python-pip package should be available on the target machine.
@@ -11,7 +10,7 @@ If not, download [get-pip.py](https://bootstrap.pypa.io/get-pip.py)
 
 Install it by running::
 
-    $ sudo apt install -y python3-pip
+    $ sudo apt install -y python3-pip python3-virtualenv tox
 
 This will install pip on the target machine.
 
@@ -51,7 +50,7 @@ Run tests from ebapi directory::
 | command | description |
 | ------- | ----------- |
 | python3 -m pytest tests | To run all tests |
-| python3 -m pytest --html=result.html suites | To save test run in result.html |
+| python3 -m pytest --html=result.html tests | To save test run in result.html |
 | python3 -m pytest -s tests | To see entire test result in console |
 
 The --html option will save the test output in specified path in an html file.

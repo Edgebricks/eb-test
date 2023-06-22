@@ -1,8 +1,7 @@
-#!/usr/bin/env python
+#! /usr/bin/env python
 #
 # Author: Ankit Jain (ankit@edgebricks.com)
 # (c) 2022 Edgebricks
-
 
 import json
 import os
@@ -18,8 +17,12 @@ from ebapi.lib.keystone import Token
 def isDefaultTestConfigsSet():
     notset     = 0
     testConfig = ConfigParser()
-    configs    = ['apiURL', 'acctID', 'clusterID', 'domainName',
-                  'projectAdmin', 'projectAdminPassword']
+    configs    = ['apiURL',
+                  'acctID',
+                  'clusterID',
+                  'domainName',
+                  'projectAdmin',
+                  'projectAdminPassword']
 
     for config in configs:
         if not testConfig.getConfig(config):
@@ -91,6 +94,7 @@ def pytest_configure(config):
     _cloudAdmin         = config.getoption("--cloudadmin")
     _cloudAdminPass     = config.getoption("--cloudadminpassword")
     testConfig          = ConfigParser()
+
     if _apiURL is not None:
         testConfig.setApiURL(_apiURL)
     if _custID is not None:
