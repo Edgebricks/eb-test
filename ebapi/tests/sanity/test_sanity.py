@@ -7,15 +7,15 @@
 from time import sleep
 import pytest
 
-from ebtest.common.config import ConfigParser
-from ebtest.lib.keystone import Domains
-from ebtest.lib.keystone import Roles
-from ebtest.lib.keystone import Users
-from ebtest.lib.edgebricks import Projects
-from ebtest.lib.nova import VMs
-from ebtest.lib.nova import Flavors
-from ebtest.lib.neutron import Networks
-from ebtest.lib.glance import Images
+from ebapi.common.config import ConfigParser
+from ebapi.lib.keystone import Domains
+from ebapi.lib.keystone import Roles
+from ebapi.lib.keystone import Users
+from ebapi.lib.edgebricks import Projects
+from ebapi.lib.nova import VMs
+from ebapi.lib.nova import Flavors
+from ebapi.lib.neutron import Networks
+from ebapi.lib.glance import Images
 
 
 class TestCreateDeleteBasic:

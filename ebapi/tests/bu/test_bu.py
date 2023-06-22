@@ -7,8 +7,8 @@
 from time import sleep
 import pytest
 
-from ebtest.common.config import ConfigParser
-from ebtest.lib.keystone import Domains
+from ebapi.common.config import ConfigParser
+from ebapi.lib.keystone import Domains
 
 
 class TestBu:

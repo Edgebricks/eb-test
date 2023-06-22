@@ -8,7 +8,7 @@
 import json
 import requests
 
-from ebtest.common import logger as elog
+from ebapi.common import logger as elog
 
 
 class RestClient(object):

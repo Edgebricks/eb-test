@@ -7,10 +7,10 @@
 
 import json
 
-from ebtest.common import utils as eutil
-from ebtest.common import logger as elog
-from ebtest.common.rest import RestClient
-from ebtest.lib.keystone import Token
+from ebapi.common import utils as eutil
+from ebapi.common import logger as elog
+from ebapi.common.rest import RestClient
+from ebapi.lib.keystone import Token
 
 
 class NeutronBase(Token):

@@ -8,12 +8,12 @@ import pytest
 import re
 import time
 
-from ebtest.common import utils as eutil
-from ebtest.common.commands import RemoteMachine
-from ebtest.common.config import ConfigParser
-from ebtest.common import logger as elog
-from ebtest.lib import nova
-from ebtest.lib import neutron
+from ebapi.common import utils as eutil
+from ebapi.common.commands import RemoteMachine
+from ebapi.common.config import ConfigParser
+from ebapi.common import logger as elog
+from ebapi.lib import nova
+from ebapi.lib import neutron
 
 
 # test settings:

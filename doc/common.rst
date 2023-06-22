@@ -5,29 +5,29 @@ ebtest common
 REST API
 --------
 
-.. automodule:: ebtest.common.rest
+.. automodule:: ebapi.common.rest
     :members:
 
 CLI
 ---
 
-.. automodule:: ebtest.common.commands
+.. automodule:: ebapi.common.commands
     :members:
 
 Custom Logger
 -------------
 
-.. automodule:: ebtest.common.logger
+.. automodule:: ebapi.common.logger
     :members:
 
 Config Parser
 -------------
 
-.. automodule:: ebtest.common.config
+.. automodule:: ebapi.common.config
     :members:
 
 Utilities
 ---------
 
-.. automodule:: ebtest.common.utils
+.. automodule:: ebapi.common.utils
     :members:

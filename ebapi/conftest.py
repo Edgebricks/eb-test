@@ -9,9 +9,9 @@ import os
 import pytest
 import requests
 
-from ebtest.common.config import ConfigParser
-from ebtest.common.rest import RestClient
-from ebtest.lib.keystone import Token
+from ebapi.common.config import ConfigParser
+from ebapi.common.rest import RestClient
+from ebapi.lib.keystone import Token
 
 
 @pytest.fixture(scope='session', autouse=True)

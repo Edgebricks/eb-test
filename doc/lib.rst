@@ -5,11 +5,11 @@ ebtest library
 cinder
 ------
 
-.. automodule:: ebtest.lib.cinder
+.. automodule:: ebapi.lib.cinder
     :members:
 
 keystone
 --------
 
-.. automodule:: ebtest.lib.keystone
+.. automodule:: ebapi.lib.keystone
     :members:

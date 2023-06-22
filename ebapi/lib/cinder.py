@@ -6,8 +6,8 @@
 
 
 """ebtest library with network utility functions"""
-from ebtest.common.rest import RestClient
-from ebtest.lib.keystone import Token
+from ebapi.common.rest import RestClient
+from ebapi.lib.keystone import Token
 
 
 class CinderBase(Token):

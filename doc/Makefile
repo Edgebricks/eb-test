@@ -5,9 +5,9 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
-BUILDDIR      = ../../ebtestdocs
+BUILDDIR      = ../ebtestdocs
 PDFBUILDDIR   = /tmp
-PDF           = ../ebtest.pdf
+PDF           = ../ebapi.pdf
 
 # User-friendly check for sphinx-build
 ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
@@ -96,9 +96,9 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/ebtest.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/ebapi.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/ebtest.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/ebapi.qhc"
 
 .PHONY: applehelp
 applehelp:

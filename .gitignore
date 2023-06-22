@@ -1,0 +1,8 @@
+# build artifacts
+api_automation/ebtestdocs
+
+# test conf
+test.conf
+
+# pycache files
+**/__pycache__/

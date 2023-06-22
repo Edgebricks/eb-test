@@ -5,8 +5,8 @@
 # (c) 2022 Edgebricks
 
 
-from ebtest.common import logger as elog
-from ebtest.common import utils as eutil
+from ebapi.common import logger as elog
+from ebapi.common import utils as eutil
 import os
 import sys
 import paramiko

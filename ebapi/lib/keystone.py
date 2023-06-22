@@ -8,10 +8,10 @@
 import json
 import requests
 
-from ebtest.common import utils as eutil
-from ebtest.common.config import ConfigParser
-from ebtest.common import logger as elog
-from ebtest.common.rest import RestClient
+from ebapi.common import utils as eutil
+from ebapi.common.config import ConfigParser
+from ebapi.common import logger as elog
+from ebapi.common.rest import RestClient
 
 
 class KeystoneBase(ConfigParser):

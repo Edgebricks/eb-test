@@ -9,13 +9,13 @@ import pytest
 import re
 from urllib.parse import urlparse
 
-from ebtest.common import utils as eutil
-from ebtest.common.commands import RemoteMachine
-from ebtest.common.config import ConfigParser
-from ebtest.common.rest import RestClient
-from ebtest.common import logger as elog
-from ebtest.lib import keystone
-from ebtest.lib import nova
+from ebapi.common import utils as eutil
+from ebapi.common.commands import RemoteMachine
+from ebapi.common.config import ConfigParser
+from ebapi.common.rest import RestClient
+from ebapi.common import logger as elog
+from ebapi.lib import keystone
+from ebapi.lib import nova
 
 
 # test settings:

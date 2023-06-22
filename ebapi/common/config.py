@@ -8,8 +8,8 @@
 from configparser import ConfigParser as CP
 import os
 
-from ebtest.common import utils as eutil
-from ebtest.common import logger as elog
+from ebapi.common import utils as eutil
+from ebapi.common import logger as elog
 
 
 class ConfigParser(object):
