@@ -13,12 +13,12 @@ def customLogger():
     """
     ebtest library for custom logger with following log levels::
 
-        * elog.logging.tpass    - [PASS]
-        * elog.logging.debug    - [DEBUG]
-        * elog.logging.info     - [INFO]
-        * elog.logging.warning  - [WARNING]
-        * elog.logging.error    - [ERROR]
-        * elog.logging.tfail    - [FAIL]
+        * elog.tpass    - [PASS]
+        * elog.debug    - [DEBUG]
+        * elog.info     - [INFO]
+        * elog.warning  - [WARNING]
+        * elog.error    - [ERROR]
+        * elog.tfail    - [FAIL]
 
     """
     PASS      = 5

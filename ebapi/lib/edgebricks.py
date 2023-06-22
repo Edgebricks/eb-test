@@ -8,7 +8,7 @@
 import json
 
 from ebapi.common import utils as eutil
-from ebapi.common import logger as elog
+from ebapi.common.logger import elog
 from ebapi.common.rest import RestClient
 from ebapi.lib.keystone import Token
 
@@ -50,34 +50,34 @@ class Projects(Token):
         if netQuota:
             payload['quota']['network_quota'] = netQuota
 
-        elog.logging.info('creating project %s in domain %s'
+        elog.info('creating project %s in domain %s'
                   % (eutil.bcolor(projName), eutil.bcolor(domainID)))
 
         response = self.client.post(self.projectURL, payload)
         if not response.ok:
-            elog.logging.error('failed to create project %s: %s'
+            elog.error('failed to create project %s: %s'
                        % (eutil.bcolor(projName),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content = json.loads(response.content)
         projID  = content['id']
-        elog.logging.info('project %s created: %s'
+        elog.info('project %s created: %s'
                   % (eutil.bcolor(projName), eutil.bcolor(projID)))
 
         return projID
 
     def deleteProject(self, projID):
-        elog.logging.info('deleting project %s' % eutil.bcolor(projID))
+        elog.info('deleting project %s' % eutil.bcolor(projID))
         response = self.client.deleteWithPayload(self.projectURL+ '/' + projID)
         if not response.ok:
-            elog.logging.error('failed to delete project: %s'
+            elog.error('failed to delete project: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('deleting project %s: %s OK'
+        elog.info('deleting project %s: %s OK'
                   % (eutil.bcolor(projID),
                      eutil.gcolor(response.status_code)))
         return True
@@ -86,10 +86,10 @@ class Projects(Token):
         requestURL = self.keystoneURL + '/users' + '/%s/projects?domain_id=%s' % (userID, domainID)
         response   = self.client.get(requestURL)
         if not response.ok:
-            elog.logging.error('failed to get projects from domain %s: %s'
+            elog.error('failed to get projects from domain %s: %s'
                        % (eutil.bcolor(domainID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         return json.loads(response.content)

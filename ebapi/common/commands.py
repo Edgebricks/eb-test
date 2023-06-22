@@ -5,12 +5,13 @@
 # (c) 2022 Edgebricks
 
 
-from ebapi.common import logger as elog
-from ebapi.common import utils as eutil
 import os
 import sys
 import paramiko
 import socket
+
+from ebapi.common.logger import elog
+from ebapi.common import utils as eutil
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -68,7 +69,7 @@ class RemoteMachine(object):
         """
         try:
             # Paramiko.SSHClient can be used to make connections to the remote server and transfer files
-            elog.logging.info('Establishing ssh connection..')
+            elog.info('Establishing ssh connection..')
             self.client = paramiko.SSHClient()
             # instructs the client to look for all the hosts connected to in the past by looking at the 
             # system's known_hosts file and finding the SSH keys the host is expecting
@@ -81,25 +82,25 @@ class RemoteMachine(object):
                     self.keyfile)
                 self.client.connect(hostname=self.host, port=self.port, username=self.username,
                                     pkey=private_key, timeout=self.timeout, allow_agent=False, look_for_keys=False)
-                elog.logging.info(
+                elog.info(
                     'Connected to the server [%s]' % eutil.bcolor(self.host))
             else:
                 self.client.connect(hostname=self.host, port=self.port, username=self.username,
                                     password=self.password, timeout=self.timeout, allow_agent=False, look_for_keys=False)
-                elog.logging.info(
+                elog.info(
                     'Connected to the server [%s]' % eutil.bcolor(self.host))
         except paramiko.AuthenticationException:
-            elog.logging.error('Authentication failed, please verify your credentials')
+            elog.error('Authentication failed, please verify your credentials')
             result_flag = False
         except paramiko.SSHException as sshException:
-            elog.logging.error(' Could not establish SSH connection: [%s]'
+            elog.error(' Could not establish SSH connection: [%s]'
                        % eutil.bcolor(sshException))
             result_flag = False
         except socket.timeout as e:
-            elog.logging.error('Connection timed out')
+            elog.error('Connection timed out')
             result_flag = False
         except Exception as e:
-            elog.logging.error('\nException in connecting to the server')
+            elog.error('\nException in connecting to the server')
             result_flag = False
             self.client.close()
         else:
@@ -130,26 +131,26 @@ class RemoteMachine(object):
         result_flag = True
         try:
             if self.connect():
-                elog.logging.info(
+                elog.info(
                     'Executing command --> [%s]' % eutil.bcolor(command))
                 stdout, stderr = self.client.exec_command(command, timeout=10)
                 self.ssh_output = stdout.read()
                 self.ssh_error = stderr.read()
                 if self.ssh_error:
-                    elog.logging.error('Problem occurred while running command: [%s] - The error is %s'
+                    elog.error('Problem occurred while running command: [%s] - The error is %s'
                                % (eutil.bcolor(command), self.ssh_error))
                     result_flag = False
                 else:
-                    elog.logging.info('Command execution completed successfully')
+                    elog.info('Command execution completed successfully')
                 self.client.close()
             else:
-                elog.logging.error('Could not establish SSH connection')
+                elog.error('Could not establish SSH connection')
                 result_flag = False
         except socket.timeout as e:
             self.client.close()
             result_flag = False
         except paramiko.SSHException:
-            elog.logging.error('Failed to execute the command: [%s]'
+            elog.error('Failed to execute the command: [%s]'
                        % eutil.bcolor(command))
             self.client.close()
             result_flag = False
@@ -179,14 +180,14 @@ class RemoteMachine(object):
                 download = self.client.open_sftp()
                 download.get(remotePath, localPath)
                 download.close()
-                elog.logging.info('[%s] download: success'
+                elog.info('[%s] download: success'
                           % eutil.bcolor(self.host))
                 self.client.close()
             else:
-                elog.logging.error('Could not establish SSH connection')
+                elog.error('Could not establish SSH connection')
                 result_flag = False
         except Exception as e:
-            elog.logging.error('[%s] download: failed'
+            elog.error('[%s] download: failed'
                        % eutil.bcolor(self.host))
             result_flag = False
             download.close()
@@ -217,14 +218,14 @@ class RemoteMachine(object):
                 upload = self.client.open_sftp()
                 upload.put(localPath, remotePath)
                 upload.close()
-                elog.logging.info('[%s] put: success'
+                elog.info('[%s] put: success'
                           % eutil.bcolor(self.host))
                 self.client.close()
             else:
                 print("Could not establish SSH connection")
                 result_flag = False
         except Exception as e:
-            elog.logging.error('[%s] put: failed'
+            elog.error('[%s] put: failed'
                        % eutil.bcolor(self.host))
             result_flag = False
             upload.close()

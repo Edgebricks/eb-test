@@ -8,7 +8,7 @@ import os
 import pytest
 import requests
 
-from ebapi.common import logger as elog
+from ebapi.common.logger import elog
 from ebapi.common import utils as eutil
 from ebapi.common.config import ConfigParser
 from ebapi.common.rest import RestClient
@@ -29,31 +29,37 @@ def isDefaultTestConfigsSet():
     for config in configs:
         if not testConfig.getConfig(config):
             notset = 1
+            elog.warning('config:%s not set' % eutil.bcolor(config))
 
     if notset:
         pytest.skip('default test configs not set')
 
 
 def getAcctAndClusterID():
-    testConfig     = ConfigParser()
-    apiURL         = testConfig.getConfig('apiURL')
-    custID         = testConfig.getConfig('custID')
-    headers        = {"Accept": "application/json",
-                      "Content-Type": "application/json;charset=UTF-8"}
+    testConfig = ConfigParser()
+    apiURL     = testConfig.getConfig('apiURL')
+    custID     = testConfig.getConfig('custID')
+    headers    = {"Accept": "application/json",
+                  "Content-Type": "application/json;charset=UTF-8"}
 
     if not apiURL or not custID:
+        elog.error('make sure apiURL:%s and custID:%s is specified'
+                    % (eutil.bcolor(apiURL), eutil.bcolor(custID)))
         return None, None
 
     url      = apiURL + '/v1/account_ops/get_clusters?login_name=' + custID
     response = requests.get(url=url, headers=headers)
 
     if not response.ok:
+        elog.error('failed to query cluster details')
         return None, None
 
-    data       = json.loads(response.content)
-    acctID     = data['clusters'][0]['acct_id']
-    clusterID  = data['clusters'][0]['id']
+    data      = json.loads(response.content)
+    acctID    = data['clusters'][0]['acct_id']
+    clusterID = data['clusters'][0]['id']
 
+    elog.info('acctID:%s, clusterID:%s'
+               % (eutil.bcolor(acctID), eutil.bcolor(clusterID)))
     return acctID, clusterID
 
 def getReleaseVersion():
@@ -65,29 +71,39 @@ def getReleaseVersion():
     cloudAdminPass = testConfig.getConfig('cloudAdminPassword')
 
     if not apiURL or not acctID or not clusterID or not cloudAdmin or not cloudAdminPass:
+        elog.error('make sure apiURL:%s and acctID:%s clusterID:%s cloudAdmin:%s '
+                   'cloudAdminPass:%s is specified'
+                    % (eutil.bcolor(apiURL), eutil.bcolor(acctID), eutil.bcolor(clusterID),
+                       eutil.bcolor(cloudAdmin), eutil.bcolor(cloudAdminPass)))
         return None, None
 
     tokenObj = Token('domain', 'admin.local', cloudAdmin, cloudAdminPass)
     token    = tokenObj.getToken()
     if not token:
+        elog.error('failed to get token')
         return None, None
+    elog.info('successfully got token:%s from %s' % (eutil.bcolor(token), eutil.gcolor(apiURL)))
 
     url      = apiURL + '/v1/accounts/%s/version' % acctID
     client   = RestClient(token)
     response = client.get(url)
-
     if not response.ok:
+        elog.error('failed to account version')
         return None, None
 
     data     = json.loads(response.content)
-    star     = data['clusters'][0]['star']['short']
-    sky      = data['sky_version']['sky']['short']
+    skyVersion      = data['sky_version']['sky']['short']
+    starVersion     = data['clusters'][0]['star']['short']
 
-    return sky, star
+    elog.info('star version:%s, sky version:%s'
+               % (eutil.bcolor(starVersion), eutil.bcolor(skyVersion)))
+    return skyVersion, starVersion
 
 def pytest_configure(config):
     """Provide additional environment details to pytest-html report"""
     # add environment details to the pytest-html plugin
+    elog.info('reading configuration...')
+
     config._metadata     = {}
     config._environment = {}
     # read values passed from the cli as parameters
@@ -110,9 +126,9 @@ def pytest_configure(config):
         testConfig.setAcctID(_acctID)
     if _clusterID is not None:
         testConfig.setClusterID(_clusterID)
-    setup                 = testConfig.getConfig('setupname')
-    sky, star             = getReleaseVersion()
-    apiURL                = testConfig.getConfig('apiURL')
+    setup                   = testConfig.getConfig('setupname')
+    skyVersion, starVersion = getReleaseVersion()
+    apiURL                  = testConfig.getConfig('apiURL')
 
     if not setup:
         setup = os.environ.get('SETUP_NAME')
@@ -122,17 +138,17 @@ def pytest_configure(config):
     if not apiURL:
         apiURL = 'Unknown'
 
-    if not sky:
-        sky = 'Unknown'
+    if not skyVersion:
+        skyVersion = 'Unknown'
 
-    if not star:
-        star = 'Unknown'
+    if not starVersion:
+        starVersion = 'Unknown'
 
     config._metadata['API URL']       = apiURL
-    config._metadata['Star Version']  = star
     config._metadata['Setup Name']    = setup
-    config._metadata['Sky Version']   = sky
-
+    config._metadata['Star Version']  = starVersion
+    config._metadata['Sky Version']   = skyVersion
+    elog.info('successfully read configuration')
 
 def pytest_addoption(parser):
     """Creates new options to be passed as pytest cli command"""
@@ -140,7 +156,7 @@ def pytest_addoption(parser):
         "--apiurl",
         action="store",
         default=None,
-        help="API URL of the cluster e.g. http://vpn.edgebricks.in:11002"
+        help="API URL of the cluster e.g. https://console.staging.edgebricks.com"
     )
     parser.addoption(
         "--custid",

@@ -8,7 +8,7 @@
 import json
 import requests
 
-from ebapi.common import logger as elog
+from ebapi.common.logger import elog
 
 
 class RestClient(object):
@@ -56,10 +56,10 @@ class RestClient(object):
                 response = client.get(requestURL)
         """
         if not self.token:
-            elog.logging.error('token not found')
+            elog.error('token not found')
             return None
 
-        elog.logging.debug('URL = %s' % url)
+        elog.debug('URL = %s' % url)
         return requests.get(url=url, headers=self.headers, timeout=timeout)
 
     def put(self, url, payload={}, timeout=30):
@@ -87,12 +87,12 @@ class RestClient(object):
                 response = client.put(requestURL, payload)
         """
         if not self.token:
-            elog.logging.error('token not found')
+            elog.error('token not found')
             return None
 
         payload = json.dumps(payload)
-        elog.logging.debug('URL = %s' % url)
-        elog.logging.debug('Payload = %s' % payload)
+        elog.debug('URL = %s' % url)
+        elog.debug('Payload = %s' % payload)
         return requests.put(url=url, headers=self.headers,
                             data=payload, timeout=timeout)
 
@@ -121,12 +121,12 @@ class RestClient(object):
                 response = client.post(requestURL, payload)
         """
         if not self.token:
-            elog.logging.error('token not found')
+            elog.error('token not found')
             return None
 
         payload = json.dumps(payload)
-        elog.logging.debug('URL = %s' % url)
-        elog.logging.debug('Payload = %s' % payload)
+        elog.debug('URL = %s' % url)
+        elog.debug('Payload = %s' % payload)
         return requests.post(url=url, headers=self.headers,
                              data=payload, timeout=timeout)
 
@@ -155,12 +155,12 @@ class RestClient(object):
                 response = client.patch(requestURL, payload)
         """
         if not self.token:
-            elog.logging.error('token not found')
+            elog.error('token not found')
             return None
 
         payload = json.dumps(payload)
-        elog.logging.debug('URL = %s' % url)
-        elog.logging.debug('Payload = %s' % payload)
+        elog.debug('URL = %s' % url)
+        elog.debug('Payload = %s' % payload)
         return requests.patch(url=url, headers=self.headers,
                              data=payload, timeout=timeout)
 
@@ -183,10 +183,10 @@ class RestClient(object):
                 response = client.delete(requestURL)
         """
         if not self.token:
-            elog.logging.error('token not found')
+            elog.error('token not found')
             return None
 
-        elog.logging.debug('URL = %s' % url)
+        elog.debug('URL = %s' % url)
         return requests.delete(url=url, headers=self.headers,
                               timeout=timeout)
 
@@ -209,11 +209,11 @@ class RestClient(object):
                 response = client.delete(requestURL)
         """
         if not self.token:
-            elog.logging.error('token not found')
+            elog.error('token not found')
             return None
 
         payload = json.dumps(payload)
-        elog.logging.debug('URL = %s' % url)
+        elog.debug('URL = %s' % url)
         return requests.delete(url=url, headers=self.headers,
                               data=payload, timeout=timeout)
 

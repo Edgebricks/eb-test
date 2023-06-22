@@ -8,7 +8,7 @@
 import json
 
 from ebapi.common import utils as eutil
-from ebapi.common import logger as elog
+from ebapi.common.logger import elog
 from ebapi.common.rest import RestClient
 from ebapi.lib.keystone import Token
 
@@ -34,9 +34,9 @@ class VMs(NovaBase):
     def getAllVMs(self):
         response = self.client.get(self.vmsURL + '/' + self.projectID + '/vms')
         if not response.ok:
-            elog.logging.error('failed to get all VMs: %s'
+            elog.error('failed to get all VMs: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content = json.loads(response.content)
@@ -54,7 +54,7 @@ class VMs(NovaBase):
         requestURL = self.novaURL + '/os-floating-ips'
         response   = self.client.get(requestURL)
         if not response.ok:
-            elog.logging.error('failed fetching VM details for %s: %s'
+            elog.error('failed fetching VM details for %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
             return None
@@ -65,14 +65,14 @@ class VMs(NovaBase):
             if instanceID == vmID:
                 return floatingIP['ip']
 
-        elog.logging.error('no floating IP assigned to %s' % eutil.bcolor(vmID))
+        elog.error('no floating IP assigned to %s' % eutil.bcolor(vmID))
         return None
 
     def getVMIDFromFloatingIP(self, fip):
         requestURL = self.novaURL + '/os-floating-ips'
         response   = self.client.get(requestURL)
         if not response.ok:
-            elog.logging.error('failed fetching VM details for %s: %s'
+            elog.error('failed fetching VM details for %s: %s'
                        % (eutil.bcolor(fip),
                           eutil.rcolor(response.status_code)))
             return None
@@ -83,16 +83,16 @@ class VMs(NovaBase):
             if ip == fip:
                 return floatingIP['instance_id']
 
-        elog.logging.error('no VM assigned with floatingIP %s' % eutil.bcolor(fip))
+        elog.error('no VM assigned with floatingIP %s' % eutil.bcolor(fip))
         return None
 
     def getMacAddrFromIP(self, vmID, ipAddr):
         response = self.getVM(vmID)
         if not response.ok:
-            elog.logging.error('fetching vm details for %s: %s'
+            elog.error('fetching vm details for %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content = json.loads(response.content)
@@ -101,16 +101,16 @@ class VMs(NovaBase):
                 if element['Addr'] == ipAddr:
                     return element['OS-EXT-IPS-MAC:mac_addr']
 
-        elog.logging.error('no mac address found for %s' % eutil.bcolor(ipAddr))
+        elog.error('no mac address found for %s' % eutil.bcolor(ipAddr))
         return None
 
     def getVolumesAttached(self, vmID):
         response = self.getVM(vmID)
         if not response.ok:
-            elog.logging.error('fetching VM details for %s: %s'
+            elog.error('fetching VM details for %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content  = json.loads(response.content)
@@ -123,10 +123,10 @@ class VMs(NovaBase):
     def getStatus(self, vmID):
         response = self.getVM(vmID)
         if not response.ok:
-            elog.logging.error('fetching VM details for %s: %s'
+            elog.error('fetching VM details for %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content  = json.loads(response.content)
@@ -135,10 +135,10 @@ class VMs(NovaBase):
     def getHost(self, vmID):
         response = self.getVM(vmID)
         if not response.ok:
-            elog.logging.error('fetching VM details for %s: %s'
+            elog.error('fetching VM details for %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content  = json.loads(response.content)
@@ -207,13 +207,13 @@ class VMs(NovaBase):
         }
         response   = self.client.post(requestURL, payload)
         if not response.ok:
-            elog.logging.error('creating vm %s: %s'
+            elog.error('creating vm %s: %s'
                        % (eutil.bcolor(vmName),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('creating vm %s: %s OK'
+        elog.info('creating vm %s: %s OK'
                   % (eutil.bcolor(vmName),
                      eutil.gcolor(response.status_code)))
         return True
@@ -222,13 +222,13 @@ class VMs(NovaBase):
         requestURL = self.vmsURL + '/' + self.projectID + '/vm/' + vmID
         response   = self.client.delete(requestURL)
         if not response.ok:
-            elog.logging.error('deleting vm %s: %s'
+            elog.error('deleting vm %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('deleting vm %s: %s OK'
+        elog.info('deleting vm %s: %s OK'
                   % (eutil.bcolor(vmID),
                      eutil.gcolor(response.status_code)))
         return True
@@ -238,13 +238,13 @@ class VMs(NovaBase):
         payload    = {"suspend": ""}
         response   = self.client.post(requestURL, payload)
         if not response.ok:
-            elog.logging.error('suspending vm %s: %s'
+            elog.error('suspending vm %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('suspending vm %s: %s OK'
+        elog.info('suspending vm %s: %s OK'
                   % (eutil.bcolor(vmID),
                      eutil.gcolor(response.status_code)))
         return True
@@ -254,13 +254,13 @@ class VMs(NovaBase):
         payload    = {"resume": ""}
         response   = self.client.post(requestURL, payload)
         if not response.ok:
-            elog.logging.error('resuming vm %s: %s'
+            elog.error('resuming vm %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('resuming vm %s: %s OK'
+        elog.info('resuming vm %s: %s OK'
                   % (eutil.bcolor(vmID),
                      eutil.gcolor(response.status_code)))
         return True
@@ -270,13 +270,13 @@ class VMs(NovaBase):
         payload    = {"reboot":{"type":"SOFT"}}
         response   = self.client.post(requestURL, payload)
         if not response.ok:
-            elog.logging.error('reboot vm %s: %s'
+            elog.error('reboot vm %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('reboot vm %s: %s OK'
+        elog.info('reboot vm %s: %s OK'
                   % (eutil.bcolor(vmID),
                      eutil.gcolor(response.status_code)))
         return True
@@ -286,13 +286,13 @@ class VMs(NovaBase):
         payload    = {"os-stop": ""}
         response   = self.client.post(requestURL, payload)
         if not response.ok:
-            elog.logging.error('poweroff vm %s: %s'
+            elog.error('poweroff vm %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('poweroff vm %s: %s OK'
+        elog.info('poweroff vm %s: %s OK'
                   % (eutil.bcolor(vmID),
                      eutil.gcolor(response.status_code)))
         return True
@@ -302,13 +302,13 @@ class VMs(NovaBase):
         payload    = {"os-start": ""}
         response   = self.client.post(requestURL, payload)
         if not response.ok:
-            elog.logging.error('poweron vm %s: %s'
+            elog.error('poweron vm %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('poweron vm %s: %s OK'
+        elog.info('poweron vm %s: %s OK'
                   % (eutil.bcolor(vmID),
                      eutil.gcolor(response.status_code)))
         return True
@@ -324,13 +324,13 @@ class VMs(NovaBase):
         }
         response = self.client.post(requestURL, payload)
         if not response.ok:
-            elog.logging.error('migrate vm %s: %s'
+            elog.error('migrate vm %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('migrate vm %s: %s OK'
+        elog.info('migrate vm %s: %s OK'
                   % (eutil.bcolor(vmID),
                      eutil.gcolor(response.status_code)))
         return True
@@ -340,10 +340,10 @@ class VMs(NovaBase):
         payload    = {"os-getVNCConsole": {"type": "novnc"}}
         response   = self.client.post(requestURL, payload)
         if not response.ok:
-            elog.logging.error('failed getting console for VM %s: %s'
+            elog.error('failed getting console for VM %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content = json.loads(response.content)
@@ -353,10 +353,10 @@ class VMs(NovaBase):
         requestURL = self.serversURL + '/' + vmID + '/os-interface'
         response   = self.client.get(requestURL)
         if not response.ok:
-            elog.logging.error('failed getting os-interface info for VM %s: %s'
+            elog.error('failed getting os-interface info for VM %s: %s'
                        % (eutil.bcolor(vmID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         return response
@@ -387,9 +387,9 @@ class Flavors(NovaBase):
     def getBestMatchingFlavor(self, numCPU, memMB):
         response = self.getFlavorsDetail()
         if not response.ok:
-            elog.logging.error('fetching flavor details failed: %s'
+            elog.error('fetching flavor details failed: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         dflavor = {}

@@ -13,7 +13,7 @@ The test configuration values can obtained from an existing cloud using `inspect
 Example::
 
     [configs]
-    apiurl = http://vpn.edgebricks.in:11000
+    apiurl = https://console.staging.edgebricks.com
     acctid = b10e48c7-54a1-493e-9ef1-231af924f1c6
     clusterid = cb7fb189-f0b9-41cc-8622-d9c00e2efb1c
     projectid = 0d262dfb843b4757958a7f16d680fcb8

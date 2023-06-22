@@ -13,7 +13,7 @@ from ebapi.common import utils as eutil
 from ebapi.common.commands import RemoteMachine
 from ebapi.common.config import ConfigParser
 from ebapi.common.rest import RestClient
-from ebapi.common import logger as elog
+from ebapi.common.logger import elog
 from ebapi.lib import keystone
 from ebapi.lib import nova
 
@@ -43,7 +43,7 @@ def setup_test(request):
 
     for key, value in testParams.items():
         if not value:
-            elog.logging.error('%s not set' % key)
+            elog.error('%s not set' % key)
             notset = True
 
     if notset:
@@ -54,17 +54,17 @@ def test_privateAccess():
     serverObj = nova.Servers(projectID)
     servers   = serverObj.getAllServers()
     assert servers
-    elog.logging.info('list of VMS: %s'
+    elog.info('list of VMS: %s'
               % eutil.bcolor(json.dumps(servers, sort_keys=True, indent=4)))
     serverID  = servers.keys().pop()
     vncURL    = serverObj.getServerConsole(serverID)
     assert vncURL
-    elog.logging.info('server console URL: %s' % eutil.bcolor(vncURL))
+    elog.info('server console URL: %s' % eutil.bcolor(vncURL))
 
     consoleURL = urlparse(vncURL)
     assert consoleURL.port     == 26000
     assert consoleURL.hostname == nginxIP
-    elog.logging.info('console URL has correct nginxIP and publicPort number')
+    elog.info('console URL has correct nginxIP and publicPort number')
 
 
 def test_publicAccess():
@@ -94,12 +94,12 @@ def test_publicAccess():
     client   = RestClient(token)
     response = client.put(vncURL, payload, timeout=60)
     if not response.ok:
-        elog.logging.error('failed to setup public VNC access: %s'
+        elog.error('failed to setup public VNC access: %s'
                    % eutil.rcolor(response.status_code))
-        elog.logging.error(response.text)
+        elog.error(response.text)
         assert False
 
-    elog.logging.info('setting up public vnc access succeeded')
+    elog.info('setting up public vnc access succeeded')
 
     rc, out = firewall.sudo('ip route show | grep default')
     assert rc == 0
@@ -130,14 +130,14 @@ def test_publicAccess():
     serverObj = nova.Servers(projectID)
     servers   = serverObj.getAllServers()
     assert servers
-    elog.logging.info('list of VMS: %s'
+    elog.info('list of VMS: %s'
               % eutil.bcolor(json.dumps(servers, sort_keys=True, indent=4)))
     serverID  = servers.keys().pop()
     vncURL    = serverObj.getServerConsole(serverID)
     assert vncURL
-    elog.logging.info('server console URL: %s' % eutil.bcolor(vncURL))
+    elog.info('server console URL: %s' % eutil.bcolor(vncURL))
 
     consoleURL = urlparse(vncURL)
     assert consoleURL.port     == vncPublicPort
     assert consoleURL.hostname == vncPublicIP
-    elog.logging.info('console URL has correct publicIP and publicPort number')
+    elog.info('console URL has correct publicIP and publicPort number')

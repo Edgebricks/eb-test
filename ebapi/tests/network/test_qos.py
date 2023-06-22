@@ -11,7 +11,7 @@ import time
 from ebapi.common import utils as eutil
 from ebapi.common.commands import RemoteMachine
 from ebapi.common.config import ConfigParser
-from ebapi.common import logger as elog
+from ebapi.common.logger import elog
 from ebapi.lib import nova
 from ebapi.lib import neutron
 
@@ -95,7 +95,7 @@ def setup_test(request):
 
     for key, value in testParams.items():
         if not value:
-            elog.logging.error('%s not set' % key)
+            elog.error('%s not set' % key)
             notset = True
 
     if notset:
@@ -120,7 +120,7 @@ def setup_test(request):
     if rc != 0:
         pytest.skip('netstat output failed to show iperf server port 5201')
 
-    elog.logging.info('iperf3 running on server %s' % eutil.bcolor(iperfServerIP))
+    elog.info('iperf3 running on server %s' % eutil.bcolor(iperfServerIP))
 
     def cleanup():
         iperfServer.sudo('killall iperf3; rm server.out', logging=False)
@@ -131,12 +131,12 @@ def setup_test(request):
 def getBandwidth(output):
     match = re.findall('.*receiver', output, re.M)
     if not match:
-        elog.logging.error('no receiver information in server log')
+        elog.error('no receiver information in server log')
         return None
     sender = match.pop()
     match  = re.findall(r'(\S+\s.bits/sec)', sender, re.M)
     if not match:
-        elog.logging.error('no bandwidth information in server log')
+        elog.error('no bandwidth information in server log')
         return None
 
     return match.pop()
@@ -147,7 +147,7 @@ def test_bandwidth(setup_test, maxBurst, maxBandwidth):
     serverObj = nova.Servers(projectID)
     macAddr   = serverObj.getMacAddrFromIP(selectedVM, iperfClientIP)
     assert macAddr
-    elog.logging.info('macAddr of VM %s with FloatingIP %s = %s'
+    elog.info('macAddr of VM %s with FloatingIP %s = %s'
                % (eutil.bcolor(selectedVM),
                   eutil.bcolor(iperfClientIP),
                   eutil.bcolor(macAddr)))
@@ -155,49 +155,49 @@ def test_bandwidth(setup_test, maxBurst, maxBandwidth):
     portObj = neutron.Ports(projectID)
     portID  = portObj.getPortIDByMacAddress(macAddr)
     assert portID
-    elog.logging.info('portID of VM %s = %s'
+    elog.info('portID of VM %s = %s'
                % (eutil.bcolor(selectedVM),
                   eutil.bcolor(portID)))
 
-    elog.logging.info('getting bandwidth without any QoS Policy')
+    elog.info('getting bandwidth without any QoS Policy')
     rc, output = iperfClient.run(iperfClntCmd)
     assert rc == 0
     assert output
 
     bandwidth = getBandwidth(output)
     assert bandwidth
-    elog.logging.info('bandwidth without any QoS Policy = %s'
+    elog.info('bandwidth without any QoS Policy = %s'
                % eutil.bcolor(bandwidth))
 
     qosObj   = neutron.QoS()
     name     = maxBandwidth + 'kbps-limit'
     policyID = qosObj.createPolicy(name)
     assert policyID
-    elog.logging.info('QoS policyID = %s'
+    elog.info('QoS policyID = %s'
                % eutil.bcolor(policyID))
 
     assert qosObj.createBandwidthLimitRules(policyID, maxBurst, maxBandwidth)
-    elog.logging.info('successfully created bandwidth limit rules')
+    elog.info('successfully created bandwidth limit rules')
 
     assert portObj.attachQoSPolicy(portID, policyID)
-    elog.logging.info('successfully attached QoS policy %s to port %s'
+    elog.info('successfully attached QoS policy %s to port %s'
                % (eutil.bcolor(policyID),
                   eutil.bcolor(portID)))
 
     time.sleep(2)
-    elog.logging.info('getting bandwidth with QoS Policy')
+    elog.info('getting bandwidth with QoS Policy')
     rc, output = iperfClient.run(iperfClntCmd)
     assert rc == 0
 
     bandwidth = getBandwidth(output)
     assert bandwidth
-    elog.logging.info('bandwidth with QoS Policy = %s'
+    elog.info('bandwidth with QoS Policy = %s'
                % eutil.bcolor(bandwidth))
 
     assert portObj.detachQoSPolicy(portID)
-    elog.logging.info('successfully detached QoS policy %s from port %s'
+    elog.info('successfully detached QoS policy %s from port %s'
                % (eutil.bcolor(policyID),
                   eutil.bcolor(portID)))
 
     assert qosObj.deletePolicy(policyID)
-    elog.logging.info('successfully deleted QoS policy %s' % eutil.bcolor(policyID))
+    elog.info('successfully deleted QoS policy %s' % eutil.bcolor(policyID))

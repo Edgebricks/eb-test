@@ -9,7 +9,7 @@
 import json
 
 from ebapi.common import utils as eutil
-from ebapi.common import logger as elog
+from ebapi.common.logger import elog
 from ebapi.common.rest import RestClient
 from ebapi.lib.keystone import Token
 
@@ -77,12 +77,12 @@ class Images(GlanceBase):
         }
         response = self.client.post(requestURL, payload)
         if not response.ok:
-            elog.logging.error('failed to create image: %s'
+            elog.error('failed to create image: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('image %s created successfully: %s'
+        elog.info('image %s created successfully: %s'
                   % (eutil.bcolor(imageName),
                      eutil.bcolor(response.status_code)))
         return True
@@ -104,12 +104,12 @@ class Images(GlanceBase):
         requestURL = self.imagesURL + '/' + imageID
         response = self.client.delete(requestURL)
         if not response.ok:
-            elog.logging.error('failed to delete image: %s'
+            elog.error('failed to delete image: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('deleting image %s: %s OK'
+        elog.info('deleting image %s: %s OK'
                   % (eutil.bcolor(imageID),
                      eutil.gcolor(response.status_code)))
         return True

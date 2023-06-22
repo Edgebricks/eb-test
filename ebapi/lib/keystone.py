@@ -10,7 +10,7 @@ import requests
 
 from ebapi.common import utils as eutil
 from ebapi.common.config import ConfigParser
-from ebapi.common import logger as elog
+from ebapi.common.logger import elog
 from ebapi.common.rest import RestClient
 
 
@@ -165,9 +165,9 @@ class Token(KeystoneBase):
         headers  = {"Accept": "application/json"}
         response = requests.post(self.tokenURL, headers=headers, data=payload)
         if not response.ok:
-            elog.logging.error('failed to fetch token: %s'
+            elog.error('failed to fetch token: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         return response.headers['X-Subject-Token']
@@ -186,9 +186,9 @@ class Roles(Token):
     def getRoles(self):
         response = self.client.get(self.rolesURL)
         if not response.ok:
-            elog.logging.error('failed to get roles: %s'
+            elog.error('failed to get roles: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         return json.loads(response.content)
@@ -200,14 +200,14 @@ class Roles(Token):
         requestURL = self.keystoneURL + domainURL + userURL + roleURL
         response   = self.client.put(requestURL)
         if not response.ok:
-            elog.logging.error('failed to assign role %s to user %s in domain %s: %s'
+            elog.error('failed to assign role %s to user %s in domain %s: %s'
                        % (eutil.bcolor(roleID), eutil.bcolor(userID),
                           eutil.bcolor(domainID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('assigned role %s to user %s in domain %s'
+        elog.info('assigned role %s to user %s in domain %s'
                   % (eutil.bcolor(roleID), eutil.bcolor(userID),
                      eutil.bcolor(domainID)))
         return True
@@ -233,17 +233,17 @@ class Users(Token):
                 "domain_id": domainID
             }
         }
-        elog.logging.info('creating user %s' % eutil.bcolor(userName))
+        elog.info('creating user %s' % eutil.bcolor(userName))
         response = self.client.post(self.usersURL, payload)
         if not response.ok:
-            elog.logging.error('failed to create user: %s'
+            elog.error('failed to create user: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content = json.loads(response.content)
         userID  = content['user']['id']
-        elog.logging.info('user %s created successfully: %s'
+        elog.info('user %s created successfully: %s'
                   % (eutil.bcolor(userName),
                      eutil.bcolor(userID)))
         return userID
@@ -258,24 +258,24 @@ class Users(Token):
         requestURL = self.getURL(domainID)
         response   = self.client.get(requestURL)
         if not response.ok:
-            elog.logging.error('failed to get users from domain %s: %s'
+            elog.error('failed to get users from domain %s: %s'
                        % (eutil.bcolor(domainID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         return json.loads(response.content)
 
     def deleteUser(self, userID):
-        elog.logging.info('deleting user %s' % eutil.bcolor(userID))
+        elog.info('deleting user %s' % eutil.bcolor(userID))
         response = self.client.delete(self.domainURL+ '/' + userID)
         if not response.ok:
-            elog.logging.error('failed to delete user: %s'
+            elog.error('failed to delete user: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('deleting user %s: %s OK'
+        elog.info('deleting user %s: %s OK'
                   % (eutil.bcolor(userID),
                      eutil.gcolor(response.status_code)))
         return True
@@ -299,19 +299,19 @@ class Domains(Token):
                 "description" : description,
             }
         }
-        elog.logging.info('creating domain %s' % eutil.bcolor(domainName))
+        elog.info('creating domain %s' % eutil.bcolor(domainName))
         response = self.client.post(self.domainURL, payload)
         if not response.ok:
-            elog.logging.error('failed to create domain: %s'
+            elog.error('failed to create domain: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         # while creating a new domain EB automatically assigns admin user
         # with admin role to the domain
         content  = json.loads(response.content)
         domainID = content['domain']['id']
-        elog.logging.info('domain %s created successfully: %s'
+        elog.info('domain %s created successfully: %s'
                   % (eutil.bcolor(domainName),
                      eutil.bcolor(domainID)))
         return domainID
@@ -323,15 +323,15 @@ class Domains(Token):
                 "enabled"     : enabled
             }
         }
-        elog.logging.info('Updating domain %s' % eutil.bcolor(domainID))
+        elog.info('Updating domain %s' % eutil.bcolor(domainID))
         response = self.client.patch(self.domainURL+ '/' + domainID, payload)
         if not response.ok:
-            elog.logging.error('failed to update domain: %s'
+            elog.error('failed to update domain: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('updating domain %s: %s OK'
+        elog.info('updating domain %s: %s OK'
                   % (eutil.bcolor(domainID),
                      eutil.gcolor(response.status_code)))
         return True
@@ -369,29 +369,29 @@ class Domains(Token):
                 "selectedTemplate": "Custom"
             }
         }
-        elog.logging.info('Updating quota of domain %s' % eutil.bcolor(domainID))
+        elog.info('Updating quota of domain %s' % eutil.bcolor(domainID))
         response = self.client.put(self.clusterURL+ '/domains/' + domainID + '/quotas', payload)
         if not response.ok:
-            elog.logging.error('failed to update quota of domain: %s'
+            elog.error('failed to update quota of domain: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('updating quota of domain %s: %s OK'
+        elog.info('updating quota of domain %s: %s OK'
                   % (eutil.bcolor(domainID),
                      eutil.gcolor(response.status_code)))
         return True
 
     def deleteDomain(self, domainID):
-        elog.logging.info('deleting domain %s' % eutil.bcolor(domainID))
+        elog.info('deleting domain %s' % eutil.bcolor(domainID))
         response = self.client.delete(self.domainURL+ '/' + domainID)
         if not response.ok:
-            elog.logging.error('failed to delete domain: %s'
+            elog.error('failed to delete domain: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('deleting domain %s: %s OK'
+        elog.info('deleting domain %s: %s OK'
                   % (eutil.bcolor(domainID),
                      eutil.gcolor(response.status_code)))
         return True
@@ -399,10 +399,10 @@ class Domains(Token):
     def getDomain(self, domainID=''):
         response   = self.client.get(self.domainURL+ '/' + domainID)
         if not response.ok:
-            elog.logging.error('failed to get domain detail %s: %s'
+            elog.error('failed to get domain detail %s: %s'
                        % (eutil.bcolor(domainID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         return json.loads(response.content)

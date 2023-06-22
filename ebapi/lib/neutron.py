@@ -8,7 +8,7 @@
 import json
 
 from ebapi.common import utils as eutil
-from ebapi.common import logger as elog
+from ebapi.common.logger import elog
 from ebapi.common.rest import RestClient
 from ebapi.lib.keystone import Token
 
@@ -54,7 +54,7 @@ class Networks(NeutronBase):
     def getInternalNetworks(self):
         response = self.getNetworksByFilter('router:external=False')
         if not response.ok:
-            elog.logging.error('failed fetching internal networks: %s'
+            elog.error('failed fetching internal networks: %s'
                        % eutil.rcolor(response.status_code))
             return None
 
@@ -63,7 +63,7 @@ class Networks(NeutronBase):
     def getExternalNetworks(self):
         response = self.getNetworksByFilter('router:external=True')
         if not response.ok:
-            elog.logging.error('failed fetching external networks: %s'
+            elog.error('failed fetching external networks: %s'
                        % eutil.rcolor(response.status_code))
             return None
 
@@ -96,17 +96,17 @@ class Networks(NeutronBase):
             "visibility": "private",
             "project_id": self.projectID
         }
-        elog.logging.info('creating internal private network %s' % eutil.bcolor(netName))
+        elog.info('creating internal private network %s' % eutil.bcolor(netName))
         response = self.client.post(self.clusterURL + '/networks', payload)
         if not response.ok:
-            elog.logging.error('failed to create network: %s'
+            elog.error('failed to create network: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content  = json.loads(response.content)
         networkID = content['id']
-        elog.logging.info('network %s created successfully: %s'
+        elog.info('network %s created successfully: %s'
                   % (eutil.bcolor(netName),
                      eutil.bcolor(networkID)))
         return networkID
@@ -115,13 +115,13 @@ class Networks(NeutronBase):
         requestURL = self.clusterURL + '/networks/' + networkID
         response   = self.client.deleteWithPayload(requestURL)
         if not response.ok:
-            elog.logging.error('deleting network %s failed: %s'
+            elog.error('deleting network %s failed: %s'
                        % (eutil.rcolor(networkID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
-        elog.logging.info('deleting network %s success: %s'
+        elog.info('deleting network %s success: %s'
                   % (eutil.bcolor(networkID),
                      eutil.gcolor(response.status_code)))
         return True
@@ -133,7 +133,7 @@ class Networks(NeutronBase):
     def getNetworkByName(self, networkID):
         response = self.getNetwork(networkID)
         if not response.ok:
-            elog.logging.error('failed fetching network %s: %s'
+            elog.error('failed fetching network %s: %s'
                        % (eutil.bcolor(networkID),
                           eutil.rcolor(response.status_code)))
             return None
@@ -173,7 +173,7 @@ class Ports(NeutronBase):
         filterStr = 'mac_address=' + macAddress
         response  = self.getPortsByFilter(filterStr)
         if not response.ok:
-            elog.logging.error('failed to get fetch ports: %s'
+            elog.error('failed to get fetch ports: %s'
                        % eutil.rcolor(response.status_code))
             return None
 
@@ -198,18 +198,18 @@ class Ports(NeutronBase):
 
         response = self.client.put(requestURL, payload)
         if not response.ok:
-            elog.logging.error('failed to attach QoS policy %s to port %s: %s'
+            elog.error('failed to attach QoS policy %s to port %s: %s'
                        % (eutil.bcolor(policyID),
                           eutil.bcolor(portID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
         content     = json.loads(response.content)
         qosPolicyID = content['port']['qos_policy_id']
 
         if policyID != qosPolicyID:
-            elog.logging.error('mismatch in qos_policy_id: given = %s: set = %s'
+            elog.error('mismatch in qos_policy_id: given = %s: set = %s'
                        % (eutil.bcolor(policyID),
                           eutil.bcolor(qosPolicyID)))
             return False
@@ -226,16 +226,16 @@ class Ports(NeutronBase):
 
         response = self.client.put(requestURL, payload)
         if not response.ok:
-            elog.logging.error('failed to detach QoS policy from port %s: %s'
+            elog.error('failed to detach QoS policy from port %s: %s'
                        % (eutil.bcolor(portID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
         content     = json.loads(response.content)
         qosPolicyID = content['port']['qos_policy_id']
         if qosPolicyID:
-            elog.logging.error('qos_policy_id is still set. should be empty')
+            elog.error('qos_policy_id is still set. should be empty')
             return False
 
         return True
@@ -263,7 +263,7 @@ class Routers(NeutronBase):
     def getAllRouters(self):
         response = self.getRoutersByFilter()
         if not response.ok:
-            elog.logging.error('failed to get all routers for project %s: %s'
+            elog.error('failed to get all routers for project %s: %s'
                        % (eutil.bcolor(self.projectID),
                           eutil.rcolor(response.status_code)))
             return None
@@ -343,9 +343,9 @@ class QoS(NeutronBase):
 
         response = self.client.post(self.policyURL, payload)
         if not response.ok:
-            elog.logging.error('failed to create QoS policy: %s'
+            elog.error('failed to create QoS policy: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content  = json.loads(response.content)
@@ -361,9 +361,9 @@ class QoS(NeutronBase):
         }
         response = self.client.post(requestURL, payload)
         if not response.ok:
-            elog.logging.error('failed to create bandwidth limit rule: %s'
+            elog.error('failed to create bandwidth limit rule: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
         return True
@@ -372,7 +372,7 @@ class QoS(NeutronBase):
         requestURL = self.policyURL + '/' + policyID
         response   = self.client.delete(requestURL)
         if not response.ok:
-            elog.logging.error('failed to delete QoS policy: %s'
+            elog.error('failed to delete QoS policy: %s'
                        % eutil.rcolor(response.status_code))
             return False
 

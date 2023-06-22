@@ -9,7 +9,7 @@ from configparser import ConfigParser as CP
 import os
 
 from ebapi.common import utils as eutil
-from ebapi.common import logger as elog
+from ebapi.common.logger import elog
 
 
 class ConfigParser(object):
@@ -46,7 +46,7 @@ class ConfigParser(object):
                 if fname == 'test.conf':
                     return os.path.join(root, fname)
 
-        elog.logging.error('test.conf not found')
+        elog.error('test.conf not found')
         return None
 
     def getConfig(self, config):
@@ -72,13 +72,13 @@ class ConfigParser(object):
         try:
             value = self.parser.get(self.section, config)
         except Exception as e:
-            elog.logging.error('%s: no such config in test.conf'
+            elog.error('%s: no such config in test.conf'
                        % eutil.rcolor(config))
-            elog.logging.error(e.message)
+            elog.error(e.message)
             raise
 
         if not value:
-            elog.logging.debug('%s: config %s in test.conf'
+            elog.debug('%s: config %s in test.conf'
                        % (eutil.bcolor(config), (eutil.rcolor('not set'))))
         return value
 
@@ -104,7 +104,7 @@ class ConfigParser(object):
         try:
             self.parser.set(self.section, config, value)
         except:
-            elog.logging.error('failed to set config %s = %s'
+            elog.error('failed to set config %s = %s'
                        % (config, value))
             return False
 
@@ -130,7 +130,7 @@ class ConfigParser(object):
         """
         self.parser.read(self.fname)
         if not self.parser.remove_option(self.section, config):
-            elog.logging.error('failed to delete config %s' % eutil.rcolor(config))
+            elog.error('failed to delete config %s' % eutil.rcolor(config))
             return False
 
         with open(self.fname, 'w') as f:

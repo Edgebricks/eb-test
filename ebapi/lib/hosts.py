@@ -8,7 +8,7 @@
 import json
 
 from ebapi.common import utils as eutil
-from ebapi.common import logger as elog
+from ebapi.common.logger import elog
 from ebapi.common.rest import RestClient
 from ebapi.lib.keystone import Token
 
@@ -31,9 +31,9 @@ class Hosts(HostsBase):
         requestURL = self.apiURL + '/v1/hosts'
         response   = self.client.get(requestURL)
         if not response.ok:
-            elog.logging.error('failed to get list of hosts: %s'
+            elog.error('failed to get list of hosts: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         hosts   = []
@@ -47,10 +47,10 @@ class Hosts(HostsBase):
         requestURL = self.apiURL + '/v1/hosts/' + hostID
         response   = self.client.get(requestURL)
         if not response.ok:
-            elog.logging.error('failed to get details for host %s : %s'
+            elog.error('failed to get details for host %s : %s'
                        % (eutil.bcolor(hostID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content = json.loads(response.content)
@@ -68,10 +68,10 @@ class Hosts(HostsBase):
         requestURL = self.apiURL + '/v1/hosts/' + hostID
         response   = self.client.get(requestURL)
         if not response.ok:
-            elog.logging.error('failed to get details for host %s : %s'
+            elog.error('failed to get details for host %s : %s'
                        % (eutil.bcolor(hostID),
                           eutil.rcolor(response.status_code)))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content = json.loads(response.content)
@@ -81,9 +81,9 @@ class Hosts(HostsBase):
         requestURL = self.hostsURL + '/' + hostID + '/dependent_vms'
         response   = self.client.get(requestURL)
         if not response.ok:
-            elog.logging.error('failed to get dependent VMS: %s'
+            elog.error('failed to get dependent VMS: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content = json.loads(response.content)
@@ -101,9 +101,9 @@ class Hosts(HostsBase):
         requestURL = self.hostsURL + '/' + hostID + '/status'
         response   = self.client.get(requestURL)
         if not response.ok:
-            elog.logging.error('failed to get host status: %s'
+            elog.error('failed to get host status: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return None
 
         content  = json.loads(response.content)
@@ -115,9 +115,9 @@ class Hosts(HostsBase):
         requestURL = self.hostsURL + '/' + hostID + '/power_off'
         response   = self.client.put(requestURL)
         if not response.ok:
-            elog.logging.error('failed to power off host: %s'
+            elog.error('failed to power off host: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
         return True
@@ -126,9 +126,9 @@ class Hosts(HostsBase):
         requestURL = self.hostsURL + '/' + hostID + '/power_on'
         response   = self.client.put(requestURL)
         if not response.ok:
-            elog.logging.error('failed to power on host: %s'
+            elog.error('failed to power on host: %s'
                        % eutil.rcolor(response.status_code))
-            elog.logging.error(response.text)
+            elog.error(response.text)
             return False
 
         return True
