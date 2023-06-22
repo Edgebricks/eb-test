@@ -292,12 +292,11 @@ class Domains(Token):
         self.client    = RestClient(self.getToken())
         self.domainURL = self.keystoneURL + '/domains'
 
-    def createDomain(self, domainName, description = None, ldapset=False):
+    def createDomain(self, domainName, description = None):
         payload = {
             "domain": {
                 "name"        : domainName,
                 "description" : description,
-                "ldapSet"     : ldapset
             }
         }
         elog.logging.info('creating domain %s' % eutil.bcolor(domainName))

@@ -8,6 +8,8 @@ import os
 import pytest
 import requests
 
+from ebapi.common import logger as elog
+from ebapi.common import utils as eutil
 from ebapi.common.config import ConfigParser
 from ebapi.common.rest import RestClient
 from ebapi.lib.keystone import Token
@@ -86,7 +88,7 @@ def getReleaseVersion():
 def pytest_configure(config):
     """Provide additional environment details to pytest-html report"""
     # add environment details to the pytest-html plugin
-    config._metdata     = {}
+    config._metadata     = {}
     config._environment = {}
     # read values passed from the cli as parameters
     _apiURL             = config.getoption("--apiurl")
@@ -108,7 +110,7 @@ def pytest_configure(config):
         testConfig.setAcctID(_acctID)
     if _clusterID is not None:
         testConfig.setClusterID(_clusterID)
-    setup                 = testConfig.getConfig('setupName')
+    setup                 = testConfig.getConfig('setupname')
     sky, star             = getReleaseVersion()
     apiURL                = testConfig.getConfig('apiURL')
 

@@ -82,7 +82,7 @@ def customLogger():
     ch.setFormatter(formatter)
     # add ch to logger and set level to DEBUG
     logger.addHandler(ch)
-    logger.setLevel(logging.PASS)
+    logger.setLevel(logging.DEBUG)
     return logger
 
 elog = customLogger()

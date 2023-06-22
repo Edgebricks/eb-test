@@ -12,7 +12,8 @@ Install it by running::
 
     $ sudo apt install -y python3-pip python3-dev python3-setuptools apache2 -y
     $ pip3 install --upgrade pip
-    $ sudo apt-get install python3-sphinx sphinx-common libjs-sphinxdoc=1.8.5-7ubuntu3 sphinx_rtd_theme rst2pdf
+    $ sudo apt-get install python3-sphinx sphinx-common libjs-sphinxdoc
+    $ pip3 install sphinx_rtd_theme rst2pdf colorlog
 
 This will install pip and related packages on the target machine.
 

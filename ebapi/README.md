@@ -43,13 +43,17 @@ After running tests, to deactivate the virtual environment, run the following co
 
 Running Tests
 =============
-Run tests from ebapi directory::
+1. Copy test.conf.tmpl as test.conf
+2. Fill environment details in the default section
+3. Run tests
 
     python3 -m pytest --html=<file-name.html> <options> <path_to_test_dir_or_file>
 
 | command | description |
 | ------- | ----------- |
 | python3 -m pytest tests | To run all tests |
+| python3 -m pytest tests/bu | To run all test in a specific folder |
+| python3 -m pytest tests/bu/test_bu.py -k 'test_create_duplicate_domain_001' | To run a specific test |
 | python3 -m pytest --html=result.html tests | To save test run in result.html |
 | python3 -m pytest -s tests | To see entire test result in console |
 

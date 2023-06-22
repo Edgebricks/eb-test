@@ -16,38 +16,38 @@ class TestBu:
     testConfig       = ConfigParser()
     domainName       = testConfig.getDomainName()
 
-    def test_create_duplicate_domain_002(cls):
+    def test_create_duplicate_domain_001(cls):
 
         domainObj = Domains()
-        domainID = domainObj.createDomain(cls.domainName)
+        domainID = domainObj.createDomain(cls.domainName, description="created by ebtest")
         assert domainID
         cls.testConfig.setDomainID(domainID)
-        dupDomainID = domainObj.createDomain(cls.domainName)
+        dupDomainID = domainObj.createDomain(cls.domainName, description="created by ebtest")
         assert not dupDomainID
 
         assert domainObj.updateDomain(domainID)
         assert domainObj.deleteDomain(domainID)
 
-    def test_delete_nonexistant_domain_003(cls):
+    def test_delete_nonexistant_domain_002(cls):
 
         domainObj = Domains()
         domainID = cls.testConfig.getDomainID()
         assert not domainObj.updateDomain(domainID)
         assert not domainObj.deleteDomain(domainID)
 
-    @pytest.mark.parametrize("domainNames", ["autodomain1", "autodomain2", "autodomain3", "autodomain4"])
-    def test_create_delete_multiple_domains_004(cls, domainNames):
+    @pytest.mark.parametrize("domainNames", ["ebtestdomain1", "ebtestdomain2", "ebtestdomain3", "ebtestdomain4"])
+    def test_create_delete_multiple_domains_003(cls, domainNames):
 
         domainObj = Domains()
-        domainID = domainObj.createDomain(domainNames)
+        domainID = domainObj.createDomain(domainNames, description="created by ebtest")
         assert domainID
         assert domainObj.updateDomain(domainID)
         assert domainObj.deleteDomain(domainID)
 
-    def test_get_domain_005(cls):
+    def test_get_domain_004(cls):
 
         domainObj = Domains()
-        domainID = domainObj.createDomain(cls.domainName)
+        domainID = domainObj.createDomain(cls.domainName, description="created by ebtest")
         assert domainID
         content = domainObj.getDomain(domainID)
         assert content["domain"]["id"]
@@ -57,10 +57,10 @@ class TestBu:
         content = domainObj.getDomain(domainID)
         assert not content
 
-    def test_create_delete_domain_different_quota_006(cls):
+    def test_create_delete_domain_different_quota_005(cls):
 
         domainObj = Domains()
-        domainID = domainObj.createDomain(cls.domainName)
+        domainID = domainObj.createDomain(cls.domainName, description="created by ebtest")
         assert domainID
         assert domainObj.updateDomainQuota(domainID)
         assert domainObj.updateDomain(domainID)

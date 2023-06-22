@@ -122,7 +122,7 @@ class TestCreateDeleteBasic:
         imgID = imageObj.createCirrosImageByURL(imageName="Auto-Cirros-Image", netID=netID)
         sleep (35)
         imgDetails = imageObj.getImagesbyOwner(owner=TestCreateDeleteBasic.projID)
-        actualImageID = imgDetails['images'][0]['id']        
+        actualImageID = imgDetails['images'][0]['id']
         sleep (20)
         vmObj = VMs(TestCreateDeleteBasic.projID)
         vmObj.createVM(vmName = "AutoVM", flavorID = matchflavorID, networkID = netID, imageID = actualImageID)

@@ -7,9 +7,10 @@ ebapi/venv
 ebui/venv
 
 # test artifacts
-ebapi/test.conf
 ebapi/assets/
+ebapi/test.conf
 ebapi/test-result.html
+ebapi/.pytest_cache
 
 # pycache files
 **/__pycache__/
