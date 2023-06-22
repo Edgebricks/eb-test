@@ -1,0 +1,9 @@
+{
+  "buQuota": {
+             "businessUnitName" : "BU",
+             "username" : "user1",
+             "email" : "user1@email.com",
+             "password" : "test123",
+             "confirmpassword" : "test123"
+            }
+}

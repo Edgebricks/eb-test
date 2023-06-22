@@ -25,7 +25,7 @@ If not, download [get-pip.py](https://bootstrap.pypa.io/get-pip.py)
 
 Install it by running::
 
-    $ python get-pip.py
+    $ sudo apt install -y python3-pip
 
 This will install pip on the target machine.
 
@@ -36,7 +36,7 @@ Basic steps::
 
     1. git clone git@github.com:Edgebricks/eb-test.git -b master
     2. cd eb-test
-    3. pip install -r requirements.txt
+    3. python3 -m pip install -r requirements.txt
     4. export PYTHONDONTWRITEBYTECODE=1
 
 To deploy eb-test in an isolated/virtual environment without conflicts with existing envrionment::
@@ -46,7 +46,7 @@ To deploy eb-test in an isolated/virtual environment without conflicts with exis
     3. cd eb-test
     4. virtualenv venv
     5. source venv/bin/activate
-    6. pip install -r requirements.txt
+    6. python3 -m pip install -r requirements.txt
     7. export PYTHONDONTWRITEBYTECODE=1
 
 After running tests, to deactivate the virtual environment, run the following comand in venv::
@@ -60,15 +60,13 @@ Running Tests
 
 Run tests from eb-test directory::
 
-    pytest --html=<file-name.html> <options> <path_to_test_dir_or_file>
+    python3 -m pytest --html=<file-name.html> <options> <path_to_test_dir_or_file>
 
 | command | description |
 | ------- | ----------- |
-| pytest tests | To run all tests |
-| pytest -m platform25 | To run all platform 2.5 tests |
-| pytest -m cloud14 | To run all cloud14 tests |
-| pytest --html=result.html suites | To save test run in result.html |
-| pytest -s tests | To see entire test result in console |
+| python3 -m pytest tests | To run all tests |
+| python3 -m pytest --html=result.html suites | To save test run in result.html |
+| python3 -m pytest -s tests | To see entire test result in console |
 
 The --html option will save the test output in specified path in an html file.
 If this option is omitted then the test result will be stored as test-result.html.
@@ -84,4 +82,4 @@ Test results are available in 2 formats::
 
 console log can be obtained by using option '-s' with py.test::
 
-    pytest -s <option>
+    python3 -m pytest -s <option>

@@ -1,0 +1,9 @@
+{
+  "login" : {
+     "baseURL" : "http://trunk0-console.dev.zerostack.net/",
+     "customerid" : "DEV101APRIL23",
+     "businessunit" : "admin.local",
+     "username" : "admin1",
+     "password" : "test123"
+ }
+}

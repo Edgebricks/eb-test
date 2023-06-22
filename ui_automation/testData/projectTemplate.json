@@ -1,0 +1,7 @@
+{
+  "projectTemplate": {
+                       "projectName" : "project1",
+                       "projectTemplate" : "Large",
+                       "cidr" : "10.1.1.0/24"
+                      }
+}
