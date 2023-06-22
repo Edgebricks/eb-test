@@ -59,7 +59,7 @@ class RestClient(object):
             elog.error('token not found')
             return None
 
-        elog.debug('URL = %s' % url)
+        elog.debug('URL = %s, Method = GET' % url)
         return requests.get(url=url, headers=self.headers, timeout=timeout)
 
     def put(self, url, payload={}, timeout=30):
@@ -91,7 +91,7 @@ class RestClient(object):
             return None
 
         payload = json.dumps(payload)
-        elog.debug('URL = %s' % url)
+        elog.debug('URL = %s, Method = PUT' % url)
         elog.debug('Payload = %s' % payload)
         return requests.put(url=url, headers=self.headers,
                             data=payload, timeout=timeout)
@@ -125,7 +125,7 @@ class RestClient(object):
             return None
 
         payload = json.dumps(payload)
-        elog.debug('URL = %s' % url)
+        elog.debug('URL = %s, Method = POST' % url)
         elog.debug('Payload = %s' % payload)
         return requests.post(url=url, headers=self.headers,
                              data=payload, timeout=timeout)
@@ -159,7 +159,7 @@ class RestClient(object):
             return None
 
         payload = json.dumps(payload)
-        elog.debug('URL = %s' % url)
+        elog.debug('URL = %s, Method = PATCH' % url)
         elog.debug('Payload = %s' % payload)
         return requests.patch(url=url, headers=self.headers,
                              data=payload, timeout=timeout)
@@ -186,7 +186,7 @@ class RestClient(object):
             elog.error('token not found')
             return None
 
-        elog.debug('URL = %s' % url)
+        elog.debug('URL = %s, Method = DELETE' % url)
         return requests.delete(url=url, headers=self.headers,
                               timeout=timeout)
 
@@ -213,7 +213,7 @@ class RestClient(object):
             return None
 
         payload = json.dumps(payload)
-        elog.debug('URL = %s' % url)
+        elog.debug('URL = %s, Method = DELETE' % url)
         return requests.delete(url=url, headers=self.headers,
                               data=payload, timeout=timeout)
 

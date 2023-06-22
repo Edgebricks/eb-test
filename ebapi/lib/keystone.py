@@ -79,7 +79,7 @@ class Token(KeystoneBase):
             }
         }
         return payload
-    
+
     def getPayloadWithDomainScope(self):
         # return payload with domain scope
         payload = {

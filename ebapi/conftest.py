@@ -51,7 +51,9 @@ def getAcctAndClusterID():
     response = requests.get(url=url, headers=headers)
 
     if not response.ok:
-        elog.error('failed to query cluster details')
+        elog.error('failed to query cluster details: %s'
+                    % eutil.rcolor(response.status_code))
+        elog.error(response.text)
         return None, None
 
     data      = json.loads(response.content)
@@ -88,7 +90,9 @@ def getReleaseVersion():
     client   = RestClient(token)
     response = client.get(url)
     if not response.ok:
-        elog.error('failed to account version')
+        elog.error('failed to query account version: %s'
+                    % eutil.rcolor(response.status_code))
+        elog.error(response.text)
         return None, None
 
     data     = json.loads(response.content)
