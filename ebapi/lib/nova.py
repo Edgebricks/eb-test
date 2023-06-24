@@ -1,6 +1,5 @@
 #! /usr/bin/env python
-
-
+#
 # Author: ankit@edgebricks.com
 # (c) 2022 Edgebricks
 

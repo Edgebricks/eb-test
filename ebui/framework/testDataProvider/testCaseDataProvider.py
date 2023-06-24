@@ -1,7 +1,7 @@
 #! /usr/bin/env python
-
-# Author: prem@zerostack.com
-# (c) 2017 ZeroStack
+#
+# Author: vikram@edgebricks.com
+# (c) 2021 Edgebricks Inc
 
 
 import json

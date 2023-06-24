@@ -33,8 +33,8 @@ To deploy zstest in an isolated/virtual environment without conflicts with exist
 Isolated Deployment::
 
     1. pip install virtualenv
-    2. git clone ssh://<userName>@code.corp.zerostack.net:29418/zstest
-    3. cd zstest
+    2. git clone git@github.com:Edgebricks/eb-test.git
+    3. cd eb-test
     4. virtualenv venv
     5. source venv/bin/activate
     6. python3 -m pip install -r requirements.txt

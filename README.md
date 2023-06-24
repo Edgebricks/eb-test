@@ -12,11 +12,11 @@ eb-test is an automated test suite based on pytest framework to perform a full-f
 
 API Automation
 ==============
-Click [here](https://github.com/Edgebricks/eb-test/tree/master/ebapi#readme) for details.
+Click [here](https://github.com/Edgebricks/eb-test/blob/master/ebapi/README.md) for details.
 
 UI Automation
 =============
-Click [here](https://github.com/Edgebricks/eb-test/tree/master/ebui#readme) for details.
+Click [here](https://github.com/Edgebricks/eb-test/blob/master/ebui/README.md) for details.
 
 Documentation
 =============

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
-
-# Author: priyanshi@zerostack.com
-# (c) 2018 ZeroStack
+#
+# Author: vikram@edgebricks.com
+# (c) 2021 Edgebricks Inc
 
 
 from framework.testDataProvider.testCaseDataProvider import TestCaseDataProvider
