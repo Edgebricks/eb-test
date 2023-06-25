@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #
 # Author: ankit@edgebricks.com
-# (c) 2022 Edgebricks
+# (c) 2022 Edgebricks Inc
 
 
 import json
@@ -30,11 +30,14 @@ class RestClient(object):
             client   = RestClient(token)
             response = client.get(requestURL)
     """
+
     def __init__(self, token):
         self.token = token
-        self.headers = {"Accept": "application/json",
-                        "Content-Type": "application/json;charset=UTF-8",
-                        "X-Auth-Token": self.token}
+        self.headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
+            "X-Auth-Token": self.token,
+        }
 
     def get(self, url, timeout=30):
         """
@@ -55,10 +58,10 @@ class RestClient(object):
                 response = client.get(requestURL)
         """
         if not self.token:
-            elog.error('token not found')
+            elog.error("token not found")
             return None
 
-        elog.debug('URL = %s, Method = GET' % url)
+        elog.debug("URL = %s, Method = GET" % url)
         return requests.get(url=url, headers=self.headers, timeout=timeout)
 
     def put(self, url, payload={}, timeout=30):
@@ -86,14 +89,15 @@ class RestClient(object):
                 response = client.put(requestURL, payload)
         """
         if not self.token:
-            elog.error('token not found')
+            elog.error("token not found")
             return None
 
         payload = json.dumps(payload)
-        elog.debug('URL = %s, Method = PUT' % url)
-        elog.debug('Payload = %s' % payload)
-        return requests.put(url=url, headers=self.headers,
-                            data=payload, timeout=timeout)
+        elog.debug("URL = %s, Method = PUT" % url)
+        elog.debug("Payload = %s" % payload)
+        return requests.put(
+            url=url, headers=self.headers, data=payload, timeout=timeout
+        )
 
     def post(self, url, payload={}, timeout=30):
         """
@@ -120,14 +124,15 @@ class RestClient(object):
                 response = client.post(requestURL, payload)
         """
         if not self.token:
-            elog.error('token not found')
+            elog.error("token not found")
             return None
 
         payload = json.dumps(payload)
-        elog.debug('URL = %s, Method = POST' % url)
-        elog.debug('Payload = %s' % payload)
-        return requests.post(url=url, headers=self.headers,
-                             data=payload, timeout=timeout)
+        elog.debug("URL = %s, Method = POST" % url)
+        elog.debug("Payload = %s" % payload)
+        return requests.post(
+            url=url, headers=self.headers, data=payload, timeout=timeout
+        )
 
     def patch(self, url, payload={}, timeout=30):
         """
@@ -154,14 +159,15 @@ class RestClient(object):
                 response = client.patch(requestURL, payload)
         """
         if not self.token:
-            elog.error('token not found')
+            elog.error("token not found")
             return None
 
         payload = json.dumps(payload)
-        elog.debug('URL = %s, Method = PATCH' % url)
-        elog.debug('Payload = %s' % payload)
-        return requests.patch(url=url, headers=self.headers,
-                             data=payload, timeout=timeout)
+        elog.debug("URL = %s, Method = PATCH" % url)
+        elog.debug("Payload = %s" % payload)
+        return requests.patch(
+            url=url, headers=self.headers, data=payload, timeout=timeout
+        )
 
     def delete(self, url, timeout=30):
         """
@@ -182,12 +188,11 @@ class RestClient(object):
                 response = client.delete(requestURL)
         """
         if not self.token:
-            elog.error('token not found')
+            elog.error("token not found")
             return None
 
-        elog.debug('URL = %s, Method = DELETE' % url)
-        return requests.delete(url=url, headers=self.headers,
-                              timeout=timeout)
+        elog.debug("URL = %s, Method = DELETE" % url)
+        return requests.delete(url=url, headers=self.headers, timeout=timeout)
 
     def deleteWithPayload(self, url, payload={}, timeout=30):
         """
@@ -208,11 +213,11 @@ class RestClient(object):
                 response = client.delete(requestURL)
         """
         if not self.token:
-            elog.error('token not found')
+            elog.error("token not found")
             return None
 
         payload = json.dumps(payload)
-        elog.debug('URL = %s, Method = DELETE' % url)
-        return requests.delete(url=url, headers=self.headers,
-                              data=payload, timeout=timeout)
-
+        elog.debug("URL = %s, Method = DELETE" % url)
+        return requests.delete(
+            url=url, headers=self.headers, data=payload, timeout=timeout
+        )

@@ -17,18 +17,19 @@ from selenium.common.exceptions import *
 import framework.utilities.customLogger as cl
 
 
-class BaseActions():
+class BaseActions:
     """
     Class having basic operations that need to be performed on the web elements
     eg : get element , click etc.
     """
+
     log = cl.customLogger(logging.DEBUG)
 
     def __init__(self, driver):
         self.driver = driver
 
     def getTitle(self):
-        time.sleep(5) # Wait for the page to load completely
+        time.sleep(5)  # Wait for the page to load completely
         return self.driver.title
 
     def getByType(self, locatorType):
@@ -55,46 +56,78 @@ class BaseActions():
             locatorType = locatorType.lower()
             byType = self.getByType(locatorType)
             element = self.driver.find_element(byType, locator)
-            self.log.info("Element Found with locator: " + locator +
-            " and  locatorType: " + locatorType)
-        except:
-            self.log.info("Element not found with locator: " + locator +
-            " and  locatorType: " + locatorType)
+            self.log.info(
+                "Element Found with locator: "
+                + locator
+                + " and  locatorType: "
+                + locatorType
+            )
+        except BaseException:
+            self.log.info(
+                "Element not found with locator: "
+                + locator
+                + " and  locatorType: "
+                + locatorType
+            )
         return element
 
     def getElements(self, locator, locatorType="id"):
         elements = None
         try:
-           locatorType = locatorType.lower()
-           byType = self.getByType(locatorType)
-           elements = self.driver.find_elements(byType, locator)
-           self.log.info("Element Found with locator: " + locator +
-           " and  locatorType: " + locatorType)
-        except:
-            self.log.info("Element not found with locator: " + locator +
-            " and  locatorType: " + locatorType)
+            locatorType = locatorType.lower()
+            byType = self.getByType(locatorType)
+            elements = self.driver.find_elements(byType, locator)
+            self.log.info(
+                "Element Found with locator: "
+                + locator
+                + " and  locatorType: "
+                + locatorType
+            )
+        except BaseException:
+            self.log.info(
+                "Element not found with locator: "
+                + locator
+                + " and  locatorType: "
+                + locatorType
+            )
         return elements
 
     def elementClick(self, locator, locatorType="id"):
         try:
             element = self.getElement(locator, locatorType)
             element.click()
-            self.log.info("Clicked on element with locator: " + locator +
-            " locatorType: " + locatorType)
-        except:
-            self.log.error("Cannot click on the element with locator: "
-            + locator +" locatorType: " + locatorType)
+            self.log.info(
+                "Clicked on element with locator: "
+                + locator
+                + " locatorType: "
+                + locatorType
+            )
+        except BaseException:
+            self.log.error(
+                "Cannot click on the element with locator: "
+                + locator
+                + " locatorType: "
+                + locatorType
+            )
             print_stack()
 
     def sendKeys(self, data, locator, locatorType="id"):
         try:
             element = self.getElement(locator, locatorType)
             element.send_keys(data)
-            self.log.info("Sent data on element with locator: " + locator +
-            " locatorType: " + locatorType)
-        except:
-            self.log.error("Cannot send data on the element with locator: "
-            + locator +" locatorType: " + locatorType)
+            self.log.info(
+                "Sent data on element with locator: "
+                + locator
+                + " locatorType: "
+                + locatorType
+            )
+        except BaseException:
+            self.log.error(
+                "Cannot send data on the element with locator: "
+                + locator
+                + " locatorType: "
+                + locatorType
+            )
             print_stack()
 
     def isElementPresent(self, locator, locatorType="id"):
@@ -106,7 +139,7 @@ class BaseActions():
             else:
                 self.log.info("Element not found")
                 return False
-        except:
+        except BaseException:
             self.log.info("Element not found")
             return False
 
@@ -119,25 +152,34 @@ class BaseActions():
             else:
                 self.log.info("Element not found")
                 return False
-        except:
+        except BaseException:
             self.log.info("Element not found")
             return False
 
-    def waitForElement(self, locator, locatorType="id",
-                               timeout=10, pollFrequency=0.5):
+    def waitForElement(self, locator, locatorType="id", timeout=10, pollFrequency=0.5):
         element = None
         try:
             byType = self.getByType(locatorType)
-            self.log.info("Waiting for maximum :: " + str(timeout) +
-                  " :: seconds for element to be clickable")
-            wait = WebDriverWait(self.driver, 10, poll_frequency=1,
-                                 ignored_exceptions=[NoSuchElementException,
-                                                     ElementNotVisibleException,
-                                                     ElementNotSelectableException])
-            element = wait.until(EC.element_to_be_clickable((byType,
-                                                             "stopFilter_stops-0")))
+            self.log.info(
+                "Waiting for maximum :: "
+                + str(timeout)
+                + " :: seconds for element to be clickable"
+            )
+            wait = WebDriverWait(
+                self.driver,
+                10,
+                poll_frequency=1,
+                ignored_exceptions=[
+                    NoSuchElementException,
+                    ElementNotVisibleException,
+                    ElementNotSelectableException,
+                ],
+            )
+            element = wait.until(
+                EC.element_to_be_clickable((byType, "stopFilter_stops-0"))
+            )
             self.log.info("Element appeared on the web page")
-        except:
+        except BaseException:
             self.log.info("Element not appeared on the web page")
         return element
 
@@ -149,14 +191,14 @@ class BaseActions():
         screenshotsDirectory = "../framework/screenshots/"
         relativeFilename = screenshotsDirectory + fileName
         currentDirectory = os.path.dirname(__file__)
-        destinationFile = os .path.join(currentDirectory, relativeFilename)
+        destinationFile = os.path.join(currentDirectory, relativeFilename)
         destinationDirectory = os.path.join(currentDirectory, screenshotsDirectory)
 
         try:
-           if not os.path.exists(destinationDirectory):
-              os.makedirs(destinationDirectory)
-           self.driver.save_screenshot(destinationFile)
-           self.log.info("Screenshots saved to directory:" +destinationFile)
-        except:
-           self.log.error("###Exception Occured")
-           print_stack()
+            if not os.path.exists(destinationDirectory):
+                os.makedirs(destinationDirectory)
+            self.driver.save_screenshot(destinationFile)
+            self.log.info("Screenshots saved to directory:" + destinationFile)
+        except BaseException:
+            self.log.error("###Exception Occured")
+            print_stack()

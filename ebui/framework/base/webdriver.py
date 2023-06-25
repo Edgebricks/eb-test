@@ -21,8 +21,7 @@ from selenium import webdriver
 from testSetup.dataSource.login import Login
 
 
-class WebDriver():
-
+class WebDriver:
     def __init__(self, browser):
         self.browser = browser
         self.config = Login()
@@ -31,16 +30,15 @@ class WebDriver():
     def getDriverPath(self):
         fpath = os.path.abspath(__file__)
         while True:
-              fpath, fname = os.path.split(fpath)
-              if fname == 'zstest':
-                 break
+            fpath, fname = os.path.split(fpath)
+            if fname == "zstest":
+                break
         for root, _, files in os.walk(fpath):
             for fname in files:
                 if fname == "chromedriver":
-                   return os.path.join(root, fname)
+                    return os.path.join(root, fname)
 
         return None
-
 
     def getWebDriverInstance(self):
         """

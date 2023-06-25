@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #
 # Author: ankit@edgebricks.com
-# (c) 2022 Edgebricks
+# (c) 2022 Edgebricks Inc
 
 
 """ebtest library with network utility functions"""
@@ -14,23 +14,24 @@ from ebapi.lib.keystone import Token
 
 
 class GlanceBase(Token):
-    def __init__(self, projectID, scope='project'):
+    def __init__(self, projectID, scope="project"):
         super(GlanceBase, self).__init__(scope)
-        self.client     = RestClient(self.getToken())
-        self.projectID  = projectID
+        self.client = RestClient(self.getToken())
+        self.projectID = projectID
         self.serviceURL = self.getServiceURL()
-        self.glanceURL  = self.serviceURL + '/glance/v2'
+        self.glanceURL = self.serviceURL + "/glance/v2"
 
 
 class Images(GlanceBase):
     """
     class that implements CRUD operation for Images
     """
+
     def __init__(self, projectID):
         super(Images, self).__init__(projectID)
-        self.imagesURL  = self.glanceURL + '/images'
+        self.imagesURL = self.glanceURL + "/images"
 
-    def createCirrosImageByURL(self, imageName='', netID=''):
+    def createCirrosImageByURL(self, imageName="", netID=""):
         """
         Returns:
             response imageID <https://goo.gl/NeMqL8>`_ after creating Image.
@@ -45,7 +46,7 @@ class Images(GlanceBase):
                 imageObj = Images(projectID)
                 response  = imageObj.createCirrosImageByURL(imageName, domainID)
         """
-        requestURL = self.glanceURL + '/tasks'
+        requestURL = self.glanceURL + "/tasks"
         payload = {
             "type": "import",
             "input": {
@@ -70,20 +71,22 @@ class Images(GlanceBase):
                     "volume-type": "relhighiops_type",
                     "import_from": "http://download.cirros-cloud.net/0.5.2/cirros-0.5.2-x86_64-disk.img",
                     "container_format": "ovf",
-                    "net_id": netID
-                }
-            }
+                    "net_id": netID,
+                },
+            },
         }
         response = self.client.post(requestURL, payload)
         if not response.ok:
-            elog.error('failed to create image: %s'
-                       % eutil.rcolor(response.status_code))
+            elog.error(
+                "failed to create image: %s" % eutil.rcolor(response.status_code)
+            )
             elog.error(response.text)
             return False
 
-        elog.info('image %s created successfully: %s'
-                  % (eutil.bcolor(imageName),
-                     eutil.bcolor(response.status_code)))
+        elog.info(
+            "image %s created successfully: %s"
+            % (eutil.bcolor(imageName), eutil.bcolor(response.status_code))
+        )
         return True
 
     def deleteImage(self, imageID):
@@ -100,17 +103,19 @@ class Images(GlanceBase):
                 ImageObj = Images(projectID)
                 response  = ImageObj.deleteImage(imageID)
         """
-        requestURL = self.imagesURL + '/' + imageID
+        requestURL = self.imagesURL + "/" + imageID
         response = self.client.delete(requestURL)
         if not response.ok:
-            elog.error('failed to delete image: %s'
-                       % eutil.rcolor(response.status_code))
+            elog.error(
+                "failed to delete image: %s" % eutil.rcolor(response.status_code)
+            )
             elog.error(response.text)
             return False
 
-        elog.info('deleting image %s: %s OK'
-                  % (eutil.bcolor(imageID),
-                     eutil.gcolor(response.status_code)))
+        elog.info(
+            "deleting image %s: %s OK"
+            % (eutil.bcolor(imageID), eutil.gcolor(response.status_code))
+        )
         return True
 
     def getImagesbyVisibility(self, visibility):
@@ -127,8 +132,8 @@ class Images(GlanceBase):
                 ImageObj = Images(projectID)
                 response  = ImageObj.getImagesbyVisibility(visibility)
         """
-        requestURL = self.imagesURL + '?visibility=%s' % visibility
-        response   = self.client.get(requestURL)
+        requestURL = self.imagesURL + "?visibility=%s" % visibility
+        response = self.client.get(requestURL)
         return json.loads(response.content)
 
     def getImagesbyOwner(self, owner):
@@ -145,6 +150,6 @@ class Images(GlanceBase):
                 ImageObj = Images(projectID)
                 response  = ImageObj.getImagesbyOwner(owner)
         """
-        requestURL = self.imagesURL + '?owner=%s' % owner
-        response   = self.client.get(requestURL)
+        requestURL = self.imagesURL + "?owner=%s" % owner
+        response = self.client.get(requestURL)
         return json.loads(response.content)

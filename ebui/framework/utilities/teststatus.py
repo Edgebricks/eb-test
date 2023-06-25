@@ -18,6 +18,7 @@ import logging
 import framework.utilities.customLogger as cl
 from framework.base.baseActions import BaseActions
 
+
 class TestStatus(BaseActions):
 
     log = cl.customLogger(logging.INFO)
@@ -43,7 +44,7 @@ class TestStatus(BaseActions):
                 self.resultList.append("FAIL")
                 self.log.error("### VERIFICATION FAILED :: + " + resultMessage)
                 self.screenShots(resultMessage)
-        except:
+        except BaseException:
             self.resultList.append("FAIL")
             self.log.error("### Exception Occurred !!!")
             self.screenShots(resultMessage)
@@ -63,10 +64,10 @@ class TestStatus(BaseActions):
         self.setResult(result, resultMessage)
 
         if "FAIL" in self.resultList:
-            self.log.error(testName +  " ### TEST FAILED")
+            self.log.error(testName + " ### TEST FAILED")
             self.resultList.clear()
             assert True == False
         else:
             self.log.info(testName + " ### TEST SUCCESSFUL")
             self.resultList.clear()
-            assert True == True
+            assert True

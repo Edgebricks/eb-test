@@ -15,10 +15,12 @@ Example:
 """
 import time
 import traceback
-import random, string
+import random
+import string
 import logging
 
 import framework.utilities.customLogger as cl
+
 
 class Util(object):
 
@@ -35,7 +37,7 @@ class Util(object):
         except InterruptedError:
             traceback.print_stack()
 
-    def getAlphaNumeric(self, length, type='letters'):
+    def getAlphaNumeric(self, length, type="letters"):
         """
         Get random string of characters
 
@@ -44,14 +46,14 @@ class Util(object):
             type: Type of characters string should have. Default is letters
             Provide lower/upper/digits for different types
         """
-        alpha_num = ''
-        if type == 'lower':
+        alpha_num = ""
+        if type == "lower":
             case = string.ascii_lowercase
-        elif type == 'upper':
+        elif type == "upper":
             case = string.ascii_uppercase
-        elif type == 'digits':
+        elif type == "digits":
             case = string.digits
-        elif type == 'mix':
+        elif type == "mix":
             case = string.ascii_letters + string.digits
         else:
             case = string.ascii_letters
@@ -61,7 +63,7 @@ class Util(object):
         """
         Get a unique name
         """
-        return self.getAlphaNumeric(charCount, 'lower')
+        return self.getAlphaNumeric(charCount, "lower")
 
     def getUniqueNameList(self, listSize=5, itemLength=None):
         """

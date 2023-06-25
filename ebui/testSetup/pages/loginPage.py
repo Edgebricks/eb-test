@@ -11,111 +11,122 @@ from framework.base.basePage import BasePage
 from testSetup.pages.navigationPage import NavigationPage
 import framework.utilities.customLogger as cl
 
+
 class LoginPage(BasePage):
-      """
+    """
       Class contains all the elements present on th login page
       """
-      log = cl.customLogger(logging.DEBUG)
 
-      def __init__(self,driver):
-          super().__init__(driver)
-          self.driver=driver
-          self.np = NavigationPage(driver)
+    log = cl.customLogger(logging.DEBUG)
 
-      #locators
-      customerID   = "Customer_Id"
-      businessUnit = "Business_Unit"
-      userName = "User_Name"
-      password = "Password"
-      signIn = "//button/span[text()='Sign in']"
-      errorPrompt = "//div[@class='alert alert-danger ng-binding ng-scope']"
-      loginPageTitle = "Console Login"
-      regionSelector = "regionSelector"
-      signoutButton = "//button[text()='Sign out from all profiles']"
-      removeProfileIcon = "//a[@class='removeProfileIcon']"
-      yesForRemoveProfile = "//button[text()='Yes']"
+    def __init__(self, driver):
+        super().__init__(driver)
+        self.driver = driver
+        self.np = NavigationPage(driver)
 
-      def verifyLoginTitle(self):
-          status =self.verifyPageTitle(self.loginPageTitle)
-          return status
+    # locators
+    customerID = "Customer_Id"
+    businessUnit = "Business_Unit"
+    userName = "User_Name"
+    password = "Password"
+    signIn = "//button/span[text()='Sign in']"
+    errorPrompt = "//div[@class='alert alert-danger ng-binding ng-scope']"
+    loginPageTitle = "Console Login"
+    regionSelector = "regionSelector"
+    signoutButton = "//button[text()='Sign out from all profiles']"
+    removeProfileIcon = "//a[@class='removeProfileIcon']"
+    yesForRemoveProfile = "//button[text()='Yes']"
 
-      def enterCustomerID(self,customerid):
-          self.sendKeys(customerid, self.customerID)
+    def verifyLoginTitle(self):
+        status = self.verifyPageTitle(self.loginPageTitle)
+        return status
 
-      def enterBusinessUnit(self, businessunit):
-          self.sendKeys(businessunit, self.businessUnit)
+    def enterCustomerID(self, customerid):
+        self.sendKeys(customerid, self.customerID)
 
-      def enterUserName(self, username):
-          self.sendKeys(username, self.userName)
+    def enterBusinessUnit(self, businessunit):
+        self.sendKeys(businessunit, self.businessUnit)
 
-      def enterPassword(self, password):
-          self.sendKeys(password, self.password)
+    def enterUserName(self, username):
+        self.sendKeys(username, self.userName)
 
-      def clickSignInButton(self):
-          self.waitForElement(self.signIn , locatorType="xpath",
-                              timeout=120, pollFrequency=0.2)
+    def enterPassword(self, password):
+        self.sendKeys(password, self.password)
 
-          self.elementClick(self.signIn , locatorType="xpath")
+    def clickSignInButton(self):
+        self.waitForElement(
+            self.signIn, locatorType="xpath", timeout=120, pollFrequency=0.2
+        )
 
-      def clickRemoveProfileIcon(self):
-          self.waitForElement(self.removeProfileIcon , locatorType="xpath",
-                              timeout=120, pollFrequency=0.2)
+        self.elementClick(self.signIn, locatorType="xpath")
 
-          self.elementClick(self.removeProfileIcon, locatorType="xpath")
+    def clickRemoveProfileIcon(self):
+        self.waitForElement(
+            self.removeProfileIcon, locatorType="xpath", timeout=120, pollFrequency=0.2
+        )
 
-      def clickYesForRemoveProfile(self):
-          self.waitForElement(self.yesForRemoveProfile , locatorType="xpath",
-                              timeout=120, pollFrequency=0.2)
+        self.elementClick(self.removeProfileIcon, locatorType="xpath")
 
-          self.elementClick(self.yesForRemoveProfile, locatorType="xpath")
+    def clickYesForRemoveProfile(self):
+        self.waitForElement(
+            self.yesForRemoveProfile,
+            locatorType="xpath",
+            timeout=120,
+            pollFrequency=0.2,
+        )
 
-      def verifyLoginStatus(self):
-          self.waitForElement(self.regionSelector, locatorType="xpath",
-                              timeout=120, pollFrequency= 0.2)
+        self.elementClick(self.yesForRemoveProfile, locatorType="xpath")
 
-          verifyElement = self.isElementPresent(self.regionSelector)
-          if verifyElement == True:
-               return True
-          else:
-               element = self.getElement(self.errorPrompt,
-                                         locatorType="xpath")
-               errormssg = element.text
-               self.log.error(errormssg)
-               return False
-               self.driver.quit()
+    def verifyLoginStatus(self):
+        self.waitForElement(
+            self.regionSelector, locatorType="xpath", timeout=120, pollFrequency=0.2
+        )
 
-      def verifyCustomerID(self):
-          self.waitForElement(self.customerID , locatorType="xpath",
-                              timeout=120, pollFrequency=0.2)
+        verifyElement = self.isElementPresent(self.regionSelector)
+        if verifyElement:
+            return True
+        else:
+            element = self.getElement(self.errorPrompt, locatorType="xpath")
+            errormssg = element.text
+            self.log.error(errormssg)
+            return False
+            self.driver.quit()
 
-          verifyElement = self.isElementPresent(self.customerID)
-          if verify_element == True:
-              return True
-          else:
-              return False
+    def verifyCustomerID(self):
+        self.waitForElement(
+            self.customerID, locatorType="xpath", timeout=120, pollFrequency=0.2
+        )
 
-      def logout(self):
-          self.np.navigateToRegionSelector()
-          self.waitForElement(self.signoutButton, locatorType="xpath",
-                              timeout=120, pollFrequency= 0.2)
+        verifyElement = self.isElementPresent(self.customerID)
+        if verify_element:
+            return True
+        else:
+            return False
 
-          self.elementClick(self.signoutButton, locatorType="xpath")
-          self.clickRemoveProfileIcon()
-          self.clickYesForRemoveProfile()
+    def logout(self):
+        self.np.navigateToRegionSelector()
+        self.waitForElement(
+            self.signoutButton, locatorType="xpath", timeout=120, pollFrequency=0.2
+        )
 
-      def signinAfterLogout(self, customerid="", businessunit="", username=""
-                              , password=""):
+        self.elementClick(self.signoutButton, locatorType="xpath")
+        self.clickRemoveProfileIcon()
+        self.clickYesForRemoveProfile()
 
-          self.enterBusinessUnit(businessunit)
-          self.enterUserName(username)
-          self.enterPassword(password)
-          self.clickSignInButton()
-          self.verifyLoginStatus()
+    def signinAfterLogout(
+        self, customerid="", businessunit="", username="", password=""
+    ):
 
-      def login(self,customerid="", businessunit="", username="", password=""):
-          self.enterCustomerID(customerid)
-          self.enterBusinessUnit(businessunit)
-          self.enterUserName(username)
-          self.enterPassword(password)
-          self.clickSignInButton()
-          self.verifyLoginStatus()
+        self.enterBusinessUnit(businessunit)
+        self.enterUserName(username)
+        self.enterPassword(password)
+        self.clickSignInButton()
+        self.verifyLoginStatus()
+
+    def login(self, customerid="", businessunit="", username="", password=""):
+        self.enterCustomerID(customerid)
+        self.enterBusinessUnit(businessunit)
+        self.enterUserName(username)
+        self.enterPassword(password)
+        self.clickSignInButton()
+        self.verifyLoginStatus()

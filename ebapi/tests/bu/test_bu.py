@@ -1,20 +1,15 @@
 #! /usr/bin/python
 #
 # Author: ankit@edgebricks.com
-# (c) 2022 Edgebricks
-
-
-from time import sleep
-import pytest
+# (c) 2022 Edgebricks Inc
 
 
 from ebapi.common.config import ConfigParser
-from ebapi.common.logger import elog
 from ebapi.lib.edgebricks import BUs
 
 
 class TestBu:
-    buID   = ''
+    buID = ""
     testConfig = ConfigParser()
     buName = testConfig.getDomainName()
 
@@ -28,12 +23,13 @@ class TestBu:
 
         # get bu
         buResp = buObj.getBU(buID)
-        assert buResp['name'] == cls.buName
+        assert buResp["name"] == cls.buName
 
         # update bu
-        #newDesc = "ebtest updated description"
-        #updatedBuResp = buObj.updateBU(buID, description=newDesc)
-        #assert updatedBuResp['description'] == newDesc
+        # newDesc = "ebtest updated description"
+        # updatedBuResp = buObj.updateBU(buID, description=newDesc)
+        # assert updatedBuResp['description'] == newDesc
 
         # delete bu
         assert buObj.deleteBU(buID)
+        cls.testConfig.clearDomainID()

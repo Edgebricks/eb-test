@@ -11,138 +11,164 @@ from framework.base.basePage import BasePage
 from testSetup.pages.navigationPage import NavigationPage
 import framework.utilities.customLogger as cl
 
+
 class BUPage(BasePage):
-  """
+    """
   Class contains all the web elements needed for creating a BU
   """
 
-  log = cl.customLogger(logging.DEBUG)
-  def __init__(self,driver):
-      super().__init__(driver)
-      self.driver=driver
-      self.np = NavigationPage(driver)
+    log = cl.customLogger(logging.DEBUG)
 
-  #locators
-  createBusinessUnitLocator = "//div[text()='Create Business Unit']"
-  businessUnitNameLocator = "domainName"
-  noQuotaLimitRadiobutton = "//label/span[text()='No Quota Limits']"
-  quotaLimitRadiobutton = "//label/span[text()='Quota Limits']"
-  buLocalRadiobutton = "//label/span[text()='Local']"
-  buAd_ldap_Radiobutton = "//label/span[text()='AD/LDAP']"
-  username = "//input[@name='userName']"
-  email ="//input[@name='email']"
-  password ="//input[@name='password']"
-  confirmPassword ="//input[@name='confirmPassword']"
-  doneButton = "//button[text()='Done']"
-  cancelButton = "//button[text()='Cancel']"
-  buLocator = "//div[@class='title ng-binding' and text()= '{}']"
-  searchBUlocator = "//input[@placeholder='Search Business Units']"
+    def __init__(self, driver):
+        super().__init__(driver)
+        self.driver = driver
+        self.np = NavigationPage(driver)
 
-  def createBusinessUnit(self):
-      self.waitForElement(self.createBusinessUnitLocator,
-                         locatorType="xpath",timeout=120, pollFrequency=0.2)
+    # locators
+    createBusinessUnitLocator = "//div[text()='Create Business Unit']"
+    businessUnitNameLocator = "domainName"
+    noQuotaLimitRadiobutton = "//label/span[text()='No Quota Limits']"
+    quotaLimitRadiobutton = "//label/span[text()='Quota Limits']"
+    buLocalRadiobutton = "//label/span[text()='Local']"
+    buAd_ldap_Radiobutton = "//label/span[text()='AD/LDAP']"
+    username = "//input[@name='userName']"
+    email = "//input[@name='email']"
+    password = "//input[@name='password']"
+    confirmPassword = "//input[@name='confirmPassword']"
+    doneButton = "//button[text()='Done']"
+    cancelButton = "//button[text()='Cancel']"
+    buLocator = "//div[@class='title ng-binding' and text()= '{}']"
+    searchBUlocator = "//input[@placeholder='Search Business Units']"
 
-      self.elementClick(self.createBusinessUnitLocator,
-                       locatorType="xpath")
+    def createBusinessUnit(self):
+        self.waitForElement(
+            self.createBusinessUnitLocator,
+            locatorType="xpath",
+            timeout=120,
+            pollFrequency=0.2,
+        )
 
-  def enterBusinessUnitName(self, businessUnitName):
-      self.waitForElement(self.businessUnitNameLocator,
-                          locatorType="xpath",timeout=120, pollFrequency=0.2)
+        self.elementClick(self.createBusinessUnitLocator, locatorType="xpath")
 
-      self.sendKeys(businessUnitName, self.businessUnitNameLocator)
+    def enterBusinessUnitName(self, businessUnitName):
+        self.waitForElement(
+            self.businessUnitNameLocator,
+            locatorType="xpath",
+            timeout=120,
+            pollFrequency=0.2,
+        )
 
-  def enterUserName(self, username):
-      self.waitForElement(self.username, locatorType="xpath",
-                          timeout=120, pollFrequency=0.2)
+        self.sendKeys(businessUnitName, self.businessUnitNameLocator)
 
-      self.sendKeys(username, self.username, locatorType="xpath")
+    def enterUserName(self, username):
+        self.waitForElement(
+            self.username, locatorType="xpath", timeout=120, pollFrequency=0.2
+        )
 
-  def enterEmail(self, email):
-      self.waitForElement(self.email ,locatorType="xpath",
-                          timeout=120, pollFrequency=0.2)
+        self.sendKeys(username, self.username, locatorType="xpath")
 
-      self.sendKeys(email, self.email, locatorType="xpath")
+    def enterEmail(self, email):
+        self.waitForElement(
+            self.email, locatorType="xpath", timeout=120, pollFrequency=0.2
+        )
 
-  def enterPassword(self, password):
-      self.waitForElement(self.password , locatorType="xpath",
-                          timeout=120, pollFrequency=0.2)
+        self.sendKeys(email, self.email, locatorType="xpath")
 
-      self.sendKeys(password, self.password , locatorType="xpath")
+    def enterPassword(self, password):
+        self.waitForElement(
+            self.password, locatorType="xpath", timeout=120, pollFrequency=0.2
+        )
 
-  def enterPasswordAgain(self, confirmpassword):
-      self.waitForElement(self.confirmPassword ,
-                          locatorType="xpath",timeout=120, pollFrequency=0.2)
+        self.sendKeys(password, self.password, locatorType="xpath")
 
-      self.sendKeys(confirmpassword, self.confirmPassword,
-                   locatorType="xpath")
+    def enterPasswordAgain(self, confirmpassword):
+        self.waitForElement(
+            self.confirmPassword, locatorType="xpath", timeout=120, pollFrequency=0.2
+        )
 
-  def selectNoQuotaLimits(self):
-      self.waitForElement(self.noQuotaLimitRadiobutton
-                          , locatorType="xpath",timeout=120, pollFrequency=0.2)
+        self.sendKeys(confirmpassword, self.confirmPassword, locatorType="xpath")
 
-      self.elementClick(self.noQuotaLimitRadiobutton , locatorType="xpath")
+    def selectNoQuotaLimits(self):
+        self.waitForElement(
+            self.noQuotaLimitRadiobutton,
+            locatorType="xpath",
+            timeout=120,
+            pollFrequency=0.2,
+        )
 
-  def selectQuotalimits(self):
-      self.waitForElement(self.quotaLimitRadiobutton, locatorType="xpath",
-                          timeout=120, pollFrequency=0.2)
+        self.elementClick(self.noQuotaLimitRadiobutton, locatorType="xpath")
 
-      self.elementClick(self.quotaLimitRadiobutton , locatorType="xpath")
+    def selectQuotalimits(self):
+        self.waitForElement(
+            self.quotaLimitRadiobutton,
+            locatorType="xpath",
+            timeout=120,
+            pollFrequency=0.2,
+        )
 
-  def selectBULocalRadiobutton(self):
-      self.waitForElement(self.buLocalRadiobutton, locatorType="xpath",
-                          timeout=120, pollFrequency=0.2)
+        self.elementClick(self.quotaLimitRadiobutton, locatorType="xpath")
 
-      self.elementClick(self.buLocalRadiobutton , locatorType="xpath")
+    def selectBULocalRadiobutton(self):
+        self.waitForElement(
+            self.buLocalRadiobutton, locatorType="xpath", timeout=120, pollFrequency=0.2
+        )
 
-  def selectBULdapRadiobutton(self):
-      self.waitForElement(self.buAd_ldap_Radiobutton, locatorType="xpath",
-                          timeout=120, pollFrequency=0.2)
+        self.elementClick(self.buLocalRadiobutton, locatorType="xpath")
 
-      self.elementClick(self.buAd_ldap_Radiobutton , locatorType="xpath")
+    def selectBULdapRadiobutton(self):
+        self.waitForElement(
+            self.buAd_ldap_Radiobutton,
+            locatorType="xpath",
+            timeout=120,
+            pollFrequency=0.2,
+        )
 
-  def clickDone(self):
-      self.waitForElement(self.doneButton , locatorType="xpath",
-                          timeout=120, pollFrequency=0.2)
+        self.elementClick(self.buAd_ldap_Radiobutton, locatorType="xpath")
 
-      self.elementClick(self.doneButton, locatorType="xpath")
+    def clickDone(self):
+        self.waitForElement(
+            self.doneButton, locatorType="xpath", timeout=120, pollFrequency=0.2
+        )
 
-  def clickCancel(self):
-       self.waitForElement(self.cancelButton, locatorType="xpath",
-                           timeout=120, pollFrequency=0.2)
+        self.elementClick(self.doneButton, locatorType="xpath")
 
-       self.elementClick(self.cancelButton, locatorType="xpath")
+    def clickCancel(self):
+        self.waitForElement(
+            self.cancelButton, locatorType="xpath", timeout=120, pollFrequency=0.2
+        )
 
-  def searchBU(self, businessUnitName):
-      self.waitForElement(self.searchBUlocator, locatorType="xpath",
-                          timeout=120, pollFrequency=0.2)
+        self.elementClick(self.cancelButton, locatorType="xpath")
 
-      self.elementClick(self.searchBUlocator, locatorType="xpath")
-      self.sendKeys( businessUnitName, self.searchBUlocator,
-                     locatorType="xpath")
+    def searchBU(self, businessUnitName):
+        self.waitForElement(
+            self.searchBUlocator, locatorType="xpath", timeout=120, pollFrequency=0.2
+        )
 
-  def verifyBUCreated(self, businessUnitName):
-      self.searchBU(businessUnitName)
-      verifyBUlocator = self.buLocator.format(businessUnitName)
-      verifyElement = self.isElementPresent(verifyBUlocator,
-                       locatorType="xpath")
+        self.elementClick(self.searchBUlocator, locatorType="xpath")
+        self.sendKeys(businessUnitName, self.searchBUlocator, locatorType="xpath")
 
-      if verifyElement == True:
-         self.elementClick(verifyBUlocator, locatorType="xpath")
-         self.log.info("BU CREATION WAS SUCCESSFUL")
-      else:
-         self.log.error("FAILED TO VERIFY BU CREATION")
+    def verifyBUCreated(self, businessUnitName):
+        self.searchBU(businessUnitName)
+        verifyBUlocator = self.buLocator.format(businessUnitName)
+        verifyElement = self.isElementPresent(verifyBUlocator, locatorType="xpath")
 
+        if verifyElement:
+            self.elementClick(verifyBUlocator, locatorType="xpath")
+            self.log.info("BU CREATION WAS SUCCESSFUL")
+        else:
+            self.log.error("FAILED TO VERIFY BU CREATION")
 
-  def createLocalBuWithNoQuota(self, businessUnitName, username, email,
-     			       password, confirmpassword):
+    def createLocalBuWithNoQuota(
+        self, businessUnitName, username, email, password, confirmpassword
+    ):
 
-      self.np.navigateToBusinessUnit()
-      self.createBusinessUnit()
-      self.enterBusinessUnitName(businessUnitName)
-      self.selectNoQuotaLimits()
-      self.selectBULocalRadiobutton()
-      self.enterUserName(username)
-      self.enterEmail(email)
-      self.enterPassword(password)
-      self.enterPasswordAgain(confirmpassword)
-      self.clickDone()
+        self.np.navigateToBusinessUnit()
+        self.createBusinessUnit()
+        self.enterBusinessUnitName(businessUnitName)
+        self.selectNoQuotaLimits()
+        self.selectBULocalRadiobutton()
+        self.enterUserName(username)
+        self.enterEmail(email)
+        self.enterPassword(password)
+        self.enterPasswordAgain(confirmpassword)
+        self.clickDone()

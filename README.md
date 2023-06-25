@@ -14,10 +14,30 @@ API Automation
 ==============
 Click [here](https://github.com/Edgebricks/eb-test/blob/master/ebapi/README.md) for details.
 
+Execute below command to run all api tests::
+
+    $ make run-api-tests
+
 UI Automation
 =============
 Click [here](https://github.com/Edgebricks/eb-test/blob/master/ebui/README.md) for details.
 
+Execute below command to run all api tests::
+
+    $ make run-ui-tests
+
 Documentation
 =============
 Click [here](https://github.com/Edgebricks/eb-test/blob/master/doc/README.md) for details.
+
+Static Checks
+=============
+Install essential python static tools by running::
+
+    $ sudo apt install -y flake8 black pylint autopep8 pycodestyle
+    $ sudo apt install python3-pycodestyle python3-autopep8
+
+This will install all required static check tools on the target machine.
+Execute below command to run all staticchecks on the code::
+
+    $ make staticchecks

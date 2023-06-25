@@ -8,7 +8,6 @@ import json
 import os
 
 
-
 class TestCaseDataProvider(object):
     """
     Base configuration class that reads/write configuration from
@@ -17,24 +16,24 @@ class TestCaseDataProvider(object):
     """
 
     def __init__(self, filename):
-        self._fname   = self._getFile(filename)
+        self._fname = self._getFile(filename)
 
     def _getFile(self, filename):
         fpath = os.path.abspath(__file__)
         while True:
             fpath, fname = os.path.split(fpath)
-            if fname == 'zstest':
-               break
+            if fname == "zstest":
+                break
 
         for root, _, files in os.walk(fpath):
-           for fname in files:
+            for fname in files:
                 if fname == filename:
                     return os.path.join(root, fname)
 
         return None
 
     def _get(self):
-        with open(self._fname, 'r') as f:
+        with open(self._fname, "r") as f:
             return json.load(f)
 
     def get(self, key, config):
@@ -44,5 +43,5 @@ class TestCaseDataProvider(object):
     def set(self, key, config, value):
         configs = self._get()
         configs[key][config] = value
-        with open(self._fname, 'w') as f:
+        with open(self._fname, "w") as f:
             json.dump(configs, f, indent=4)

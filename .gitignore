@@ -1,16 +1,22 @@
 # build artifacts
 ebtestdocs/
-ebapi/.tox/
+.tox/
 
 # virtual envs
 ebapi/venv
 ebui/venv
 
 # test artifacts
+assets/
+test-result.html
 ebapi/assets/
 ebapi/test.conf
 ebapi/test-result.html
 ebapi/.pytest_cache
+ebui/assets/
+ebui/test.conf
+ebui/test-result.html
+ebui/.pytest_cache
 
 # pycache files
 **/__pycache__/

@@ -10,7 +10,7 @@ If not, download [get-pip.py](https://bootstrap.pypa.io/get-pip.py)
 
 Install it by running::
 
-    $ sudo apt install -y python3-pip python3-virtualenv tox
+    $ sudo apt install -y python3-pip python3-virtualenv
 
 This will install pip on the target machine.
 
@@ -53,7 +53,8 @@ Running Tests
 | ------- | ----------- |
 | python3 -m pytest tests | To run all tests |
 | python3 -m pytest tests/bu | To run all test in a specific folder |
-| python3 -m pytest tests/bu/test_bu.py -k 'test_create_duplicate_domain_001' | To run a specific test |
+| python3 -m pytest tests/bu/test_bu.py | To run all test in a specific file |
+| python3 -m pytest tests/bu/test_bu.py -s -k 'test_domain_crud_001' | To run a specific test |
 | python3 -m pytest --html=result.html tests | To save test run in result.html |
 | python3 -m pytest -s tests | To see entire test result in console |
 

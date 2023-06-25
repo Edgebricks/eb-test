@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #
 # Author: ankit@edgebricks.com
-# (c) 2022 Edgebricks
+# (c) 2022 Edgebricks Inc
 
 
 import random
@@ -21,10 +21,9 @@ def randomKey(length):
 
             eutil.randomKey(7)
     """
-    key = ''
+    key = ""
     for i in range(length):
-        key += random.choice(string.lowercase + string.uppercase +
-                             string.digits)
+        key += random.choice(string.lowercase + string.uppercase + string.digits)
     return key
 
 
@@ -43,8 +42,8 @@ def rcolor(s):
     """
     if not isinstance(s, str):
         s = str(s)
-    RED = '\033[0;31m'
-    NC = '\033[0m'
+    RED = "\033[0;31m"
+    NC = "\033[0m"
     return RED + s + NC
 
 
@@ -63,8 +62,8 @@ def gcolor(s):
     """
     if not isinstance(s, str):
         s = str(s)
-    GREEN = '\033[0;32m'
-    NC = '\033[0m'
+    GREEN = "\033[0;32m"
+    NC = "\033[0m"
     return GREEN + s + NC
 
 
@@ -83,6 +82,6 @@ def bcolor(s):
     """
     if not isinstance(s, str):
         s = str(s)
-    BLUE = '\033[0;34m'
-    NC = '\033[0m'
+    BLUE = "\033[0;34m"
+    NC = "\033[0m"
     return BLUE + s + NC
