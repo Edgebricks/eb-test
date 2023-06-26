@@ -7,17 +7,16 @@
 from time import sleep
 
 from ebapi.common.config import ConfigParser
-from ebapi.lib.keystone import Domains
 from ebapi.lib.keystone import Roles
 from ebapi.lib.keystone import Users
-from ebapi.lib.edgebricks import Projects
+from ebapi.lib.edgebricks import BUs, Projects
 from ebapi.lib.nova import VMs
 from ebapi.lib.nova import Flavors
 from ebapi.lib.neutron import Networks
 from ebapi.lib.glance import Images
 
 
-class TestCreateDeleteBasic:
+class TestSanity:
     domainID = ""
     adminUserID = ""
     userID = ""
@@ -32,42 +31,38 @@ class TestCreateDeleteBasic:
     def test_create_domain_users_project(cls):
 
         # Create Domain
-        domainObj = Domains()
-        TestCreateDeleteBasic.domainID = domainObj.createDomain(cls.domainName)
-        assert TestCreateDeleteBasic.domainID
-        cls.testConfig.setDomainID(TestCreateDeleteBasic.domainID)
+        domainObj = BUs()
+        TestSanity.domainID = domainObj.createBU(buName=cls.domainName)
+        assert TestSanity.domainID
+        cls.testConfig.setDomainID(TestSanity.domainID)
 
         # Create User
         userObj = Users()
-        TestCreateDeleteBasic.userID = userObj.createUser(
-            TestCreateDeleteBasic.domainID, cls.projectAdmin, cls.projectAdminPass
+        TestSanity.userID = userObj.createUser(
+            TestSanity.domainID, cls.projectAdmin, cls.projectAdminPass
         )
-        assert TestCreateDeleteBasic.userID
+        assert TestSanity.userID
 
         # Get User
         content = userObj.getUsers()
         for user in content["users"]:
             if user["name"] == cls.testConfig.getCloudAdmin():
-                TestCreateDeleteBasic.adminUserID = user["id"]
+                TestSanity.adminUserID = user["id"]
                 break
-
-        assert TestCreateDeleteBasic.adminUserID
+        assert TestSanity.adminUserID
 
         # Get Roles
         roleObj = Roles()
         content = roleObj.getRoles()
         for role in content["roles"]:
             if role["name"] == "admin":
-                TestCreateDeleteBasic.roleID = role["id"]
+                TestSanity.roleID = role["id"]
                 break
-
-        assert TestCreateDeleteBasic.roleID
+        assert TestSanity.roleID
 
         # assign admin role to created user
         assert roleObj.assignRole(
-            TestCreateDeleteBasic.domainID,
-            TestCreateDeleteBasic.userID,
-            TestCreateDeleteBasic.roleID,
+            TestSanity.domainID, TestSanity.userID, TestSanity.roleID
         )
         # assert roleObj.assignRole(domainID, adminUserID, roleID)
 
@@ -104,32 +99,32 @@ class TestCreateDeleteBasic:
             "pool": -1,
         }
 
-        TestCreateDeleteBasic.projID = projObj.createProject(
+        TestSanity.projID = projObj.createProject(
             cls.projectName,
-            TestCreateDeleteBasic.domainID,
+            TestSanity.domainID,
             metadata,
             compQuota,
             strQuota,
             netQuota,
         )
-        assert TestCreateDeleteBasic.projID
-        cls.testConfig.setProjectID(TestCreateDeleteBasic.projID)
+        assert TestSanity.projID
+        cls.testConfig.setProjectID(TestSanity.projID)
 
     def test_create_delete_vm(cls):
 
-        flavorObj = Flavors(TestCreateDeleteBasic.projID)
+        flavorObj = Flavors(TestSanity.projID)
         matchflavorID = flavorObj.getBestMatchingFlavor(numCPU=2, memMB=4096)
 
-        networkObj = Networks(TestCreateDeleteBasic.projID)
+        networkObj = Networks(TestSanity.projID)
         netID = networkObj.createInternalNetwork(
             netName="Auto-Net1", subnetName="Auto-SubNet1"
         )
 
-        imageObj = Images(TestCreateDeleteBasic.projID)
-        imgDetails = imageObj.getImagesbyOwner(owner=TestCreateDeleteBasic.projID)
+        imageObj = Images(TestSanity.projID)
+        imgDetails = imageObj.getImagesbyOwner(owner=TestSanity.projID)
         actualImageID = imgDetails["images"][0]["id"]
         sleep(20)
-        vmObj = VMs(TestCreateDeleteBasic.projID)
+        vmObj = VMs(TestSanity.projID)
         vmObj.createVM(
             vmName="AutoVM",
             flavorID=matchflavorID,
@@ -153,17 +148,15 @@ class TestCreateDeleteBasic:
 
         # Delete Project
         projObj = Projects(cls.domainName, cls.projectAdmin, cls.projectAdminPass)
-        content = projObj.getProject(
-            TestCreateDeleteBasic.userID, TestCreateDeleteBasic.domainID
-        )
+        content = projObj.getProject(TestSanity.userID, TestSanity.domainID)
         for project in content["projects"]:
             if project["name"] == cls.projectName:
-                TestCreateDeleteBasic.projID = project["id"]
+                TestSanity.projID = project["id"]
                 break
-        assert projObj.deleteProject(TestCreateDeleteBasic.projID)
+        assert projObj.deleteProject(TestSanity.projID)
         sleep(15)
 
         # Delete Domain
-        domainObj = Domains()
-        assert domainObj.updateDomain(TestCreateDeleteBasic.domainID)
-        assert domainObj.deleteDomain(TestCreateDeleteBasic.domainID)
+        domainObj = BUs()
+        # assert domainObj.updateDomain(TestSanity.domainID)
+        assert domainObj.deleteBU(TestSanity.domainID)

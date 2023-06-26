@@ -28,14 +28,22 @@ class BUs(Token):
         self.clusterURL = self.apiURL + "/v2/clusters/" + self.clusterID
         self.buURL = self.clusterURL + "/domains"
 
-    def createBU(self, buName, description=None):
+    def createBU(self, buName=None, userName=None, userPwd=None, description=None):
+        if buName is None:
+            buName = "ebtestdomain"
+        if userName is None:
+            userName = "ebtest"
+        if userPwd is None:
+            userPwd = "ebtest"
+        if description is None:
+            description = "created by ebtest"
         payload = {
             "domain": {"name": buName, "description": description},
             "user": {
                 "email": "ebtest@edgebricks.com",
                 "enabled": True,
-                "name": "ebtest",
-                "password": "ebtest@123",
+                "name": userName,
+                "password": userPwd,
                 "provider": "local",
             },
         }
@@ -51,7 +59,7 @@ class BUs(Token):
 
         buID = json.loads(response.content)
         elog.info(
-            "business unit [%s,%s] create request submitted successfully: %s OK"
+            "business unit [%s,%s] create request sent successfully: %s OK"
             % (
                 eutil.bcolor(buName),
                 eutil.bcolor(buID),
@@ -61,12 +69,19 @@ class BUs(Token):
 
         # wait for bu to be created
         elog.info("waiting for business unit %s to be created" % eutil.bcolor(buID))
+
+        curIteration = 1
         while True:
             sleep(10)
             buState = self.getBU(buID)["domain_state"]
             if buState == 3:
                 break
-            # TODO(vikram): break after maximum timeout and report failure
+            # break after maximum allowed iterations and report failure
+            if curIteration > 15:
+                elog.error(
+                    "failed to create business unit: %s" % eutil.rcolor(buID))
+                return None
+            curIteration = curIteration + 1
 
         elog.info("business unit %s created successfully" % (eutil.bcolor(buID)))
         return buID
@@ -89,12 +104,19 @@ class BUs(Token):
 
         # wait for bu to be created
         elog.info("waiting for business unit %s to be deleted" % eutil.bcolor(buID))
+
+        curIteration = 1
         while True:
             sleep(10)
             buState = self.getBU(buID)["domain_state"]
             if buState == 8:
                 break
-            # TODO(vikram): break after maximum timeout and report failure
+            # break after maximum allowed iterations and report failure
+            if curIteration > 15:
+                elog.error(
+                    "failed to create business unit: %s" % eutil.rcolor(buID))
+                return None
+            curIteration = curIteration + 1
 
         elog.info("business unit %s deleted successfully" % (eutil.bcolor(buID)))
         return True

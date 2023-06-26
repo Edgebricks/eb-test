@@ -83,7 +83,7 @@ class ConfigParser(object):
             )
         return value
 
-    def setConfig(self, config, value):
+    def setConfig(self, config, value=None):
         """
         method to set test configuration
 
@@ -101,6 +101,8 @@ class ConfigParser(object):
                 testConfig = ConfigParser()
                 testConfig.setConfig('domainName', value)
         """
+        if value is None:
+            value = ""
         self.parser.read(self.fname)
         try:
             self.parser.set(self.section, config, value)
@@ -226,7 +228,7 @@ class ConfigParser(object):
         return self.setConfig("domainID", value)
 
     def clearDomainID(self):
-        return self.deleteConfig("domainID")
+        return self.setConfig("domainID")
 
     def setDomainName(self, value):
         return self.setConfig("domainName", value)

@@ -3,27 +3,26 @@
 # Author: ankit@edgebricks.com
 # (c) 2022 Edgebricks Inc
 
+import pytest
 
 from ebapi.common.config import ConfigParser
 from ebapi.lib.edgebricks import BUs
 
 
 class TestBu:
-    buID = ""
     testConfig = ConfigParser()
-    buName = testConfig.getDomainName()
 
-    def test_domain_crud_001(cls):
+    def test_single_bu_001(cls):
 
-        # create bu
+        # create bu using config
         buObj = BUs()
-        buID = buObj.createBU(cls.buName, description="created by ebtest")
+        domainName = cls.testConfig.getDomainName()
+        buID = buObj.createBU(buName=domainName)
         assert buID
-        cls.testConfig.setDomainID(buID)
 
         # get bu
         buResp = buObj.getBU(buID)
-        assert buResp["name"] == cls.buName
+        assert buResp["name"] == domainName
 
         # update bu
         # newDesc = "ebtest updated description"
@@ -32,4 +31,13 @@ class TestBu:
 
         # delete bu
         assert buObj.deleteBU(buID)
-        cls.testConfig.clearDomainID()
+
+    @pytest.mark.parametrize(
+        "buNames", ["ebtestDomain01", "ebtestDomain02", "ebtestDomain03"]
+    )
+    def test_multiple_bu_002(cls, buNames):
+
+        buObj = BUs()
+        buID = buObj.createBU(buName=buNames)
+        assert buID
+        assert buObj.deleteBU(buID)

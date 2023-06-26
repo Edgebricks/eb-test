@@ -40,4 +40,4 @@ Install essential python static tools by running::
 This will install all required static check tools on the target machine.
 Execute below command to run all staticchecks on the code::
 
-    $ make staticchecks
+    $ make codechecks
