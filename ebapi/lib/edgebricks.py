@@ -15,6 +15,27 @@ from ebapi.lib.keystone import Token
 
 
 class BUs(Token):
+    # BU_STATE_UNKNOWN represents state unknown
+    BU_STATE_UNKNOWN = 0
+    # BU_STATE_ENABLED represents state enabled
+    BU_STATE_ENABLED = 1
+    # BU_STATE_DISABLED represents state disabled
+    BU_STATE_DISABLED = 2
+    # BU_STATE_DELETED represents state deleted
+    BU_STATE_DELETED = 3
+    # BU_STATE_CREATE_PENDING represents state to be created
+    BU_STATE_CREATE_PENDING = 4
+    # BU_STATE_CREATING represents state creating
+    BU_STATE_CREATING = 5
+    # BU_STATE_CREATED represents state created
+    BU_STATE_CREATED = 6
+    # BU_STATE_DELETE_PENDING represents state to be deleted
+    BU_STATE_DELETE_PENDING = 7
+    # BU_STATE_DELETING represents state error
+    BU_STATE_DELETING = 8
+    # BU_STATE_ERROR represents state error
+    BU_STATE_ERROR = 9
+
     def __init__(self):
         testConfig = ConfigParser()
         cloudAdmin = testConfig.getCloudAdmin()
@@ -28,17 +49,23 @@ class BUs(Token):
         self.clusterURL = self.apiURL + "/v2/clusters/" + self.clusterID
         self.buURL = self.clusterURL + "/domains"
 
-    def createBU(self, buName=None, userName=None, userPwd=None, description=None):
+    def create(self, buName=None, userName=None, userPwd=None, desc=None):
+        elog.info("creating business unit %s" % eutil.bcolor(buName))
+
+        # prepare create payload
         if buName is None:
             buName = "ebtestdomain"
         if userName is None:
             userName = "ebtest"
         if userPwd is None:
             userPwd = "ebtest"
-        if description is None:
-            description = "created by ebtest"
+        if desc is None:
+            desc = "created by ebtest"
         payload = {
-            "domain": {"name": buName, "description": description},
+            "domain": {
+                "name": buName,
+                "description": desc,
+            },
             "user": {
                 "email": "ebtest@edgebricks.com",
                 "enabled": True,
@@ -47,12 +74,13 @@ class BUs(Token):
                 "provider": "local",
             },
         }
-        elog.info("creating business unit %s" % eutil.bcolor(buName))
+
+        # send create request
         response = self.client.post(self.buURL, payload)
         if not response.ok:
             elog.error(
-                "failed to create business unit: %s"
-                % eutil.rcolor(response.status_code)
+                "failed to create business unit %s :: %s"
+                % (eutil.rcolor(buName), eutil.rcolor(response.status_code))
             )
             elog.error(response.text)
             return None
@@ -66,33 +94,60 @@ class BUs(Token):
                 eutil.gcolor(response.status_code),
             )
         )
-
-        # wait for bu to be created
-        elog.info("waiting for business unit %s to be created" % eutil.bcolor(buID))
-
-        curIteration = 1
-        while True:
-            sleep(10)
-            buState = self.getBU(buID)["domain_state"]
-            if buState == 3:
-                break
-            # break after maximum allowed iterations and report failure
-            if curIteration > 15:
-                elog.error(
-                    "failed to create business unit: %s" % eutil.rcolor(buID))
-                return None
-            curIteration = curIteration + 1
-
-        elog.info("business unit %s created successfully" % (eutil.bcolor(buID)))
         return buID
 
-    def deleteBU(self, buID):
-        elog.info("deleting business unit with id:%s" % eutil.bcolor(buID))
+    def waitForState(self, buID, state=None,
+                     timeoutInSec=None, sleepInSec=None):
+
+        elog.info("waiting for business unit %s state to be %s"
+                  % (eutil.bcolor(buID), eutil.gcolor(state)))
+
+        if timeoutInSec is None:
+            timeoutInSec = 150  # 2mins 30secs
+        if sleepInSec is None:
+            sleepInSec = 15     # 15secs
+
+        curIteration = 1
+        maxAllowedItr = timeoutInSec / sleepInSec
+        while True:
+            buRsp = self.get(buID)
+            if buRsp is None:
+                elog.error("business unit [%s] not found"
+                           % eutil.rcolor(buID))
+                return None
+
+            buName = buRsp["name"]
+            buState = buRsp["domain_state"]
+            if buState == state:
+                elog.info(
+                    "business unit [%s,%s] is in desired state [%s]"
+                    % (eutil.bcolor(buName), eutil.bcolor(buID),
+                       eutil.gcolor(state))
+                )
+                break
+
+            # break after maximum allowed iterations and report failure
+            if curIteration > maxAllowedItr:
+                elog.error(
+                    "business unit [%s] failed to get desired state %s"
+                    % (eutil.rcolor(buID), eutil.rcolor(state))
+                )
+                return None
+
+            sleep(10)
+            curIteration = curIteration + 1
+
+        return True
+
+    def delete(self, buID):
+        elog.info("deleting business unit %s" % eutil.bcolor(buID))
+
+        # send delete request
         response = self.client.delete(self.buURL + "/" + buID)
         if not response.ok:
             elog.error(
-                "failed to delete business unit: %s"
-                % eutil.rcolor(response.status_code)
+                "failed to delete business unit %s :: %s"
+                % (eutil.rcolor(buID), eutil.rcolor(response.status_code))
             )
             elog.error(response.text)
             return False
@@ -102,51 +157,41 @@ class BUs(Token):
             % (eutil.bcolor(buID), eutil.gcolor(response.status_code))
         )
 
-        # wait for bu to be created
-        elog.info("waiting for business unit %s to be deleted" % eutil.bcolor(buID))
-
-        curIteration = 1
-        while True:
-            sleep(10)
-            buState = self.getBU(buID)["domain_state"]
-            if buState == 8:
-                break
-            # break after maximum allowed iterations and report failure
-            if curIteration > 15:
-                elog.error(
-                    "failed to create business unit: %s" % eutil.rcolor(buID))
-                return None
-            curIteration = curIteration + 1
-
-        elog.info("business unit %s deleted successfully" % (eutil.bcolor(buID)))
         return True
 
-    def getBU(self, buID=""):
+    def get(self, buID=""):
+        elog.info("fetching business unit %s" % (eutil.bcolor(buID)))
+
+        # send get request
         response = self.client.get(self.buURL + "/" + buID)
         if not response.ok:
             elog.error(
-                "failed to get business unit detail %s: %s"
-                % (eutil.bcolor(buID), eutil.rcolor(response.status_code))
+                "failed to get business unit details %s :: %s"
+                % (eutil.rcolor(buID), eutil.rcolor(response.status_code))
             )
             elog.error(response.text)
             return None
 
-        elog.info(
-            "fetching business unit %s: %s OK"
-            % (eutil.bcolor(buID), eutil.gcolor(response.status_code))
-        )
+        # display received response
         content = json.loads(response.content)
         elog.info(content)
         return content
 
-    def updateBU(self, buID, description=None, enabled=True):
-        payload = {"description": description, "enabled": enabled}
-        elog.info("Updating business unit %s" % eutil.bcolor(buID))
+    def update(self, buID, desc=None, enabled=True):
+        elog.info("updating business unit %s" % eutil.bcolor(buID))
+
+        # prepare update payload
+        payload = {
+            "description": desc,
+            "enabled": enabled,
+        }
+
+        # send update request
         response = self.client.patch(self.buURL + "/" + buID, payload)
         if not response.ok:
             elog.error(
-                "failed to update business unit: %s"
-                % eutil.rcolor(response.status_code)
+                "failed to update business unit %s :: %s"
+                % (eutil.rcolor(buID), eutil.rcolor(response.status_code))
             )
             elog.error(response.text)
             return False
@@ -155,6 +200,8 @@ class BUs(Token):
             "updating business unit %s: %s OK"
             % (eutil.bcolor(buID), eutil.gcolor(response.status_code))
         )
+
+        # display received response
         content = json.loads(response.content)
         elog.info(content)
         return content
@@ -169,10 +216,9 @@ class Projects(Token):
         self.clusterURL = self.apiURL + "/v2/clusters/" + self.clusterID
         self.projectURL = self.clusterURL + "/projects"
         serviceURL = self.getServiceURL()
-        keystoneVer = "/keystone/v3"
-        self.keystoneURL = serviceURL + keystoneVer
+        self.keystoneURL = serviceURL + "/keystone/v3"
 
-    def createProject(
+    def create(
         self,
         projName,
         buID,
@@ -181,14 +227,22 @@ class Projects(Token):
         strQuota="",
         netQuota="",
         duration=False,
+        desc=None,
     ):
+        elog.info(
+            "creating project %s in business unit %s"
+            % (eutil.bcolor(projName), eutil.bcolor(buID))
+        )
+
+        # prepare create payload
+        if desc is None:
+            desc = "created by ebtest"
         payload = {
             "name": projName,
             "domain_id": buID,
-            "description": projName,
+            "description": desc,
             "finite_duration": duration,
         }
-
         if metadata:
             payload["metadata"] = metadata
 
@@ -204,55 +258,75 @@ class Projects(Token):
         if netQuota:
             payload["quota"]["network_quota"] = netQuota
 
-        elog.info(
-            "creating project %s in business unit %s"
-            % (eutil.bcolor(projName), eutil.bcolor(buID))
-        )
-
+        # send create request
         response = self.client.post(self.projectURL, payload)
         if not response.ok:
             elog.error(
-                "failed to create project %s: %s"
-                % (eutil.bcolor(projName), eutil.rcolor(response.status_code))
+                "failed to create project %s :: %s"
+                % (eutil.rcolor(projName), eutil.rcolor(response.status_code))
             )
             elog.error(response.text)
             return None
 
+        # parse projID from the received response
         content = json.loads(response.content)
         projID = content["id"]
         elog.info(
-            "project %s created: %s" % (eutil.bcolor(projName), eutil.bcolor(projID))
+            "project [%s,%s] created successfully"
+            % (eutil.bcolor(projName), eutil.bcolor(projID))
         )
-
         return projID
 
-    def deleteProject(self, projID):
+    def delete(self, projID):
         elog.info("deleting project %s" % eutil.bcolor(projID))
+
+        # send delete request
         response = self.client.deleteWithPayload(self.projectURL + "/" + projID)
         if not response.ok:
             elog.error(
-                "failed to delete project: %s" % eutil.rcolor(response.status_code)
+                "failed to delete project %s :: %s"
+                % (eutil.rcolor(projID), eutil.rcolor(response.status_code))
             )
             elog.error(response.text)
             return False
 
-        elog.info(
-            "deleting project %s: %s OK"
-            % (eutil.bcolor(projID), eutil.gcolor(response.status_code))
-        )
+        elog.info("project %s deleted successfully" % (eutil.bcolor(projID)))
         return True
 
-    def getProject(self, userID="", buID=""):
-        requestURL = (
-            self.keystoneURL + "/users" + "/%s/projects?domain_id=%s" % (userID, buID)
-        )
+    def list(self, buID):
+        elog.info("fetching projects in business unit %s" % eutil.bcolor(buID))
+
+        # send list request
+        requestURL = self.clusterURL + "/domains" + "/%s/projects" % buID
         response = self.client.get(requestURL)
         if not response.ok:
             elog.error(
-                "failed to get projects from business unit %s: %s"
-                % (eutil.bcolor(buID), eutil.rcolor(response.status_code))
+                "failed to get projects from business unit %s :: %s"
+                % (eutil.rcolor(buID), eutil.rcolor(response.status_code))
             )
             elog.error(response.text)
             return None
 
-        return json.loads(response.content)
+        # display received response
+        content = json.loads(response.content)
+        elog.info(content)
+        return content
+
+    def get(self, projID):
+        elog.info("fetching project %s" % eutil.bcolor(projID))
+
+        # send get request
+        requestURL = self.keystoneURL + "/projects/%s" % projID
+        response = self.client.get(requestURL)
+        if not response.ok:
+            elog.error(
+                "failed to get project details %s :: %s"
+                % (eutil.rcolor(projID), eutil.rcolor(response.status_code))
+            )
+            elog.error(response.text)
+            return None
+
+        # display received response
+        content = json.loads(response.content)
+        elog.info(content)
+        return content

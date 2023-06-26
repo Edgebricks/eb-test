@@ -54,7 +54,7 @@ class CreateBUProject(unittest.TestCase):
         result = self.bu.verifyBUCreated(self.businessUnitName)
         self.ts.mark(result, "BU CREATION VERIFICATION")
         self.buSummary.navigateToProjects()
-        self.projects.createProject(self.projectName, self.projectTemplate)
+        self.projects.create(self.projectName, self.projectTemplate)
         self.projects.customizeProject(self.cidr)
 
         result = self.projects.verifyProjectCreated(self.projectName)

@@ -54,7 +54,7 @@ Running Tests
 | python3 -m pytest tests | To run all tests |
 | python3 -m pytest tests/bu | To run all test in a specific folder |
 | python3 -m pytest tests/bu/test_bu.py | To run all test in a specific file |
-| python3 -m pytest tests/bu/test_bu.py -s -k 'test_domain_crud_001' | To run a specific test |
+| python3 -m pytest tests/bu/test_crud.py -s -k 'test_bu_crud_001' | To run a specific test |
 | python3 -m pytest --html=result.html tests | To save test run in result.html |
 | python3 -m pytest -s tests | To see entire test result in console |
 

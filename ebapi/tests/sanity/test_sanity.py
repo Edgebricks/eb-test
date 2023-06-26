@@ -28,23 +28,23 @@ class TestSanity:
     projectAdmin = testConfig.getProjectAdmin()
     projectAdminPass = testConfig.getProjectAdminPassword()
 
-    def test_create_domain_users_project(cls):
+    def test_sanity_project_001(cls):
 
         # Create Domain
         domainObj = BUs()
-        TestSanity.domainID = domainObj.createBU(buName=cls.domainName)
+        TestSanity.domainID = domainObj.create(buName=cls.domainName)
         assert TestSanity.domainID
         cls.testConfig.setDomainID(TestSanity.domainID)
 
         # Create User
         userObj = Users()
-        TestSanity.userID = userObj.createUser(
+        TestSanity.userID = userObj.create(
             TestSanity.domainID, cls.projectAdmin, cls.projectAdminPass
         )
         assert TestSanity.userID
 
         # Get User
-        content = userObj.getUsers()
+        content = userObj.list()
         for user in content["users"]:
             if user["name"] == cls.testConfig.getCloudAdmin():
                 TestSanity.adminUserID = user["id"]
@@ -53,7 +53,7 @@ class TestSanity:
 
         # Get Roles
         roleObj = Roles()
-        content = roleObj.getRoles()
+        content = roleObj.get()
         for role in content["roles"]:
             if role["name"] == "admin":
                 TestSanity.roleID = role["id"]
@@ -61,10 +61,8 @@ class TestSanity:
         assert TestSanity.roleID
 
         # assign admin role to created user
-        assert roleObj.assignRole(
-            TestSanity.domainID, TestSanity.userID, TestSanity.roleID
-        )
-        # assert roleObj.assignRole(domainID, adminUserID, roleID)
+        assert roleObj.assign(TestSanity.domainID, TestSanity.userID, TestSanity.roleID)
+        # assert roleObj.assign(domainID, adminUserID, roleID)
 
         # Create Project
         projObj = Projects(cls.domainName, cls.projectAdmin, cls.projectAdminPass)
@@ -99,7 +97,7 @@ class TestSanity:
             "pool": -1,
         }
 
-        TestSanity.projID = projObj.createProject(
+        TestSanity.projID = projObj.create(
             cls.projectName,
             TestSanity.domainID,
             metadata,
@@ -110,7 +108,7 @@ class TestSanity:
         assert TestSanity.projID
         cls.testConfig.setProjectID(TestSanity.projID)
 
-    def test_create_delete_vm(cls):
+    def test_sanity_vm_002(cls):
 
         flavorObj = Flavors(TestSanity.projID)
         matchflavorID = flavorObj.getBestMatchingFlavor(numCPU=2, memMB=4096)
@@ -144,19 +142,19 @@ class TestSanity:
         networkObj.deleteInternalNetwork(netID)
         sleep(20)
 
-    def test_delete_domain_users_project(cls):
+    def test_sanity_user_003(cls):
 
         # Delete Project
         projObj = Projects(cls.domainName, cls.projectAdmin, cls.projectAdminPass)
-        content = projObj.getProject(TestSanity.userID, TestSanity.domainID)
+        content = projObj.list(TestSanity.userID, TestSanity.domainID)
         for project in content["projects"]:
             if project["name"] == cls.projectName:
                 TestSanity.projID = project["id"]
                 break
-        assert projObj.deleteProject(TestSanity.projID)
+        assert projObj.delete(TestSanity.projID)
         sleep(15)
 
         # Delete Domain
         domainObj = BUs()
-        # assert domainObj.updateDomain(TestSanity.domainID)
-        assert domainObj.deleteBU(TestSanity.domainID)
+        # assert domainObj.update(TestSanity.domainID)
+        assert domainObj.delete(TestSanity.domainID)

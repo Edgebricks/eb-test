@@ -2,3 +2,4 @@
 per-file-ignores =
     # line too long
     doc/conf.py: E501,
+    ebapi/lib/*.py: E501,

@@ -161,16 +161,27 @@ class Roles(Token):
         self.client = RestClient(self.getToken())
         self.rolesURL = self.keystoneURL + "/roles"
 
-    def getRoles(self):
+    def get(self):
+        elog.info("fetching roles")
+
         response = self.client.get(self.rolesURL)
         if not response.ok:
             elog.error("failed to get roles: %s" % eutil.rcolor(response.status_code))
             elog.error(response.text)
             return None
 
-        return json.loads(response.content)
+        # display received response
+        content = json.loads(response.content)
+        elog.info(content)
+        return content
 
-    def assignRole(self, domainID, userID, roleID):
+    def assign(self, domainID, userID, roleID):
+        elog.info(
+            "assigning role %s to user %s in domain %s"
+            % (eutil.bcolor(roleID), eutil.bcolor(userID), eutil.bcolor(domainID))
+        )
+
+        # send role assign request
         userURL = "/users/" + userID
         roleURL = "/roles/" + roleID
         domainURL = "/domains/" + domainID
@@ -205,7 +216,13 @@ class Users(Token):
         self.client = RestClient(self.getToken())
         self.usersURL = self.keystoneURL + "/users"
 
-    def createUser(self, domainID, userName, password):
+    def create(self, domainID, userName, password):
+        elog.info(
+            "creating user %s in domain %s with password %s"
+            % (eutil.bcolor(userName), eutil.bcolor(domainID), eutil.bcolor(password))
+        )
+
+        # prepare create user payload
         payload = {
             "user": {
                 "name": userName,
@@ -215,17 +232,19 @@ class Users(Token):
                 "domain_id": domainID,
             }
         }
-        elog.info("creating user %s" % eutil.bcolor(userName))
+
+        # send create request
         response = self.client.post(self.usersURL, payload)
         if not response.ok:
             elog.error("failed to create user: %s" % eutil.rcolor(response.status_code))
             elog.error(response.text)
             return None
 
+        # parse userID from the received reponse
         content = json.loads(response.content)
         userID = content["user"]["id"]
         elog.info(
-            "user %s created successfully: %s"
+            "user [%s,%s] created successfully"
             % (eutil.bcolor(userName), eutil.bcolor(userID))
         )
         return userID
@@ -236,7 +255,7 @@ class Users(Token):
 
         return self.usersURL + "?domain_id=%s" % domainID
 
-    def getUsers(self, domainID=""):
+    def list(self, domainID=""):
         requestURL = self.getURL(domainID)
         response = self.client.get(requestURL)
         if not response.ok:
@@ -249,7 +268,7 @@ class Users(Token):
 
         return json.loads(response.content)
 
-    def deleteUser(self, userID):
+    def delete(self, userID):
         elog.info("deleting user %s" % eutil.bcolor(userID))
         response = self.client.delete(self.domainURL + "/" + userID)
         if not response.ok:
@@ -276,7 +295,7 @@ class Domains(Token):
         self.client = RestClient(self.getToken())
         self.domainURL = self.keystoneURL + "/domains"
 
-    def createDomain(self, domainName, description=None):
+    def create(self, domainName, description=None):
         payload = {"domain": {"name": domainName, "description": description}}
         elog.info("creating domain %s" % eutil.bcolor(domainName))
         response = self.client.post(self.domainURL, payload)
@@ -297,7 +316,7 @@ class Domains(Token):
         )
         return domainID
 
-    def updateDomain(self, domainID, description=None, enabled=False):
+    def update(self, domainID, description=None, enabled=False):
         payload = {"domain": {"description": description, "enabled": enabled}}
         elog.info("Updating domain %s" % eutil.bcolor(domainID))
         response = self.client.patch(self.domainURL + "/" + domainID, payload)
@@ -314,7 +333,7 @@ class Domains(Token):
         )
         return True
 
-    def updateDomainQuota(self, domainID=""):
+    def updateQuota(self, domainID=""):
         payload = {
             "acct_id": self.acctID,
             "cluster_id": self.clusterID,
@@ -365,7 +384,7 @@ class Domains(Token):
         )
         return True
 
-    def deleteDomain(self, domainID):
+    def delete(self, domainID):
         elog.info("deleting domain %s" % eutil.bcolor(domainID))
         response = self.client.delete(self.domainURL + "/" + domainID)
         if not response.ok:
@@ -381,7 +400,7 @@ class Domains(Token):
         )
         return True
 
-    def getDomain(self, domainID=""):
+    def get(self, domainID=""):
         response = self.client.get(self.domainURL + "/" + domainID)
         if not response.ok:
             elog.error(
