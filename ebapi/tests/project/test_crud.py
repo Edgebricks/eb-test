@@ -16,33 +16,20 @@ class TestProjectCRUD:
         # create BU
         buObj = BUs()
         domainName = cls.testConfig.getDomainName()
-        buID = buObj.create(buName=domainName)
+        userName = cls.testConfig.getProjectAdmin()
+        userPwd = cls.testConfig.getProjectAdminPassword()
+        buID = buObj.create(buName=domainName, userName=userName, userPwd=userPwd)
         assert buID
 
-        # create admin user
-        userObj = Users()
-        projectAdmin = cls.testConfig.getProjectAdmin()
-        projectAdminPass = cls.testConfig.getProjectAdminPassword()
-        userID = userObj.create(buID, projectAdmin, projectAdminPass)
-        assert userID
+        # get bu
+        buResp = buObj.get(buID)
+        assert buResp["name"] == domainName
 
-        # get Admin RoleID
-        roleID = None
-        roleObj = Roles()
-        content = roleObj.get()
-        for role in content["roles"]:
-            if role["name"] == "admin":
-                roleID = role["id"]
-                break
-        assert roleID is not None
+        # wait for bu to be created
+        assert buObj.waitForState(buID, state=BUs.BU_STATE_CREATED)
 
-        # assign admin role to created user
-        roleObj = Roles()
-        assert roleObj.assign(buID, userID, roleID)
-
-        # create Project with above created user
-        projObj = Projects(domainName, projectAdmin, projectAdminPass)
-
+        # create Project in the above bu
+        projObj = Projects(domainName, userName, userPwd)
         metadata = {"templateId": "Large", "custom_template": "true"}
         compQuota = {
             "cores": 128,
@@ -78,10 +65,19 @@ class TestProjectCRUD:
 
         # get project
         projResp = projObj.get(projID)
-        assert projResp["project"]["name"] == projectName
+        assert projResp["name"] == projectName
+
+        # wait for project to be created
+        assert projObj.waitForState(projID, state=Projects.PROJ_STATE_CREATED)
 
         # delete project
         assert projObj.delete(projID)
 
+        # wait for project to be deleted
+        assert projObj.waitForState(projID, state=Projects.PROJ_STATE_DELETED)
+
         # delete bu
         assert buObj.delete(buID)
+
+        # wait for bu to be deleted
+        assert buObj.waitForState(buID, state=BUs.BU_STATE_DELETED)

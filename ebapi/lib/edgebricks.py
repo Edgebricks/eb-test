@@ -33,8 +33,12 @@ class BUs(Token):
     BU_STATE_DELETE_PENDING = 7
     # BU_STATE_DELETING represents state error
     BU_STATE_DELETING = 8
+    # BU_STATE_CREATE_ERROR represents state create error
+    BU_STATE_CREATE_ERROR = 9
+    # BU_STATE_DELETE_ERROR represents state delete error
+    BU_STATE_DELETE_ERROR = 10
     # BU_STATE_ERROR represents state error
-    BU_STATE_ERROR = 9
+    BU_STATE_ERROR = 11
 
     def __init__(self):
         testConfig = ConfigParser()
@@ -62,10 +66,7 @@ class BUs(Token):
         if desc is None:
             desc = "created by ebtest"
         payload = {
-            "domain": {
-                "name": buName,
-                "description": desc,
-            },
+            "domain": {"name": buName, "description": desc},
             "user": {
                 "email": "ebtest@edgebricks.com",
                 "enabled": True,
@@ -96,24 +97,24 @@ class BUs(Token):
         )
         return buID
 
-    def waitForState(self, buID, state=None,
-                     timeoutInSec=None, sleepInSec=None):
+    def waitForState(self, buID, state=None, timeoutInSec=None, sleepInSec=None):
 
-        elog.info("waiting for business unit %s state to be %s"
-                  % (eutil.bcolor(buID), eutil.gcolor(state)))
+        elog.info(
+            "waiting for business unit %s state to be %s"
+            % (eutil.bcolor(buID), eutil.gcolor(state))
+        )
 
         if timeoutInSec is None:
             timeoutInSec = 150  # 2mins 30secs
         if sleepInSec is None:
-            sleepInSec = 15     # 15secs
+            sleepInSec = 15  # 15secs
 
         curIteration = 1
         maxAllowedItr = timeoutInSec / sleepInSec
         while True:
             buRsp = self.get(buID)
             if buRsp is None:
-                elog.error("business unit [%s] not found"
-                           % eutil.rcolor(buID))
+                elog.error("business unit [%s] not found" % eutil.rcolor(buID))
                 return None
 
             buName = buRsp["name"]
@@ -121,8 +122,7 @@ class BUs(Token):
             if buState == state:
                 elog.info(
                     "business unit [%s,%s] is in desired state [%s]"
-                    % (eutil.bcolor(buName), eutil.bcolor(buID),
-                       eutil.gcolor(state))
+                    % (eutil.bcolor(buName), eutil.bcolor(buID), eutil.gcolor(state))
                 )
                 break
 
@@ -181,10 +181,7 @@ class BUs(Token):
         elog.info("updating business unit %s" % eutil.bcolor(buID))
 
         # prepare update payload
-        payload = {
-            "description": desc,
-            "enabled": enabled,
-        }
+        payload = {"description": desc, "enabled": enabled}
 
         # send update request
         response = self.client.patch(self.buURL + "/" + buID, payload)
@@ -208,6 +205,33 @@ class BUs(Token):
 
 
 class Projects(Token):
+    # PROJ_STATE_UNKNOWN represents state unknown
+    PROJ_STATE_UNKNOWN = 0
+    # PROJ_STATE_ENABLED represents state enabled
+    PROJ_STATE_ENABLED = 1
+    # PROJ_STATE_DISABLED represents state disabled
+    PROJ_STATE_DISABLED = 2
+    # PROJ_STATE_DELETED represents state deleted
+    PROJ_STATE_DELETED = 3
+    # PROJ_STATE_ARCHIVED represents state archived
+    PROJ_STATE_ARCHIVED = 4
+    # PROJ_STATE_CREATE_PENDING represents state to be created
+    PROJ_STATE_CREATE_PENDING = 5
+    # PROJ_STATE_CREATING represents state creating
+    PROJ_STATE_CREATING = 6
+    # PROJ_STATE_CREATED represents state created
+    PROJ_STATE_CREATED = 7
+    # PROJ_STATE_DELETE_PENDING represents state to be deleted
+    PROJ_STATE_DELETE_PENDING = 8
+    # PROJ_STATE_DELETING represents state error
+    PROJ_STATE_DELETING = 9
+    # PROJ_STATE_CREATE_ERROR represents state create error
+    PROJ_STATE_CREATE_ERROR = 10
+    # PROJ_STATE_DELETE_ERROR represents state delete error
+    PROJ_STATE_DELETE_ERROR = 11
+    # PROJ_STATE_ERROR represents state error
+    PROJ_STATE_ERROR = 12
+
     def __init__(self, buName, projAdmin, projAdminPass):
         super(Projects, self).__init__("domain", buName, projAdmin, projAdminPass)
         self.client = RestClient(self.getToken())
@@ -215,8 +239,7 @@ class Projects(Token):
         self.clusterID = self.getClusterID()
         self.clusterURL = self.apiURL + "/v2/clusters/" + self.clusterID
         self.projectURL = self.clusterURL + "/projects"
-        serviceURL = self.getServiceURL()
-        self.keystoneURL = serviceURL + "/keystone/v3"
+        self.projectNewURL = self.clusterURL + "/projectsnew"
 
     def create(
         self,
@@ -259,7 +282,7 @@ class Projects(Token):
             payload["quota"]["network_quota"] = netQuota
 
         # send create request
-        response = self.client.post(self.projectURL, payload)
+        response = self.client.post(self.projectNewURL, payload)
         if not response.ok:
             elog.error(
                 "failed to create project %s :: %s"
@@ -269,19 +292,64 @@ class Projects(Token):
             return None
 
         # parse projID from the received response
-        content = json.loads(response.content)
-        projID = content["id"]
+        projID = json.loads(response.content)
         elog.info(
             "project [%s,%s] created successfully"
             % (eutil.bcolor(projName), eutil.bcolor(projID))
         )
         return projID
 
+    def waitForState(self, projID, state=None, timeoutInSec=None, sleepInSec=None):
+
+        elog.info(
+            "waiting for project %s state to be %s"
+            % (eutil.bcolor(projID), eutil.gcolor(state))
+        )
+
+        if timeoutInSec is None:
+            timeoutInSec = 150  # 2mins 30secs
+        if sleepInSec is None:
+            sleepInSec = 15  # 15secs
+
+        curIteration = 1
+        maxAllowedItr = timeoutInSec / sleepInSec
+        while True:
+            projRsp = self.get(projID)
+            if projRsp is None:
+                elog.error("project [%s] not found" % eutil.rcolor(projID))
+                return None
+
+            projName = projRsp["name"]
+            projState = projRsp["project_state"]
+            if projState == state:
+                elog.info(
+                    "project [%s,%s] is in desired state [%s]"
+                    % (
+                        eutil.bcolor(projName),
+                        eutil.bcolor(projID),
+                        eutil.gcolor(state),
+                    )
+                )
+                break
+
+            # break after maximum allowed iterations and report failure
+            if curIteration > maxAllowedItr:
+                elog.error(
+                    "project [%s] failed to get desired state %s"
+                    % (eutil.rcolor(projID), eutil.rcolor(state))
+                )
+                return None
+
+            sleep(10)
+            curIteration = curIteration + 1
+
+        return True
+
     def delete(self, projID):
         elog.info("deleting project %s" % eutil.bcolor(projID))
 
         # send delete request
-        response = self.client.deleteWithPayload(self.projectURL + "/" + projID)
+        response = self.client.deleteWithPayload(self.projectNewURL + "/" + projID)
         if not response.ok:
             elog.error(
                 "failed to delete project %s :: %s"
@@ -290,7 +358,10 @@ class Projects(Token):
             elog.error(response.text)
             return False
 
-        elog.info("project %s deleted successfully" % (eutil.bcolor(projID)))
+        elog.info(
+            "project %s delete request submitted successfully: %s OK"
+            % (eutil.bcolor(projID), eutil.gcolor(response.status_code))
+        )
         return True
 
     def list(self, buID):
@@ -316,7 +387,7 @@ class Projects(Token):
         elog.info("fetching project %s" % eutil.bcolor(projID))
 
         # send get request
-        requestURL = self.keystoneURL + "/projects/%s" % projID
+        requestURL = self.projectURL + "/%s" % projID
         response = self.client.get(requestURL)
         if not response.ok:
             elog.error(
