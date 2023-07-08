@@ -23,7 +23,6 @@ import framework.utilities.customLogger as cl
 
 
 class Util(object):
-
     log = cl.customLogger(logging.INFO)
 
     def sleep(self, sec, info=""):

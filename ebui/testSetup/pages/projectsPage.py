@@ -21,8 +21,8 @@ import framework.utilities.customLogger as cl
 
 class ProjectsPage(BasePage):
     """
-  Class contains web elements or links needed for creating Projects
-  """
+    Class contains web elements or links needed for creating Projects
+    """
 
     log = cl.customLogger(logging.DEBUG)
 

@@ -12,7 +12,6 @@ class TestProjectCRUD:
     testConfig = ConfigParser()
 
     def test_project_crud_001(cls):
-
         # create BU
         buObj = BUs()
         domainName = cls.testConfig.getDomainName()

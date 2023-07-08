@@ -13,11 +13,11 @@ import framework.utilities.customLogger as cl
 
 class BUSummaryPage(BasePage):
     """
-  Class contains the links which can be used for navigating to
-  BU summary
-  BU Projects
-  BU Configuration
-  """
+    Class contains the links which can be used for navigating to
+    BU summary
+    BU Projects
+    BU Configuration
+    """
 
     log = cl.customLogger(logging.DEBUG)
 

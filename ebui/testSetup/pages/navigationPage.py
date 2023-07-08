@@ -13,8 +13,8 @@ import framework.utilities.customLogger as cl
 
 class NavigationPage(BasePage):
     """
-      Class contains methods to navigate to the links common for all the pages
-      """
+    Class contains methods to navigate to the links common for all the pages
+    """
 
     log = cl.customLogger(logging.DEBUG)
 

@@ -20,7 +20,6 @@ from framework.base.baseActions import BaseActions
 
 
 class TestStatus(BaseActions):
-
     log = cl.customLogger(logging.INFO)
 
     def __init__(self, driver):

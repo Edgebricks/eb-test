@@ -48,7 +48,6 @@ selectedVM = None
 
 @pytest.fixture(scope="module")
 def setup_test(request):
-
     notset = False
     testParams = {
         "vmUserName": vmUserName,

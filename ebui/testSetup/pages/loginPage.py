@@ -14,8 +14,8 @@ import framework.utilities.customLogger as cl
 
 class LoginPage(BasePage):
     """
-      Class contains all the elements present on th login page
-      """
+    Class contains all the elements present on th login page
+    """
 
     log = cl.customLogger(logging.DEBUG)
 
@@ -116,7 +116,6 @@ class LoginPage(BasePage):
     def signinAfterLogout(
         self, customerid="", businessunit="", username="", password=""
     ):
-
         self.enterBusinessUnit(businessunit)
         self.enterUserName(username)
         self.enterPassword(password)

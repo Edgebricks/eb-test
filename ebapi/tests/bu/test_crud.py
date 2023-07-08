@@ -13,7 +13,6 @@ class TestBuCRUD:
     testConfig = ConfigParser()
 
     def test_bu_crud_001(cls):
-
         # create bu using config
         buObj = BUs()
         domainName = cls.testConfig.getDomainName()
@@ -42,7 +41,6 @@ class TestBuCRUD:
         "buNames", ["ebtestDomainNew01", "ebtestDomainNew02", "ebtestDomainNew03"]
     )
     def test_bu_crud_002(cls, buNames):
-
         # create bu
         buObj = BUs()
         buID = buObj.create(buName=buNames)

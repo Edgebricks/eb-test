@@ -14,8 +14,8 @@ import framework.utilities.customLogger as cl
 
 class BUPage(BasePage):
     """
-  Class contains all the web elements needed for creating a BU
-  """
+    Class contains all the web elements needed for creating a BU
+    """
 
     log = cl.customLogger(logging.DEBUG)
 
@@ -161,7 +161,6 @@ class BUPage(BasePage):
     def createLocalBuWithNoQuota(
         self, businessUnitName, username, email, password, confirmpassword
     ):
-
         self.np.navigateToBusinessUnit()
         self.createBusinessUnit()
         self.enterBusinessUnitName(businessUnitName)

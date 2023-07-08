@@ -9,8 +9,8 @@ from framework.testDataProvider.testCaseDataProvider import TestCaseDataProvider
 
 class Login(object):
     """
-      Class that provides attributes from buQuota section in buQuota.json
-      """
+    Class that provides attributes from buQuota section in buQuota.json
+    """
 
     def __init__(self):
         self.dataproviderObj = TestCaseDataProvider("login.json")

@@ -9,8 +9,8 @@ from framework.testDataProvider.testCaseDataProvider import TestCaseDataProvider
 
 class ProjectTemplate(object):
     """
-      Class that provides attributes from buQuota section in projectTemplate.json
-      """
+    Class that provides attributes from buQuota section in projectTemplate.json
+    """
 
     def __init__(self):
         self.dataproviderObj = TestCaseDataProvider("projectTemplate.json")

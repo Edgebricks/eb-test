@@ -98,7 +98,6 @@ class BUs(Token):
         return buID
 
     def waitForState(self, buID, state=None, timeoutInSec=None, sleepInSec=None):
-
         elog.info(
             "waiting for business unit %s state to be %s"
             % (eutil.bcolor(buID), eutil.gcolor(state))
@@ -300,7 +299,6 @@ class Projects(Token):
         return projID
 
     def waitForState(self, projID, state=None, timeoutInSec=None, sleepInSec=None):
-
         elog.info(
             "waiting for project %s state to be %s"
             % (eutil.bcolor(projID), eutil.gcolor(state))

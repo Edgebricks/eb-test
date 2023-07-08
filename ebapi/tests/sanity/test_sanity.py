@@ -29,7 +29,6 @@ class TestSanity:
     projectAdminPass = testConfig.getProjectAdminPassword()
 
     def test_sanity_project_001(cls):
-
         # Create Domain
         domainObj = BUs()
         TestSanity.domainID = domainObj.create(buName=cls.domainName)
@@ -109,7 +108,6 @@ class TestSanity:
         cls.testConfig.setProjectID(TestSanity.projID)
 
     def test_sanity_vm_002(cls):
-
         flavorObj = Flavors(TestSanity.projID)
         matchflavorID = flavorObj.getBestMatchingFlavor(numCPU=2, memMB=4096)
 
@@ -143,7 +141,6 @@ class TestSanity:
         sleep(20)
 
     def test_sanity_user_003(cls):
-
         # Delete Project
         projObj = Projects(cls.domainName, cls.projectAdmin, cls.projectAdminPass)
         content = projObj.list(TestSanity.userID, TestSanity.domainID)
