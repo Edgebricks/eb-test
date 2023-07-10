@@ -19,7 +19,7 @@ class KeystoneBase(ConfigParser):
     """
 
     def __init__(self):
-        super(KeystoneBase, self).__init__()
+        super().__init__()
         serviceURL = self.getServiceURL()
         keystoneVer = "/keystone/v3"
         self.keystoneURL = serviceURL + keystoneVer
@@ -36,7 +36,7 @@ class Token(KeystoneBase):
     def __init__(
         self, scope="system", domainName="", user="", password="", projectName=""
     ):
-        super(Token, self).__init__()
+        super().__init__()
         self.scope = scope
         self.domainName = domainName
         self.projectName = projectName
@@ -143,7 +143,7 @@ class Token(KeystoneBase):
 
         payload = json.dumps(payload)
         headers = {"Accept": "application/json"}
-        response = requests.post(self.tokenURL, headers=headers, data=payload)
+        response = requests.post(self.tokenURL, headers=headers, data=payload, timeout=30)
         if not response.ok:
             elog.error("failed to fetch token: %s" % eutil.rcolor(response.status_code))
             elog.error(response.text)
@@ -157,7 +157,7 @@ class Roles(Token):
         testConfig = ConfigParser()
         cloudAdmin = testConfig.getCloudAdmin()
         cloudAdminPass = testConfig.getCloudAdminPassword()
-        super(Roles, self).__init__("system", "admin.local", cloudAdmin, cloudAdminPass)
+        super().__init__("system", "admin.local", cloudAdmin, cloudAdminPass)
         self.client = RestClient(self.getToken())
         self.rolesURL = self.keystoneURL + "/roles"
 
@@ -212,7 +212,7 @@ class Users(Token):
         testConfig = ConfigParser()
         cloudAdmin = testConfig.getCloudAdmin()
         cloudAdminPass = testConfig.getCloudAdminPassword()
-        super(Users, self).__init__("system", "admin.local", cloudAdmin, cloudAdminPass)
+        super().__init__("system", "admin.local", cloudAdmin, cloudAdminPass)
         self.client = RestClient(self.getToken())
         self.usersURL = self.keystoneURL + "/users"
 
@@ -289,7 +289,7 @@ class Domains(Token):
         cloudAdmin = testConfig.getCloudAdmin()
         cloudAdminPass = testConfig.getCloudAdminPassword()
         self.acctID = testConfig.getAcctID()
-        super(Domains, self).__init__(
+        super().__init__(
             "system", "admin.local", cloudAdmin, cloudAdminPass
         )
         self.client = RestClient(self.getToken())

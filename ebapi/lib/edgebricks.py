@@ -48,7 +48,7 @@ class BUs(Token):
         self.acctID = testConfig.getAcctID()
         self.clusterID = testConfig.getClusterID()
 
-        super(BUs, self).__init__("system", "admin.local", cloudAdmin, cloudAdminPass)
+        super().__init__("system", "admin.local", cloudAdmin, cloudAdminPass)
         self.client = RestClient(self.getToken())
         self.clusterURL = self.apiURL + "/v2/clusters/" + self.clusterID
         self.buURL = self.clusterURL + "/domains"
@@ -232,7 +232,7 @@ class Projects(Token):
     PROJ_STATE_ERROR = 12
 
     def __init__(self, buName, projAdmin, projAdminPass):
-        super(Projects, self).__init__("domain", buName, projAdmin, projAdminPass)
+        super().__init__("domain", buName, projAdmin, projAdminPass)
         self.client = RestClient(self.getToken())
         self.apiURL = self.getApiURL()
         self.clusterID = self.getClusterID()

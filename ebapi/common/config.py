@@ -11,7 +11,7 @@ from ebapi.common import utils as eutil
 from ebapi.common.logger import elog
 
 
-class ConfigParser(object):
+class ConfigParser():
     """
     Config class for getting, setting, deleting test configuration.
 
@@ -110,7 +110,7 @@ class ConfigParser(object):
             elog.error("failed to set config %s = %s" % (config, value))
             return False
 
-        with open(self.fname, "w") as f:
+        with open(self.fname, "w", encoding="UTF-8", errors="ignore") as f:
             self.parser.write(f)
         return True
 
@@ -135,7 +135,7 @@ class ConfigParser(object):
             elog.error("failed to delete config %s" % eutil.rcolor(config))
             return False
 
-        with open(self.fname, "w") as f:
+        with open(self.fname, "w", encoding="UTF-8", errors="ignore") as f:
             self.parser.write(f)
         return True
 

@@ -10,7 +10,7 @@ import requests
 from ebapi.common.logger import elog
 
 
-class RestClient(object):
+class RestClient():
     """
     RestClient API class, implements::
 
@@ -64,7 +64,7 @@ class RestClient(object):
         elog.debug("URL = %s, Method = GET" % url)
         return requests.get(url=url, headers=self.headers, timeout=timeout)
 
-    def put(self, url, payload={}, timeout=30):
+    def put(self, url, payload=None, timeout=30):
         """
         implements PUT rest api.
 
@@ -99,7 +99,7 @@ class RestClient(object):
             url=url, headers=self.headers, data=payload, timeout=timeout
         )
 
-    def post(self, url, payload={}, timeout=30):
+    def post(self, url, payload=None, timeout=30):
         """
         implements POST rest api.
 
@@ -134,7 +134,7 @@ class RestClient(object):
             url=url, headers=self.headers, data=payload, timeout=timeout
         )
 
-    def patch(self, url, payload={}, timeout=30):
+    def patch(self, url, payload=None, timeout=30):
         """
         implements PATCH rest api.
 
@@ -194,7 +194,7 @@ class RestClient(object):
         elog.debug("URL = %s, Method = DELETE" % url)
         return requests.delete(url=url, headers=self.headers, timeout=timeout)
 
-    def deleteWithPayload(self, url, payload={}, timeout=30):
+    def deleteWithPayload(self, url, payload=None, timeout=30):
         """
         implements DELETE rest api.
 

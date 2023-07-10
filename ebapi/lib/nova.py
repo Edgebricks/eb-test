@@ -14,7 +14,7 @@ from ebapi.lib.keystone import Token
 
 class NovaBase(Token):
     def __init__(self, projectID, scope="project"):
-        super(NovaBase, self).__init__(scope)
+        super().__init__(scope)
         self.client = RestClient(self.getToken())
         self.projectID = projectID
         self.apiURL = self.getApiURL()
@@ -26,7 +26,7 @@ class NovaBase(Token):
 
 class VMs(NovaBase):
     def __init__(self, projectID):
-        super(VMs, self).__init__(projectID)
+        super().__init__(projectID)
         self.vmsURL = self.clusterURL + "/projects"
         self.serversURL = self.novaURL + "/servers"
 
@@ -389,7 +389,7 @@ class VMs(NovaBase):
 
 class Flavors(NovaBase):
     def __init__(self, projectID):
-        super(Flavors, self).__init__(projectID)
+        super().__init__(projectID)
         self.flavorsURL = self.serviceURL + "/nova/v2.1/" + self.projectID + "/flavors"
 
     def getFlavorsDetail(self):
@@ -432,5 +432,4 @@ class Flavors(NovaBase):
 
         if bestMatchFlavor:
             return flavorID
-        else:
-            return None
+        return None

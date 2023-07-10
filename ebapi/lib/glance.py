@@ -15,7 +15,7 @@ from ebapi.lib.keystone import Token
 
 class GlanceBase(Token):
     def __init__(self, projectID, scope="project"):
-        super(GlanceBase, self).__init__(scope)
+        super().__init__(scope)
         self.client = RestClient(self.getToken())
         self.projectID = projectID
         self.serviceURL = self.getServiceURL()
@@ -28,7 +28,7 @@ class Images(GlanceBase):
     """
 
     def __init__(self, projectID):
-        super(Images, self).__init__(projectID)
+        super().__init__(projectID)
         self.imagesURL = self.glanceURL + "/images"
 
     def createCirrosImageByURL(self, imageName="", netID=""):

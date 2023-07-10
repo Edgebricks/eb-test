@@ -437,6 +437,14 @@ disable=raw-checker-failed,
         invalid-name,
         no-member,
         redefined-builtin,
+        protected-access,
+        line-too-long,
+        too-many-arguments,
+        unused-argument,
+        too-many-public-methods,
+        too-many-locals,
+        too-many-instance-attributes,
+        broad-exception-caught,
         use-symbolic-message-instead
 
 # Enable the message, report, category or checker with the given id(s). You can

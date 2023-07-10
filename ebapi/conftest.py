@@ -54,7 +54,7 @@ def getAcctAndClusterID():
         return None, None
 
     url = apiURL + "/v1/account_ops/get_clusters?login_name=" + custID
-    rsp = requests.get(url=url, headers=headers)
+    rsp = requests.get(url=url, headers=headers, timeout=10)
 
     if not rsp.ok:
         elog.error("failed to get cluster:%s" % eutil.rcolor(rsp.status_code))
