@@ -4,10 +4,9 @@
 # (c) 2021 Edgebricks Inc
 
 
-import pytest
 import unittest2 as unittest
+import pytest
 
-from testSetup.pages.loginPage import LoginPage
 from testSetup.pages.buPage import BUPage
 from testSetup.pages.buSummaryPage import BUSummaryPage
 from testSetup.pages.projectsPage import ProjectsPage

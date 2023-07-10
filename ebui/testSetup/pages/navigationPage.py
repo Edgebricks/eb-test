@@ -4,7 +4,6 @@
 # (c) 2021 Edgebricks Inc
 
 
-import pytest
 import logging
 
 from framework.base.basePage import BasePage
@@ -64,10 +63,10 @@ class NavigationPage(BasePage):
         self.elementClick(locator=self.feedbackLocator, locatorType="xpath")
 
     def navigateToZSHelpHandler(self):
-        self.elementClick(locator=zsHelpHandlerIcon)
+        self.elementClick(locator=self.zsHelpHandlerIcon)
 
     def navigateToCloudServiceIcon(self):
-        self.elementClick(locator=goToCloudServiceIcon)
+        self.elementClick(locator=self.goToCloudServiceIcon)
 
     def navigateToRegionSelector(self):
         self.waitForElement(

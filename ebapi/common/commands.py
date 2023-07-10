@@ -113,10 +113,10 @@ class RemoteMachine(object):
             )
             result_flag = False
         except socket.timeout as e:
-            elog.error("Connection timed out")
+            elog.error("Connection timed out" % eutil.bcolor(e))
             result_flag = False
         except Exception as e:
-            elog.error("\nException in connecting to the server")
+            elog.error("\nException in connecting to the server" % eutil.bcolor(e))
             result_flag = False
             self.client.close()
         else:
@@ -164,6 +164,7 @@ class RemoteMachine(object):
                 elog.error("Could not establish SSH connection")
                 result_flag = False
         except socket.timeout as e:
+            elog.error("\nException in connecting to the server" % eutil.bcolor(e))
             self.client.close()
             result_flag = False
         except paramiko.SSHException:
@@ -202,7 +203,7 @@ class RemoteMachine(object):
                 elog.error("Could not establish SSH connection")
                 result_flag = False
         except Exception as e:
-            elog.error("[%s] download: failed" % eutil.bcolor(self.host))
+            elog.error("[%s] download: failed" % eutil.bcolor(e))
             result_flag = False
             download.close()
             self.client.close()
@@ -238,7 +239,7 @@ class RemoteMachine(object):
                 print("Could not establish SSH connection")
                 result_flag = False
         except Exception as e:
-            elog.error("[%s] put: failed" % eutil.bcolor(self.host))
+            elog.error("[%s] put: failed" % eutil.bcolor(e))
             result_flag = False
             upload.close()
             self.client.close()

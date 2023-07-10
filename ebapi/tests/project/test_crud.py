@@ -4,7 +4,8 @@
 # (c) 2022 Edgebricks Inc
 
 from ebapi.common.config import ConfigParser
-from ebapi.lib.keystone import Users, Roles
+
+# from ebapi.lib.keystone import Users, Roles
 from ebapi.lib.edgebricks import BUs, Projects
 
 

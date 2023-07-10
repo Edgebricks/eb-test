@@ -4,7 +4,6 @@
 # (c) 2021 Edgebricks Inc
 
 
-import pytest
 import logging
 
 from framework.base.basePage import BasePage

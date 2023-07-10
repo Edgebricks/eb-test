@@ -14,7 +14,6 @@ Example:
     wdf = WebDriver(browser)
     wdf.getWebDriverInstance()
 """
-import traceback
 import os
 
 from selenium import webdriver

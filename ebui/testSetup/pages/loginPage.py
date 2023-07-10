@@ -4,7 +4,6 @@
 # (c) 2021 Edgebricks Inc
 
 
-import pytest
 import logging
 
 from framework.base.basePage import BasePage
@@ -90,7 +89,6 @@ class LoginPage(BasePage):
             errormssg = element.text
             self.log.error(errormssg)
             return False
-            self.driver.quit()
 
     def verifyCustomerID(self):
         self.waitForElement(
@@ -98,7 +96,7 @@ class LoginPage(BasePage):
         )
 
         verifyElement = self.isElementPresent(self.customerID)
-        if verify_element:
+        if verifyElement:
             return True
         else:
             return False

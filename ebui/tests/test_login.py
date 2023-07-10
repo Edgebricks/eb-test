@@ -6,9 +6,7 @@
 
 import pytest
 import unittest2 as unittest
-import time
 
-from selenium import webdriver
 from testSetup.dataSource.login import Login
 from framework.utilities.teststatus import TestStatus
 from testSetup.pages.loginPage import LoginPage

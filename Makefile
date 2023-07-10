@@ -49,7 +49,7 @@ fix-flake8-errors: check-black
 # errors, styling issues and complexity.
 flake8: check-flake8
 	@echo -e "* \e[0;32mRunning flake8\e[m"
-	flake8 **/*.py
+	flake8 .
 	@$(MAKE) -s fix-flake8-errors
 	@echo -e "* \e[0;32mFinished flake8\e[m"
 
