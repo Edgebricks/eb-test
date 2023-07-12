@@ -12,6 +12,7 @@ from ebapi.lib.edgebricks import BUs, Projects
 class TestProjectCRUD:
     testConfig = ConfigParser()
 
+    @classmethod
     def test_project_crud_001(cls):
         # create BU
         buObj = BUs()
@@ -81,3 +82,7 @@ class TestProjectCRUD:
 
         # wait for bu to be deleted
         assert buObj.waitForState(buID, state=BUs.BU_STATE_DELETED)
+
+    @classmethod
+    def test_project_crud_002(cls):
+        assert True

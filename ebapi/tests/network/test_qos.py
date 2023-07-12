@@ -4,9 +4,9 @@
 # (c) 2022 Edgebricks Inc
 
 
-import pytest
 import re
 import time
+import pytest
 
 from ebapi.common import utils as eutil
 from ebapi.common.commands import RemoteMachine
@@ -47,7 +47,7 @@ selectedVM = None
 
 
 @pytest.fixture(scope="module")
-def setup_test(request):
+def setup_test(request):  # pylint: disable=too-many-branches
     notset = False
     testParams = {
         "vmUserName": vmUserName,
@@ -55,8 +55,6 @@ def setup_test(request):
         "iperfServerIP": iperfServerIP,
     }
 
-    global iperfClientIP
-    global selectedVM
     serverObj = nova.Servers(projectID)
 
     if not iperfClientIP:
@@ -74,19 +72,17 @@ def setup_test(request):
     if not selectedVM:
         pytest.skip("failed to find any VMS with floating IP")
 
-    global iperfServer
     if serPassword:
         iperfServer = RemoteMachine(iperfServerIP, serUserName, serPassword)
     elif serKeyFile:
-        iperfServer = RemoteMachine(iperfServerIP, serUserName, keyFile=serKeyFile)
+        iperfServer = RemoteMachine(iperfServerIP, serUserName, keyfile=serKeyFile)
     else:
         pytest.skip("set test param serPassword or serKeyFile")
 
-    global iperfClient
     if vmPassword:
         iperfClient = RemoteMachine(iperfClientIP, vmUserName, vmPassword)
     elif vmKeyFile:
-        iperfClient = RemoteMachine(iperfClientIP, vmUserName, keyFile=vmKeyFile)
+        iperfClient = RemoteMachine(iperfClientIP, vmUserName, keyfile=vmKeyFile)
     else:
         pytest.skip("set test param vmPassword or vmKeyFile")
 

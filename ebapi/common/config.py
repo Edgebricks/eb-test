@@ -197,31 +197,31 @@ class ConfigParser():
     def setApiURL(self, value):
         return self.setConfig("apiURL", value)
 
-    def clearApiURL(self, value):
+    def clearApiURL(self):
         return self.setConfig("apiURL")
 
     def setCustURL(self, value):
         return self.setConfig("custID", value)
 
-    def clearCustURL(self, value):
+    def clearCustURL(self):
         return self.setConfig("custID")
 
     def setAcctID(self, value):
         return self.setConfig("acctID", value)
 
-    def clearAcctID(self, value):
+    def clearAcctID(self):
         return self.setConfig("acctID")
 
     def setClusterID(self, value):
         return self.setConfig("clusterID", value)
 
-    def clearClusterID(self, value):
+    def clearClusterID(self):
         return self.setConfig("clusterID")
 
     def setProjectID(self, value):
         return self.setConfig("projectID", value)
 
-    def clearProjectID(self, value):
+    def clearProjectID(self):
         return self.setConfig("projectID")
 
     def setDomainID(self, value):
@@ -233,53 +233,53 @@ class ConfigParser():
     def setDomainName(self, value):
         return self.setConfig("domainName", value)
 
-    def clearDomainName(self, value):
+    def clearDomainName(self):
         return self.setConfig("domainName")
 
     def setCloudAdmin(self, value):
         return self.setConfig("cloudAdmin", value)
 
-    def clearCloudAdmin(self, value):
+    def clearCloudAdmin(self):
         return self.setConfig("cloudAdmin")
 
     def setCloudAdminPassword(self, value):
         return self.setConfig("cloudAdminPassword", value)
 
-    def clearCloudAdminPassword(self, value):
+    def clearCloudAdminPassword(self):
         return self.setConfig("cloudAdminPassword")
 
     def setProjectName(self, value):
         return self.setConfig("projectName", value)
 
-    def clearProjectName(self, value):
+    def clearProjectName(self):
         return self.setConfig("projectName")
 
     def setProjectAdmin(self, value):
         return self.setConfig("projectAdmin", value)
 
-    def clearProjectAdmin(self, value):
+    def clearProjectAdmin(self):
         return self.setConfig("projectAdmin")
 
     def setProjectAdminPassword(self, value):
         return self.setConfig("projectAdminPassword", value)
 
-    def clearProjectAdminPassword(self, value):
+    def clearProjectAdminPassword(self):
         return self.setConfig("projectAdminPassword")
 
     def setProjectMember(self, value):
         return self.setConfig("projectMember", value)
 
-    def clearProjectMember(self, value):
+    def clearProjectMember(self):
         return self.setConfig("projectMember")
 
     def setProjectMemberPassword(self, value):
         return self.setConfig("projectMemberPassword", value)
 
-    def clearProjectMemberPassword(self, value):
+    def clearProjectMemberPassword(self):
         return self.setConfig("projectMemberPassword")
 
     def setProviderID(self, value):
         return self.setConfig("providerID", value)
 
-    def clearProviderID(self, value):
+    def clearProviderID(self):
         return self.setConfig("providerID")
