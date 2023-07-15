@@ -4,10 +4,10 @@
 # (c) 2021 Edgebricks Inc
 
 
-from framework.testDataProvider.testCaseDataProvider import TestCaseDataProvider
+from ebui.framework.testDataProvider.testCaseDataProvider import TestCaseDataProvider
 
 
-class Login(object):
+class Login():
     """
     Class that provides attributes from buQuota section in buQuota.json
     """

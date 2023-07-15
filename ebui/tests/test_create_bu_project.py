@@ -7,14 +7,14 @@
 import unittest2 as unittest
 import pytest
 
-from testSetup.pages.buPage import BUPage
-from testSetup.pages.buSummaryPage import BUSummaryPage
-from testSetup.pages.projectsPage import ProjectsPage
-from testSetup.pages.navigationPage import NavigationPage
-from framework.utilities.teststatus import TestStatus
-from framework.utilities.util import Util
-from testSetup.dataSource.buQuota import BUquota
-from testSetup.dataSource.projectTemplate import ProjectTemplate
+from ebui.testSetup.pages.buPage import BUPage
+from ebui.testSetup.pages.buSummaryPage import BUSummaryPage
+from ebui.testSetup.pages.projectsPage import ProjectsPage
+from ebui.testSetup.pages.navigationPage import NavigationPage
+from ebui.framework.utilities.teststatus import TestStatus
+from ebui.framework.utilities.util import Util
+from ebui.testSetup.dataSource.buQuota import BUquota
+from ebui.testSetup.dataSource.projectTemplate import ProjectTemplate
 
 
 @pytest.mark.usefixtures("oneTimeSetUp")

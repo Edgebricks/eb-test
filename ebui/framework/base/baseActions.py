@@ -8,8 +8,8 @@ import logging
 import time
 import os
 
-from selenium.webdriver.common.by import By
 from traceback import print_stack
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import (
@@ -18,7 +18,7 @@ from selenium.common.exceptions import (
     ElementNotSelectableException,
 )
 
-import framework.utilities.customLogger as cl
+import ebui.framework.utilities.customLogger as cl
 
 
 class BaseActions:
@@ -52,7 +52,7 @@ class BaseActions:
             return By.LINK_TEXT
         else:
             self.log.info("Locator type " + locatorType + " not correct/supported")
-        return False
+            return False
 
     def getElement(self, locator, locatorType="id"):
         element = None

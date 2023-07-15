@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Edgebricks Inc.
+# Copyright (c) 2021-2023 Edgebricks Inc.
 #
 # Targets:
 #   clean: clean generated files
@@ -6,7 +6,7 @@
 #   run-tests: runs ebapi and ebui tests
 #   print-[VARIABLE]: good for debugging and testing variables.
 
-SHELL :=/bin/bash
+SHELL := /bin/bash
 
 # Figure out git repository details.
 export GITREPO = $(shell git rev-parse --show-toplevel)
@@ -61,10 +61,10 @@ flake8: check-flake8
 # pycodestyle: is a tool that checks Python code against a handful of style
 # conventions, including those defined in PEP 8.
 fix-pylint-errors: check-autopep8 check-pycodestyle
-	@echo -e "* \e[0;34mFixing obvious pylint issues...\e[m"
-	find -type f -name '*.py' -exec autopep8 --in-place --aggressive --aggressive '{}' \;
-	find -type f -name '*.py' -exec pycodestyle --first '{}' \;
-	@echo -e "* \e[0;34mFixed obvious pylint issues\e[m"
+	@echo -e "* \e[0;34mFixing obvious codestyle issues...\e[m"
+	find -type f -name '*.py' -exec autopep8 --in-place --aggressive '{}' \;
+	find -type f -name '*.py' -exec pycodestyle --first --repeat --ignore=E501,E121,E123,E126,E226,E24,E704,W503,W504 '{}' \;
+	@echo -e "* \e[0;34mFixed obvious codestyle issues\e[m"
 
 # Pylint is a static code analysis tool for the Python programming language.
 # It is named following a common convention in Python of a "py" prefix, and

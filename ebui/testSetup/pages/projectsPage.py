@@ -6,8 +6,8 @@
 
 import logging
 
-from framework.base.basePage import BasePage
-import framework.utilities.customLogger as cl
+from ebui.framework.base.basePage import BasePage
+import ebui.framework.utilities.customLogger as cl
 
 
 class ProjectsPage(BasePage):
@@ -209,9 +209,8 @@ class ProjectsPage(BasePage):
             self.elementClick(verifyProjectLocator, locatorType="xpath")
             self.log.info("PROJECT CREATION WAS SUCCESSFUL")
             return True
-        else:
-            self.log.error("FAILED TO VERIFY PROJECT CREATION")
-            return False
+        self.log.error("FAILED TO VERIFY PROJECT CREATION")
+        return False
 
     def createProject(self, projectName, projectTemplate, cidr):
         self.clickCreateProject()

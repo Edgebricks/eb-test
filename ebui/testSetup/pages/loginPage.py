@@ -6,9 +6,9 @@
 
 import logging
 
-from framework.base.basePage import BasePage
-from testSetup.pages.navigationPage import NavigationPage
-import framework.utilities.customLogger as cl
+from ebui.framework.base.basePage import BasePage
+from ebui.testSetup.pages.navigationPage import NavigationPage
+import ebui.framework.utilities.customLogger as cl
 
 
 class LoginPage(BasePage):
@@ -111,9 +111,7 @@ class LoginPage(BasePage):
         self.clickRemoveProfileIcon()
         self.clickYesForRemoveProfile()
 
-    def signinAfterLogout(
-        self, customerid="", businessunit="", username="", password=""
-    ):
+    def signinAfterLogout(self, businessunit="", username="", password=""):
         self.enterBusinessUnit(businessunit)
         self.enterUserName(username)
         self.enterPassword(password)

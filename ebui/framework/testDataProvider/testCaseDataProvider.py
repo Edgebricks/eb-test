@@ -8,7 +8,7 @@ import json
 import os
 
 
-class TestCaseDataProvider(object):
+class TestCaseDataProvider():
     """
     Base configuration class that reads/write configuration from
     .json file . Mainly used for persistent test data store.

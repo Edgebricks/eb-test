@@ -7,9 +7,9 @@
 import pytest
 import unittest2 as unittest
 
-from testSetup.dataSource.login import Login
-from framework.utilities.teststatus import TestStatus
-from testSetup.pages.loginPage import LoginPage
+from ebui.testSetup.dataSource.login import Login
+from ebui.framework.utilities.teststatus import TestStatus
+from ebui.testSetup.pages.loginPage import LoginPage
 
 
 @pytest.mark.usefixtures("oneTimeSetUp")

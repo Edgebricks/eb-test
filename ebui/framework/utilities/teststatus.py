@@ -15,8 +15,8 @@ Example:
 """
 import logging
 
-import framework.utilities.customLogger as cl
-from framework.base.baseActions import BaseActions
+import ebui.framework.utilities.customLogger as cl
+from ebui.framework.base.baseActions import BaseActions
 
 
 class TestStatus(BaseActions):
@@ -26,7 +26,7 @@ class TestStatus(BaseActions):
         """
         Inits CheckPoint class
         """
-        super(TestStatus, self).__init__(driver)
+        super().__init__(driver)
         self.resultList = []
 
     def setResult(self, result, resultMessage):

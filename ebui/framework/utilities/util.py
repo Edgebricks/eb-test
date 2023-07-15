@@ -19,10 +19,10 @@ import random
 import string
 import logging
 
-import framework.utilities.customLogger as cl
+import ebui.framework.utilities.customLogger as cl
 
 
-class Util(object):
+class Util():
     log = cl.customLogger(logging.INFO)
 
     def sleep(self, sec, info=""):

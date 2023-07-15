@@ -6,9 +6,9 @@
 
 import logging
 
-from framework.base.basePage import BasePage
-from testSetup.pages.navigationPage import NavigationPage
-import framework.utilities.customLogger as cl
+from ebui.framework.base.basePage import BasePage
+from ebui.testSetup.pages.navigationPage import NavigationPage
+import ebui.framework.utilities.customLogger as cl
 
 
 class BUPage(BasePage):

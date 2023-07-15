@@ -4,8 +4,8 @@
 # (c) 2021 Edgebricks Inc
 
 
-from framework.base.baseActions import BaseActions
-from framework.utilities.util import Util
+from ebui.framework.base.baseActions import BaseActions
+from ebui.framework.utilities.util import Util
 
 
 class BasePage(BaseActions):
@@ -14,7 +14,7 @@ class BasePage(BaseActions):
     """
 
     def __init__(self, driver):
-        super(BasePage, self).__init__(driver)
+        super().__init__(driver)
         self.driver = driver
         self.util = Util()
 

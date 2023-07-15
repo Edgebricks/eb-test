@@ -6,8 +6,8 @@
 
 import logging
 
-from framework.base.basePage import BasePage
-import framework.utilities.customLogger as cl
+from ebui.framework.base.basePage import BasePage
+import ebui.framework.utilities.customLogger as cl
 
 
 class NavigationPage(BasePage):
