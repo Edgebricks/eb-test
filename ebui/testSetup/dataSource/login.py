@@ -7,7 +7,7 @@
 from ebui.framework.testDataProvider.testCaseDataProvider import TestCaseDataProvider
 
 
-class Login():
+class Login:
     """
     Class that provides attributes from buQuota section in buQuota.json
     """

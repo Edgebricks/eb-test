@@ -84,22 +84,19 @@ class LoginPage(BasePage):
         verifyElement = self.isElementPresent(self.regionSelector)
         if verifyElement:
             return True
-        else:
-            element = self.getElement(self.errorPrompt, locatorType="xpath")
-            errormssg = element.text
-            self.log.error(errormssg)
-            return False
+        element = self.getElement(self.errorPrompt, locatorType="xpath")
+        errormssg = element.text
+        self.log.error(errormssg)
+        return False
 
     def verifyCustomerID(self):
         self.waitForElement(
             self.customerID, locatorType="xpath", timeout=120, pollFrequency=0.2
         )
-
         verifyElement = self.isElementPresent(self.customerID)
         if verifyElement:
             return True
-        else:
-            return False
+        return False
 
     def logout(self):
         self.np.navigateToRegionSelector()
@@ -111,7 +108,10 @@ class LoginPage(BasePage):
         self.clickRemoveProfileIcon()
         self.clickYesForRemoveProfile()
 
-    def signinAfterLogout(self, businessunit="", username="", password=""):
+    def signinAfterLogout(
+        self, customerid="", businessunit="", username="", password=""
+    ):
+        self.enterCustomerID(customerid)
         self.enterBusinessUnit(businessunit)
         self.enterUserName(username)
         self.enterPassword(password)

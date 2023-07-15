@@ -4,7 +4,6 @@
 # (c) 2021 Edgebricks Inc
 
 
-import unittest2 as unittest
 import pytest
 
 from ebui.testSetup.pages.buPage import BUPage
@@ -18,9 +17,9 @@ from ebui.testSetup.dataSource.projectTemplate import ProjectTemplate
 
 
 @pytest.mark.usefixtures("oneTimeSetUp")
-class CreateBUProject(unittest.TestCase):
+class CreateBUProject:
     @pytest.fixture()
-    def objectSetUp(self, oneTimeSetUp):
+    def __init__(self):
         self.bu = BUPage(self.driver)
         self.ts = TestStatus(self.driver)
         self.buSummary = BUSummaryPage(self.driver)
@@ -40,7 +39,7 @@ class CreateBUProject(unittest.TestCase):
         self.projectTemplate = self.projectConfig.projectTemplate
         self.cidr = self.projectConfig.cidr
 
-    @pytest.mark.usefixtures("objectSetUp")
+    @pytest.mark.usefixtures("__init__")
     def test_create_bu_project(self):
         self.bu.createLocalBuWithNoQuota(
             self.businessUnitName,
@@ -62,3 +61,7 @@ class CreateBUProject(unittest.TestCase):
         )
 
         self.util.sleep(10, "SESSION TO ABORT")
+
+    @pytest.mark.usefixtures("__init__")
+    def test_delete_bu_project(self):
+        assert True

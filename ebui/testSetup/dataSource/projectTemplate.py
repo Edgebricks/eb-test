@@ -7,7 +7,7 @@
 from ebui.framework.testDataProvider.testCaseDataProvider import TestCaseDataProvider
 
 
-class ProjectTemplate():
+class ProjectTemplate:
     """
     Class that provides attributes from buQuota section in projectTemplate.json
     """

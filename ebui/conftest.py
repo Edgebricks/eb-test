@@ -26,7 +26,7 @@ password = loginConfig.password
 
 
 @pytest.yield_fixture(scope="class")
-def oneTimeSetUp(request, browser): # pylint: disable=redefined-outer-name
+def oneTimeSetUp(request, browser):  # pylint: disable=redefined-outer-name
     log = cl.customLogger(logging.DEBUG)
     log.info("Running one time setUp")
     wdf = WebDriver(browser)

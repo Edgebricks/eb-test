@@ -22,7 +22,7 @@ import logging
 import ebui.framework.utilities.customLogger as cl
 
 
-class Util():
+class Util:
     log = cl.customLogger(logging.INFO)
 
     def sleep(self, sec, info=""):

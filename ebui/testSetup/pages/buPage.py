@@ -154,8 +154,9 @@ class BUPage(BasePage):
         if verifyElement:
             self.elementClick(verifyBUlocator, locatorType="xpath")
             self.log.info("BU CREATION WAS SUCCESSFUL")
-        else:
-            self.log.error("FAILED TO VERIFY BU CREATION")
+            return True
+        self.log.error("FAILED TO VERIFY BU CREATION")
+        return False
 
     def createLocalBuWithNoQuota(
         self, businessUnitName, username, email, password, confirmpassword
