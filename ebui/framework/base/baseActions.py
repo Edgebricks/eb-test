@@ -39,20 +39,21 @@ class BaseActions:
     def getByType(self, locatorType):
         locatorType = locatorType.lower()
         if locatorType == "id":
-            return By.ID
-        elif locatorType == "name":
-            return By.NAME
-        elif locatorType == "xpath":
-            return By.XPATH
-        elif locatorType == "css":
-            return By.CSS_SELECTOR
-        elif locatorType == "class":
-            return By.CLASS_NAME
-        elif locatorType == "link":
-            return By.LINK_TEXT
+            by_type = By.ID
+        if locatorType == "name":
+            by_type = By.NAME
+        if locatorType == "xpath":
+            by_type = By.XPATH
+        if locatorType == "css":
+            by_type = By.CSS_SELECTOR
+        if locatorType == "class":
+            by_type = By.CLASS_NAME
+        if locatorType == "link":
+            by_type = By.LINK_TEXT
         else:
             self.log.info("Locator type " + locatorType + " not correct/supported")
             return False
+        return by_type
 
     def getElement(self, locator, locatorType="id"):
         element = None
@@ -140,9 +141,8 @@ class BaseActions:
             if element is not None:
                 self.log.info("Element Found")
                 return True
-            else:
-                self.log.info("Element not found")
-                return False
+            self.log.info("Element not found")
+            return False
         except BaseException:
             self.log.info("Element not found")
             return False
@@ -153,9 +153,8 @@ class BaseActions:
             if len(elementList) > 0:
                 self.log.info("Element Found")
                 return True
-            else:
-                self.log.info("Element not found")
-                return False
+            self.log.info("Element not found")
+            return False
         except BaseException:
             self.log.info("Element not found")
             return False
@@ -165,23 +164,21 @@ class BaseActions:
         try:
             byType = self.getByType(locatorType)
             self.log.info(
-                "Waiting for maximum :: "
+                "Waiting for maximum:: "
                 + str(timeout)
                 + " :: seconds for element to be clickable"
             )
             wait = WebDriverWait(
                 self.driver,
-                10,
-                poll_frequency=1,
+                timeout=timeout,
+                poll_frequency=pollFrequency,
                 ignored_exceptions=[
                     NoSuchElementException,
                     ElementNotVisibleException,
                     ElementNotSelectableException,
                 ],
             )
-            element = wait.until(
-                EC.element_to_be_clickable((byType, "stopFilter_stops-0"))
-            )
+            element = wait.until(EC.element_to_be_clickable((byType, locator)))
             self.log.info("Element appeared on the web page")
         except BaseException:
             self.log.info("Element not appeared on the web page")

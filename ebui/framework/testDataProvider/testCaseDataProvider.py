@@ -33,7 +33,7 @@ class TestCaseDataProvider():
         return None
 
     def _get(self):
-        with open(self._fname, "r") as f:
+        with open(self._fname, "r", encoding="UTF-8", errors="ignore") as f:
             return json.load(f)
 
     def get(self, key, config):
@@ -43,5 +43,5 @@ class TestCaseDataProvider():
     def set(self, key, config, value):
         configs = self._get()
         configs[key][config] = value
-        with open(self._fname, "w") as f:
+        with open(self._fname, "w", encoding="UTF-8", errors="ignore") as f:
             json.dump(configs, f, indent=4)

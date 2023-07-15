@@ -92,9 +92,8 @@ class Util():
         if actualText.lower() in expectedText.lower():
             self.log.info("### VERIFICATION CONTAINS !!!")
             return True
-        else:
-            self.log.info("### VERIFICATION DOES NOT CONTAINS !!!")
-            return False
+        self.log.info("### VERIFICATION DOES NOT CONTAINS !!!")
+        return False
 
     def verifyTextMatch(self, actualText, expectedText):
         """
@@ -109,9 +108,8 @@ class Util():
         if actualText.lower() == expectedText.lower():
             self.log.info("### VERIFICATION MATCHED !!!")
             return True
-        else:
-            self.log.info("### VERIFICATION DOES NOT MATCHED !!!")
-            return False
+        self.log.info("### VERIFICATION DOES NOT MATCHED !!!")
+        return False
 
     def verifyListMatch(self, expectedList, actualList):
         """
@@ -135,5 +133,4 @@ class Util():
         for i in range(0, length):
             if expectedList[i] not in actualList:
                 return False
-        else:
-            return True
+        return True
