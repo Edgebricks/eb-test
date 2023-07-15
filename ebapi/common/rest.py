@@ -10,7 +10,7 @@ import requests
 from ebapi.common.logger import elog
 
 
-class RestClient():
+class RestClient:
     """
     RestClient API class, implements::
 

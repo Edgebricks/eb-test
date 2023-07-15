@@ -143,7 +143,9 @@ class Token(KeystoneBase):
 
         payload = json.dumps(payload)
         headers = {"Accept": "application/json"}
-        response = requests.post(self.tokenURL, headers=headers, data=payload, timeout=30)
+        response = requests.post(
+            self.tokenURL, headers=headers, data=payload, timeout=30
+        )
         if not response.ok:
             elog.error("failed to fetch token: %s" % eutil.rcolor(response.status_code))
             elog.error(response.text)
@@ -289,9 +291,7 @@ class Domains(Token):
         cloudAdmin = testConfig.getCloudAdmin()
         cloudAdminPass = testConfig.getCloudAdminPassword()
         self.acctID = testConfig.getAcctID()
-        super().__init__(
-            "system", "admin.local", cloudAdmin, cloudAdminPass
-        )
+        super().__init__("system", "admin.local", cloudAdmin, cloudAdminPass)
         self.client = RestClient(self.getToken())
         self.domainURL = self.keystoneURL + "/domains"
 

@@ -69,6 +69,7 @@ def test_privateAccess():
 
 
 def test_publicAccess():
+    firewall = None
     if password:
         firewall = RemoteMachine(vncPublicIP, userName, password)
     elif keyFile:
@@ -90,10 +91,7 @@ def test_publicAccess():
     client = RestClient(token)
     response = client.put(vncURL, payload, timeout=60)
     if not response.ok:
-        elog.error(
-            "failed to setup public VNC access: %s" % eutil.rcolor(response.status_code)
-        )
-        elog.error(response.text)
+        elog.error(eutil.rcolor(response.text))
         assert False
     elog.info("setting up public vnc access succeeded")
 
@@ -134,5 +132,5 @@ def test_publicAccess():
     elog.info("server console URL: %s" % eutil.bcolor(vncURL))
 
     consoleURL = urlparse(vncURL)
-    assert ((consoleURL.port == vncPublicPort) and (consoleURL.hostname == vncPublicIP))
+    assert (consoleURL.port == vncPublicPort) and (consoleURL.hostname == vncPublicIP)
     elog.info("console URL has correct publicIP and publicPort number")

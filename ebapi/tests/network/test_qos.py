@@ -20,14 +20,14 @@ from ebapi.lib import neutron
 # set serUserPass or serKeyFileName, not both
 # set vmUserPass or vmKeyFileName, not both
 testConfig = ConfigParser("qos")
-iperfServerIP = testConfig.getConfig("iperfServerIP")
-serUserName = testConfig.getConfig("serUserName")
-serPassword = testConfig.getConfig("serPassword")
-serKeyFile = testConfig.getConfig("serKeyFile")
-iperfClientIP = testConfig.getConfig("iperfClientIP")
-vmUserName = testConfig.getConfig("vmUserName")
-vmPassword = testConfig.getConfig("vmPassword")
-vmKeyFile = testConfig.getConfig("vmKeyFile")
+iperfServerIP = testConfig.getConfig("iperfserverip")
+serUserName = testConfig.getConfig("serusername")
+serPassword = testConfig.getConfig("serpassword")
+serKeyFile = testConfig.getConfig("serkeyfile")
+iperfClientIP = testConfig.getConfig("iperfclientip")
+vmUserName = testConfig.getConfig("vmusername")
+vmPassword = testConfig.getConfig("vmpassword")
+vmKeyFile = testConfig.getConfig("vmkeyfile")
 policies = [
     # (maxBurst, maxBandwidth) in Kbps
     ("50", "500"),  # 500  Kbps throttling (10% fluctuation)
@@ -42,7 +42,6 @@ iperfClntCmd = "iperf3 " + clientCmdOpts
 # following test settings will be automatically populated
 iperfServer = None
 iperfClient = None
-iperfClientIP = None
 selectedVM = None
 
 
@@ -55,10 +54,11 @@ def setup_test(request):  # pylint: disable=too-many-branches
         "iperfServerIP": iperfServerIP,
     }
 
-    serverObj = nova.Servers(projectID)
+    serverObj = nova.VMs(projectID)
 
+    global iperfClientIP, iperfServer, iperfClient, selectedVM  # pylint: disable=global-statement
     if not iperfClientIP:
-        vms = serverObj.getAllServers()
+        vms = serverObj.getAllVMs()
         vmIDs = vms.keys()
         for vmID in vmIDs:
             floatingIP = serverObj.getFloatingIPFromVMID(vmID)
@@ -138,8 +138,8 @@ def getBandwidth(output):
 
 
 @pytest.mark.parametrize("maxBurst, maxBandwidth", policies)
-def test_bandwidth(setup_test, maxBurst, maxBandwidth):
-    serverObj = nova.Servers(projectID)
+def test_bandwidth(maxBurst, maxBandwidth):
+    serverObj = nova.VMs(projectID)
     macAddr = serverObj.getMacAddrFromIP(selectedVM, iperfClientIP)
     assert macAddr
     elog.info(

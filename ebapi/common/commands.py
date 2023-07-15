@@ -15,7 +15,7 @@ from ebapi.common import utils as eutil
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-class RemoteMachine():
+class RemoteMachine:
     """
     RemoteMachine API class implements::
 
@@ -117,7 +117,9 @@ class RemoteMachine():
             elog.error("Connection timed out: [%s]" % eutil.bcolor(e))
             result_flag = False
         except Exception as e:
-            elog.error("\nException in connecting to the server: [%s]" % eutil.bcolor(e))
+            elog.error(
+                "\nException in connecting to the server: [%s]" % eutil.bcolor(e)
+            )
             result_flag = False
             self.client.close()
         else:
@@ -166,7 +168,9 @@ class RemoteMachine():
                 elog.error("Could not establish SSH connection")
                 result_flag = False
         except socket.timeout as e:
-            elog.error("\nException in connecting to the server: [%s]" % eutil.bcolor(e))
+            elog.error(
+                "\nException in connecting to the server: [%s]" % eutil.bcolor(e)
+            )
             self.client.close()
             result_flag = False
         except paramiko.SSHException:

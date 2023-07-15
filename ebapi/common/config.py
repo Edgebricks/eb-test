@@ -11,7 +11,7 @@ from ebapi.common import utils as eutil
 from ebapi.common.logger import elog
 
 
-class ConfigParser():
+class ConfigParser:
     """
     Config class for getting, setting, deleting test configuration.
 
