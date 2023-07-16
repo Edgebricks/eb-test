@@ -272,7 +272,7 @@ class Users(Token):
 
     def delete(self, userID):
         elog.info("deleting user %s" % eutil.bcolor(userID))
-        response = self.client.delete(self.domainURL + "/" + userID)
+        response = self.client.delete(self.usersURL + "/" + userID)
         if not response.ok:
             elog.error("failed to delete user: %s" % eutil.rcolor(response.status_code))
             elog.error(response.text)

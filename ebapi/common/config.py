@@ -73,7 +73,7 @@ class ConfigParser:
             value = self.parser.get(self.section, config)
         except Exception as e:
             elog.error("%s: config not in test.conf" % eutil.rcolor(config))
-            elog.error(e.message)
+            elog.error(e)
             raise
 
         if not value:

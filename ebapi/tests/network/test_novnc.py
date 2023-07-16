@@ -51,14 +51,14 @@ def setup_test():
 
 
 def test_privateAccess():
-    serverObj = nova.Servers(projectID)
-    servers = serverObj.getAllServers()
+    serverObj = nova.VMs(projectID)
+    servers = serverObj.getAllVMs()
     assert servers
     elog.info(
         "list of VMS: %s" % eutil.bcolor(json.dumps(servers, sort_keys=True, indent=4))
     )
     serverID = servers.keys().pop()
-    vncURL = serverObj.getServerConsole(serverID)
+    vncURL = serverObj.getVMConsole(serverID)
     assert vncURL
     elog.info("server console URL: %s" % eutil.bcolor(vncURL))
 
@@ -122,13 +122,13 @@ def test_publicAccess():
     rc, _ = firewall.run(cmd)
     assert rc == 0
 
-    serverObj = nova.Servers(projectID)
-    servers = serverObj.getAllServers()
+    serverObj = nova.VMs(projectID)
+    servers = serverObj.getAllVMs()
     elog.info(
         "list of VMS: %s" % eutil.bcolor(json.dumps(servers, sort_keys=True, indent=4))
     )
     serverID = servers.keys().pop()
-    vncURL = serverObj.getServerConsole(serverID)
+    vncURL = serverObj.getVMConsole(serverID)
     elog.info("server console URL: %s" % eutil.bcolor(vncURL))
 
     consoleURL = urlparse(vncURL)

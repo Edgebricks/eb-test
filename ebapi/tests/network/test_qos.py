@@ -106,19 +106,19 @@ def setup_test(request):  # pylint: disable=too-many-branches
             "iperf3 not installed on iperfClient: %s" % eutil.bcolor(iperfClientIP)
         )
 
-    iperfServer.sudo("killall iperf3; rm server.out", logging=False)
-    rc, _ = iperfServer.sudo(iperfServCmd)
+    iperfServer.run("killall iperf3; rm server.out")
+    rc, _ = iperfServer.run(iperfServCmd)
     if rc != 0:
         pytest.skip("failed to start iperf server")
 
-    rc, _ = iperfServer.sudo("netstat -anp | grep 5201")
+    rc, _ = iperfServer.run("netstat -anp | grep 5201")
     if rc != 0:
         pytest.skip("netstat output failed to show iperf server port 5201")
 
     elog.info("iperf3 running on server %s" % eutil.bcolor(iperfServerIP))
 
     def cleanup():
-        iperfServer.sudo("killall iperf3; rm server.out", logging=False)
+        iperfServer.run("killall iperf3; rm server.out")
 
     request.addfinalizer(cleanup)
 

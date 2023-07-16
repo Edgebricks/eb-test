@@ -23,7 +23,7 @@ def randomKey(length):
     """
     key = ""
     for _ in range(length):
-        key += random.choice(string.lowercase + string.uppercase + string.digits)
+        key += random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits)
     return key
 
 

@@ -286,7 +286,7 @@ class Routers(NeutronBase):
     def getExternalNetworkIDFromRouter(self, routerID):
         response = self.getRouter(routerID)
         if not response.ok:
-            eutil.error(
+            elog.error(
                 "failed getting router %s: %s"
                 % (eutil.bcolor(routerID), eutil.rcolor(response.status_code))
             )

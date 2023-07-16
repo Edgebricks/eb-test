@@ -14,9 +14,9 @@ from ebui.testSetup.pages.loginPage import LoginPage
 @pytest.mark.usefixtures("oneTimeSetUp")
 class LoginTest:
     @pytest.fixture()
-    def __init__(self):
-        self.lp = LoginPage(self.driver)
-        self.ts = TestStatus(self.driver)
+    def __init__(self, driver):
+        self.lp = LoginPage(driver)
+        self.ts = TestStatus(driver)
         self.loginConfig = Login()
         self.customerid = self.loginConfig.customerID
         self.businessunit = self.loginConfig.businessUnit

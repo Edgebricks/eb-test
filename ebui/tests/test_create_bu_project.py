@@ -19,12 +19,12 @@ from ebui.testSetup.dataSource.projectTemplate import ProjectTemplate
 @pytest.mark.usefixtures("oneTimeSetUp")
 class CreateBUProject:
     @pytest.fixture()
-    def __init__(self):
-        self.bu = BUPage(self.driver)
-        self.ts = TestStatus(self.driver)
-        self.buSummary = BUSummaryPage(self.driver)
-        self.projects = ProjectsPage(self.driver)
-        self.np = NavigationPage(self.driver)
+    def __init__(self, driver):
+        self.bu = BUPage(driver)
+        self.ts = TestStatus(driver)
+        self.buSummary = BUSummaryPage(driver)
+        self.projects = ProjectsPage(driver)
+        self.np = NavigationPage(driver)
         self.util = Util()
 
         self.buConfig = BUquota()
@@ -52,8 +52,7 @@ class CreateBUProject:
         result = self.bu.verifyBUCreated(self.businessUnitName)
         self.ts.mark(result, "BU CREATION VERIFICATION")
         self.buSummary.navigateToProjects()
-        self.projects.create(self.projectName, self.projectTemplate)
-        self.projects.customizeProject(self.cidr)
+        self.projects.createProject(self.projectName, self.projectTemplate, self.cidr)
 
         result = self.projects.verifyProjectCreated(self.projectName)
         self.ts.markFinal(
