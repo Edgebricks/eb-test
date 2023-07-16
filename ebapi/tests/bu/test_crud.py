@@ -12,7 +12,6 @@ from ebapi.lib.edgebricks import BUs
 class TestBuCRUD:
     testConfig = ConfigParser()
 
-    @classmethod
     def test_bu_crud_001(cls):
         # create bu using config
         buObj = BUs()
@@ -41,7 +40,6 @@ class TestBuCRUD:
     @pytest.mark.parametrize(
         "buNames", ["ebtestDomainNew01", "ebtestDomainNew02", "ebtestDomainNew03"]
     )
-    @classmethod
     def test_bu_crud_002(cls, buNames):
         # create bu
         buObj = BUs()
