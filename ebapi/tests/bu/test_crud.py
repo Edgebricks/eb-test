@@ -27,9 +27,9 @@ class TestBuCRUD:
         assert buObj.waitForState(buID, state=BUs.BU_STATE_CREATED)
 
         # update bu
-        # newDesc = "ebtest updated description"
-        # updatedBuResp = buObj.update(buID, description=newDesc)
-        # assert updatedBuResp['description'] == newDesc
+        newDesc = "ebtestDomain description updated"
+        updatedBuResp = buObj.update(buID, desc=newDesc, buName=domainName)
+        assert updatedBuResp['description'] == newDesc
 
         # delete bu
         assert buObj.delete(buID)

@@ -176,11 +176,13 @@ class BUs(Token):
         elog.info(content)
         return content
 
-    def update(self, buID, desc=None, enabled=True):
+    def update(self, buID, buName, desc=None, enabled=True):
         elog.info("updating business unit %s" % eutil.bcolor(buID))
 
         # prepare update payload
-        payload = {"description": desc, "enabled": enabled}
+        payload = {"description": desc, "enabled": enabled,
+                   "explicit_domain_id": buID, "id": buID,
+                   "name": buName}
 
         # send update request
         response = self.client.patch(self.buURL + "/" + buID, payload)
