@@ -60,8 +60,7 @@ flake8: check-flake8
 # -> Checking that declared interfaces are truly implemented.[5]
 pylint: check-pylint
 	@echo -e "* \e[0;32mRunning pylint\e[m"
-	pylint *
-	@$(MAKE) -s fix-pylint-errors
+	pylint --recursive=y .
 	@echo -e "* \e[0;32mFinished pylint\e[m"
 
 # checks code formatting and linting issues
