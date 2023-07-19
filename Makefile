@@ -26,15 +26,11 @@ print-%  : ; @echo $* = $($*)
 
 # check and install dependencies
 check-flake8:
-	(which flake8) >/dev/null || (sudo apt install -y flake8) >/dev/null
+	(which flake8) >/dev/null || (pip3 install flake8) >/dev/null
 check-black:
-	(which black) >/dev/null || (sudo apt install -y black) >/dev/null
+	(which black) >/dev/null || (pip3 install black) >/dev/null
 check-pylint:
-	(which pylint) >/dev/null || (sudo apt install -y pylint) >/dev/null
-check-autopep8:
-	(which autopep8) >/dev/null || (sudo apt install -y autopep8) >/dev/null
-check-pycodestyle:
-	(which pycodestyle) >/dev/null || (sudo apt install -y pycodestyle) >/dev/null
+	(which pylint) >/dev/null || (pip3 install pylint) >/dev/null
 
 # We use black for fixing flake8 issues.
 # Black is a PEP 8 compliant opinionated formatter.
@@ -52,19 +48,6 @@ flake8: check-flake8
 	flake8 .
 	@$(MAKE) -s fix-flake8-errors
 	@echo -e "* \e[0;32mFinished flake8\e[m"
-
-# We use autopep8 and pycodestyle for fixing flake8 issues.
-# autopep8: automatically formats Python code to conform to the PEP 8 style guide.
-# It uses the pycodestyle utility to determine what parts of the code needs to be
-# formatted. autopep8 is capable of fixing most of the formatting issues that can
-# be reported by pycodestyle.
-# pycodestyle: is a tool that checks Python code against a handful of style
-# conventions, including those defined in PEP 8.
-fix-pylint-errors: check-autopep8 check-pycodestyle
-	@echo -e "* \e[0;34mFixing obvious codestyle issues...\e[m"
-	find -type f -name '*.py' -exec autopep8 --in-place --aggressive '{}' \;
-	find -type f -name '*.py' -exec pycodestyle --first --repeat --ignore=E501,E121,E123,E126,E226,E24,E704,W503,W504 '{}' \;
-	@echo -e "* \e[0;34mFixed obvious codestyle issues\e[m"
 
 # Pylint is a static code analysis tool for the Python programming language.
 # It is named following a common convention in Python of a "py" prefix, and

@@ -29,7 +29,7 @@ class TestBuCRUD:
         # update bu
         newDesc = "ebtestDomain description updated"
         updatedBuResp = buObj.update(buID, desc=newDesc, buName=domainName)
-        assert updatedBuResp['description'] == newDesc
+        assert updatedBuResp["description"] == newDesc
 
         # delete bu
         assert buObj.delete(buID)
