@@ -4,25 +4,16 @@
 # (c) 2021 Edgebricks Inc
 
 
-import pytest
-import time
 import logging
 
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-from framework.base.basePage import BasePage
-from testSetup.pages.buPage import BUPage
-import framework.utilities.customLogger as cl
+from ebui.framework.base.basePage import BasePage
+import ebui.framework.utilities.customLogger as cl
 
 
 class ProjectsPage(BasePage):
     """
-  Class contains web elements or links needed for creating Projects
-  """
+    Class contains web elements or links needed for creating Projects
+    """
 
     log = cl.customLogger(logging.DEBUG)
 
@@ -218,9 +209,8 @@ class ProjectsPage(BasePage):
             self.elementClick(verifyProjectLocator, locatorType="xpath")
             self.log.info("PROJECT CREATION WAS SUCCESSFUL")
             return True
-        else:
-            self.log.error("FAILED TO VERIFY PROJECT CREATION")
-            return False
+        self.log.error("FAILED TO VERIFY PROJECT CREATION")
+        return False
 
     def createProject(self, projectName, projectTemplate, cidr):
         self.clickCreateProject()

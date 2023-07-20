@@ -5,9 +5,9 @@
 
 
 import json
-import pytest
 import re
 from urllib.parse import urlparse
+import pytest
 
 from ebapi.common import utils as eutil
 from ebapi.common.commands import RemoteMachine
@@ -32,7 +32,7 @@ projectID = testConfig.getProjectID()
 
 
 @pytest.fixture(scope="module")
-def setup_test(request):
+def setup_test():
     notset = False
     testParams = {
         "nginxIP": nginxIP,
@@ -51,14 +51,14 @@ def setup_test(request):
 
 
 def test_privateAccess():
-    serverObj = nova.Servers(projectID)
-    servers = serverObj.getAllServers()
+    serverObj = nova.VMs(projectID)
+    servers = serverObj.getAllVMs()
     assert servers
     elog.info(
         "list of VMS: %s" % eutil.bcolor(json.dumps(servers, sort_keys=True, indent=4))
     )
     serverID = servers.keys().pop()
-    vncURL = serverObj.getServerConsole(serverID)
+    vncURL = serverObj.getVMConsole(serverID)
     assert vncURL
     elog.info("server console URL: %s" % eutil.bcolor(vncURL))
 
@@ -69,11 +69,11 @@ def test_privateAccess():
 
 
 def test_publicAccess():
-    global vncPublicIP
+    firewall = None
     if password:
         firewall = RemoteMachine(vncPublicIP, userName, password)
     elif keyFile:
-        firewall = RemoteMachine(vncPublicIP, userName, keyFile=keyFile)
+        firewall = RemoteMachine(vncPublicIP, userName, keyfile=keyFile)
     else:
         pytest.skip("set test param password or keyFile")
 
@@ -81,7 +81,6 @@ def test_publicAccess():
     adminPass = testConfig.getCloudAdminPassword()
     tokenObj = keystone.Token("domain", "admin.local", admin, adminPass)
     token = tokenObj.getToken()
-    assert token
 
     apiURL = testConfig.getConfig("apiURL")
     clusterID = testConfig.getConfig("clusterID")
@@ -92,30 +91,24 @@ def test_publicAccess():
     client = RestClient(token)
     response = client.put(vncURL, payload, timeout=60)
     if not response.ok:
-        elog.error(
-            "failed to setup public VNC access: %s" % eutil.rcolor(response.status_code)
-        )
-        elog.error(response.text)
+        elog.error(eutil.rcolor(response.text))
         assert False
-
     elog.info("setting up public vnc access succeeded")
 
-    rc, out = firewall.sudo("ip route show | grep default")
+    rc, out = firewall.run("ip route show | grep default")
     assert rc == 0
     dev = re.findall(r"dev (\S+)", out, re.M)
-    assert dev
     dev = dev[0]
-    rc, out = firewall.sudo("ifconfig %s" % dev)
+    rc, out = firewall.run("ifconfig %s" % dev)
     assert rc == 0
     privateIP = re.findall(r"inet (\S+)", out, re.M)
-    assert privateIP
     privateIP = privateIP[0]
 
     # port forwarding using iptables
     rule = "iptables -A PREROUTING -t nat -p tcp "
     opts = "-i %s --dport %s -j DNAT --to %s:26000" % (dev, vncPublicPort, nginxIP)
     cmd = rule + opts
-    rc, _ = firewall.sudo(cmd)
+    rc, _ = firewall.run(cmd)
     assert rc == 0
 
     rule = "iptables -A POSTROUTING -t nat -p tcp "
@@ -126,21 +119,18 @@ def test_publicAccess():
         privateIP,
     )
     cmd = rule + opts
-    rc, _ = firewall.sudo(cmd)
+    rc, _ = firewall.run(cmd)
     assert rc == 0
 
-    serverObj = nova.Servers(projectID)
-    servers = serverObj.getAllServers()
-    assert servers
+    serverObj = nova.VMs(projectID)
+    servers = serverObj.getAllVMs()
     elog.info(
         "list of VMS: %s" % eutil.bcolor(json.dumps(servers, sort_keys=True, indent=4))
     )
     serverID = servers.keys().pop()
-    vncURL = serverObj.getServerConsole(serverID)
-    assert vncURL
+    vncURL = serverObj.getVMConsole(serverID)
     elog.info("server console URL: %s" % eutil.bcolor(vncURL))
 
     consoleURL = urlparse(vncURL)
-    assert consoleURL.port == vncPublicPort
-    assert consoleURL.hostname == vncPublicIP
+    assert (consoleURL.port == vncPublicPort) and (consoleURL.hostname == vncPublicIP)
     elog.info("console URL has correct publicIP and publicPort number")

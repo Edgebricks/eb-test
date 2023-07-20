@@ -4,18 +4,17 @@
 # (c) 2021 Edgebricks Inc
 
 
-import pytest
 import logging
 
-from framework.base.basePage import BasePage
-from testSetup.pages.navigationPage import NavigationPage
-import framework.utilities.customLogger as cl
+from ebui.framework.base.basePage import BasePage
+from ebui.testSetup.pages.navigationPage import NavigationPage
+import ebui.framework.utilities.customLogger as cl
 
 
 class LoginPage(BasePage):
     """
-      Class contains all the elements present on th login page
-      """
+    Class contains all the elements present on th login page
+    """
 
     log = cl.customLogger(logging.DEBUG)
 
@@ -85,23 +84,19 @@ class LoginPage(BasePage):
         verifyElement = self.isElementPresent(self.regionSelector)
         if verifyElement:
             return True
-        else:
-            element = self.getElement(self.errorPrompt, locatorType="xpath")
-            errormssg = element.text
-            self.log.error(errormssg)
-            return False
-            self.driver.quit()
+        element = self.getElement(self.errorPrompt, locatorType="xpath")
+        errormssg = element.text
+        self.log.error(errormssg)
+        return False
 
     def verifyCustomerID(self):
         self.waitForElement(
             self.customerID, locatorType="xpath", timeout=120, pollFrequency=0.2
         )
-
         verifyElement = self.isElementPresent(self.customerID)
-        if verify_element:
+        if verifyElement:
             return True
-        else:
-            return False
+        return False
 
     def logout(self):
         self.np.navigateToRegionSelector()
@@ -116,7 +111,7 @@ class LoginPage(BasePage):
     def signinAfterLogout(
         self, customerid="", businessunit="", username="", password=""
     ):
-
+        self.enterCustomerID(customerid)
         self.enterBusinessUnit(businessunit)
         self.enterUserName(username)
         self.enterPassword(password)

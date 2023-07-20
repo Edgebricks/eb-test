@@ -5,28 +5,26 @@
 
 
 import pytest
-import unittest2 as unittest
 
-from testSetup.pages.loginPage import LoginPage
-from testSetup.pages.buPage import BUPage
-from testSetup.pages.buSummaryPage import BUSummaryPage
-from testSetup.pages.projectsPage import ProjectsPage
-from testSetup.pages.navigationPage import NavigationPage
-from framework.utilities.teststatus import TestStatus
-from framework.utilities.util import Util
-from testSetup.dataSource.buQuota import BUquota
-from testSetup.dataSource.projectTemplate import ProjectTemplate
+from ebui.testSetup.pages.buPage import BUPage
+from ebui.testSetup.pages.buSummaryPage import BUSummaryPage
+from ebui.testSetup.pages.projectsPage import ProjectsPage
+from ebui.testSetup.pages.navigationPage import NavigationPage
+from ebui.framework.utilities.teststatus import TestStatus
+from ebui.framework.utilities.util import Util
+from ebui.testSetup.dataSource.buQuota import BUquota
+from ebui.testSetup.dataSource.projectTemplate import ProjectTemplate
 
 
 @pytest.mark.usefixtures("oneTimeSetUp")
-class CreateBUProject(unittest.TestCase):
+class CreateBUProject:
     @pytest.fixture()
-    def objectSetUp(self, oneTimeSetUp):
-        self.bu = BUPage(self.driver)
-        self.ts = TestStatus(self.driver)
-        self.buSummary = BUSummaryPage(self.driver)
-        self.projects = ProjectsPage(self.driver)
-        self.np = NavigationPage(self.driver)
+    def __init__(self, driver):
+        self.bu = BUPage(driver)
+        self.ts = TestStatus(driver)
+        self.buSummary = BUSummaryPage(driver)
+        self.projects = ProjectsPage(driver)
+        self.np = NavigationPage(driver)
         self.util = Util()
 
         self.buConfig = BUquota()
@@ -41,7 +39,7 @@ class CreateBUProject(unittest.TestCase):
         self.projectTemplate = self.projectConfig.projectTemplate
         self.cidr = self.projectConfig.cidr
 
-    @pytest.mark.usefixtures("objectSetUp")
+    @pytest.mark.usefixtures("__init__")
     def test_create_bu_project(self):
         self.bu.createLocalBuWithNoQuota(
             self.businessUnitName,
@@ -54,8 +52,7 @@ class CreateBUProject(unittest.TestCase):
         result = self.bu.verifyBUCreated(self.businessUnitName)
         self.ts.mark(result, "BU CREATION VERIFICATION")
         self.buSummary.navigateToProjects()
-        self.projects.create(self.projectName, self.projectTemplate)
-        self.projects.customizeProject(self.cidr)
+        self.projects.createProject(self.projectName, self.projectTemplate, self.cidr)
 
         result = self.projects.verifyProjectCreated(self.projectName)
         self.ts.markFinal(
@@ -63,3 +60,7 @@ class CreateBUProject(unittest.TestCase):
         )
 
         self.util.sleep(10, "SESSION TO ABORT")
+
+    @pytest.mark.usefixtures("__init__")
+    def test_delete_bu_project(self):
+        assert True

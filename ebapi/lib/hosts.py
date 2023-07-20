@@ -14,7 +14,7 @@ from ebapi.lib.keystone import Token
 
 class HostsBase(Token):
     def __init__(self, scope="project"):
-        super(HostsBase, self).__init__(scope)
+        super().__init__(scope)
         self.client = RestClient(self.getToken())
         self.apiURL = self.getApiURL()
         self.clusterID = self.getClusterID()
@@ -24,7 +24,7 @@ class HostsBase(Token):
 
 class Hosts(HostsBase):
     def __init__(self):
-        super(Hosts, self).__init__()
+        super().__init__()
 
     def getHosts(self):
         requestURL = self.apiURL + "/v1/hosts"

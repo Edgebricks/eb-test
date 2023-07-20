@@ -14,11 +14,10 @@ Example:
     wdf = WebDriver(browser)
     wdf.getWebDriverInstance()
 """
-import traceback
 import os
 
 from selenium import webdriver
-from testSetup.dataSource.login import Login
+from ebui.testSetup.dataSource.login import Login
 
 
 class WebDriver:

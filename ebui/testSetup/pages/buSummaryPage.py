@@ -4,20 +4,19 @@
 # (c) 2021 Edgebricks Inc
 
 
-import pytest
 import logging
 
-from framework.base.basePage import BasePage
-import framework.utilities.customLogger as cl
+from ebui.framework.base.basePage import BasePage
+import ebui.framework.utilities.customLogger as cl
 
 
 class BUSummaryPage(BasePage):
     """
-  Class contains the links which can be used for navigating to
-  BU summary
-  BU Projects
-  BU Configuration
-  """
+    Class contains the links which can be used for navigating to
+    BU summary
+    BU Projects
+    BU Configuration
+    """
 
     log = cl.customLogger(logging.DEBUG)
 

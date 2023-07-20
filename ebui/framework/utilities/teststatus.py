@@ -15,19 +15,18 @@ Example:
 """
 import logging
 
-import framework.utilities.customLogger as cl
-from framework.base.baseActions import BaseActions
+import ebui.framework.utilities.customLogger as cl
+from ebui.framework.base.baseActions import BaseActions
 
 
 class TestStatus(BaseActions):
-
     log = cl.customLogger(logging.INFO)
 
     def __init__(self, driver):
         """
         Inits CheckPoint class
         """
-        super(TestStatus, self).__init__(driver)
+        super().__init__(driver)
         self.resultList = []
 
     def setResult(self, result, resultMessage):
@@ -66,7 +65,7 @@ class TestStatus(BaseActions):
         if "FAIL" in self.resultList:
             self.log.error(testName + " ### TEST FAILED")
             self.resultList.clear()
-            assert True == False
+            assert False
         else:
             self.log.info(testName + " ### TEST SUCCESSFUL")
             self.resultList.clear()

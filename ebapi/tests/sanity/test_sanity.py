@@ -28,8 +28,8 @@ class TestSanity:
     projectAdmin = testConfig.getProjectAdmin()
     projectAdminPass = testConfig.getProjectAdminPassword()
 
+    @classmethod
     def test_sanity_project_001(cls):
-
         # Create Domain
         domainObj = BUs()
         TestSanity.domainID = domainObj.create(buName=cls.domainName)
@@ -108,8 +108,8 @@ class TestSanity:
         assert TestSanity.projID
         cls.testConfig.setProjectID(TestSanity.projID)
 
+    @classmethod
     def test_sanity_vm_002(cls):
-
         flavorObj = Flavors(TestSanity.projID)
         matchflavorID = flavorObj.getBestMatchingFlavor(numCPU=2, memMB=4096)
 
@@ -142,11 +142,11 @@ class TestSanity:
         networkObj.deleteInternalNetwork(netID)
         sleep(20)
 
+    @classmethod
     def test_sanity_user_003(cls):
-
         # Delete Project
         projObj = Projects(cls.domainName, cls.projectAdmin, cls.projectAdminPass)
-        content = projObj.list(TestSanity.userID, TestSanity.domainID)
+        content = projObj.list(TestSanity.domainID)
         for project in content["projects"]:
             if project["name"] == cls.projectName:
                 TestSanity.projID = project["id"]

@@ -48,7 +48,7 @@ class BUs(Token):
         self.acctID = testConfig.getAcctID()
         self.clusterID = testConfig.getClusterID()
 
-        super(BUs, self).__init__("system", "admin.local", cloudAdmin, cloudAdminPass)
+        super().__init__("system", "admin.local", cloudAdmin, cloudAdminPass)
         self.client = RestClient(self.getToken())
         self.clusterURL = self.apiURL + "/v2/clusters/" + self.clusterID
         self.buURL = self.clusterURL + "/domains"
@@ -98,7 +98,6 @@ class BUs(Token):
         return buID
 
     def waitForState(self, buID, state=None, timeoutInSec=None, sleepInSec=None):
-
         elog.info(
             "waiting for business unit %s state to be %s"
             % (eutil.bcolor(buID), eutil.gcolor(state))
@@ -177,11 +176,17 @@ class BUs(Token):
         elog.info(content)
         return content
 
-    def update(self, buID, desc=None, enabled=True):
+    def update(self, buID, buName, desc=None, enabled=True):
         elog.info("updating business unit %s" % eutil.bcolor(buID))
 
         # prepare update payload
-        payload = {"description": desc, "enabled": enabled}
+        payload = {
+            "description": desc,
+            "enabled": enabled,
+            "explicit_domain_id": buID,
+            "id": buID,
+            "name": buName,
+        }
 
         # send update request
         response = self.client.patch(self.buURL + "/" + buID, payload)
@@ -233,7 +238,7 @@ class Projects(Token):
     PROJ_STATE_ERROR = 12
 
     def __init__(self, buName, projAdmin, projAdminPass):
-        super(Projects, self).__init__("domain", buName, projAdmin, projAdminPass)
+        super().__init__("domain", buName, projAdmin, projAdminPass)
         self.client = RestClient(self.getToken())
         self.apiURL = self.getApiURL()
         self.clusterID = self.getClusterID()
@@ -300,7 +305,6 @@ class Projects(Token):
         return projID
 
     def waitForState(self, projID, state=None, timeoutInSec=None, sleepInSec=None):
-
         elog.info(
             "waiting for project %s state to be %s"
             % (eutil.bcolor(projID), eutil.gcolor(state))

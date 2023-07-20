@@ -11,7 +11,7 @@ from ebapi.lib.keystone import Token
 
 class CinderBase(Token):
     def __init__(self, projectID, scope="project"):
-        super(CinderBase, self).__init__(scope)
+        super().__init__(scope)
         self.client = RestClient(self.getToken())
         self.projectID = projectID
         self.serviceURL = self.getServiceURL()
@@ -24,7 +24,7 @@ class Volumes(CinderBase):
     """
 
     def __init__(self, projectID):
-        super(Volumes, self).__init__(projectID)
+        super().__init__(projectID)
         self.volumesURL = self.cinderURL + "/volumes"
 
     def deleteVolume(self, volumeID):

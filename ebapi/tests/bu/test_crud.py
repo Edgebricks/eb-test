@@ -13,7 +13,6 @@ class TestBuCRUD:
     testConfig = ConfigParser()
 
     def test_bu_crud_001(cls):
-
         # create bu using config
         buObj = BUs()
         domainName = cls.testConfig.getDomainName()
@@ -28,9 +27,9 @@ class TestBuCRUD:
         assert buObj.waitForState(buID, state=BUs.BU_STATE_CREATED)
 
         # update bu
-        # newDesc = "ebtest updated description"
-        # updatedBuResp = buObj.update(buID, description=newDesc)
-        # assert updatedBuResp['description'] == newDesc
+        newDesc = "ebtestDomain description updated"
+        updatedBuResp = buObj.update(buID, desc=newDesc, buName=domainName)
+        assert updatedBuResp["description"] == newDesc
 
         # delete bu
         assert buObj.delete(buID)
@@ -42,7 +41,6 @@ class TestBuCRUD:
         "buNames", ["ebtestDomainNew01", "ebtestDomainNew02", "ebtestDomainNew03"]
     )
     def test_bu_crud_002(cls, buNames):
-
         # create bu
         buObj = BUs()
         buID = buObj.create(buName=buNames)

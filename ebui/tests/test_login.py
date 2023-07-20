@@ -5,28 +5,25 @@
 
 
 import pytest
-import unittest2 as unittest
-import time
 
-from selenium import webdriver
-from testSetup.dataSource.login import Login
-from framework.utilities.teststatus import TestStatus
-from testSetup.pages.loginPage import LoginPage
+from ebui.testSetup.dataSource.login import Login
+from ebui.framework.utilities.teststatus import TestStatus
+from ebui.testSetup.pages.loginPage import LoginPage
 
 
 @pytest.mark.usefixtures("oneTimeSetUp")
-class LoginTest(unittest.TestCase):
+class LoginTest:
     @pytest.fixture()
-    def objectSetUp(self, oneTimeSetUp):
-        self.lp = LoginPage(self.driver)
-        self.ts = TestStatus(self.driver)
+    def __init__(self, driver):
+        self.lp = LoginPage(driver)
+        self.ts = TestStatus(driver)
         self.loginConfig = Login()
         self.customerid = self.loginConfig.customerID
         self.businessunit = self.loginConfig.businessUnit
         self.username = self.loginConfig.userName
         self.password = self.loginConfig.password
 
-    @pytest.mark.usefixtures("objectSetUp")
+    @pytest.mark.usefixtures("__init__")
     def test_login(self):
         self.lp.logout()
         result1 = self.lp.verifyLoginTitle()
@@ -40,3 +37,7 @@ class LoginTest(unittest.TestCase):
         self.ts.markFinal("test_login", result2, "Login Verification")
         if not result2:
             self.driver.quit()
+
+    @pytest.mark.usefixtures("__init__")
+    def test_relogin(self):
+        assert True

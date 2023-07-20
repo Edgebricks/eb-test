@@ -10,13 +10,13 @@ every test module and to quit from the browser after test module
 is done executing.
 """
 
-import pytest
 import logging
+import pytest
 
-from testSetup.dataSource.login import Login
-from testSetup.pages.loginPage import LoginPage
-from framework.base.webdriver import WebDriver
-import framework.utilities.customLogger as cl
+from ebui.testSetup.dataSource.login import Login
+from ebui.testSetup.pages.loginPage import LoginPage
+from ebui.framework.base.webdriver import WebDriver
+import ebui.framework.utilities.customLogger as cl
 
 loginConfig = Login()
 customerid = loginConfig.customerID
@@ -26,7 +26,7 @@ password = loginConfig.password
 
 
 @pytest.yield_fixture(scope="class")
-def oneTimeSetUp(request, browser):
+def oneTimeSetUp(request, browser):  # pylint: disable=redefined-outer-name
     log = cl.customLogger(logging.DEBUG)
     log.info("Running one time setUp")
     wdf = WebDriver(browser)

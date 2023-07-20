@@ -14,7 +14,7 @@ from ebapi.lib.keystone import Token
 
 class NeutronBase(Token):
     def __init__(self, scope="domain"):
-        super(NeutronBase, self).__init__(scope)
+        super().__init__(scope)
         self.client = RestClient(self.getToken())
         self.serviceURL = self.getServiceURL()
         self.neutronURL = self.serviceURL + "/neutron/v2.0"
@@ -25,7 +25,7 @@ class NeutronBase(Token):
 
 class Networks(NeutronBase):
     def __init__(self, projectID):
-        super(Networks, self).__init__()
+        super().__init__()
         self.projectID = projectID
         self.networksURL = self.neutronURL + "/networks"
         self.tenantURL = self.networksURL + "?tenant_id=" + self.projectID
@@ -147,12 +147,12 @@ class Networks(NeutronBase):
 
 class Subnets(NeutronBase):
     def __init__(self):
-        super(Subnets, self).__init__()
+        super().__init__()
 
 
 class Ports(NeutronBase):
     def __init__(self, projectID):
-        super(Ports, self).__init__()
+        super().__init__()
         self.projectID = projectID
         self.portsURL = self.neutronURL + "/ports"
 
@@ -245,7 +245,7 @@ class Ports(NeutronBase):
 
 class Routers(NeutronBase):
     def __init__(self, projectID):
-        super(Routers, self).__init__()
+        super().__init__()
         self.projectID = projectID
         self.routersURL = self.neutronURL + "/routers?tenant_id="
         self.routersURL += self.projectID
@@ -286,7 +286,7 @@ class Routers(NeutronBase):
     def getExternalNetworkIDFromRouter(self, routerID):
         response = self.getRouter(routerID)
         if not response.ok:
-            eutil.error(
+            elog.error(
                 "failed getting router %s: %s"
                 % (eutil.bcolor(routerID), eutil.rcolor(response.status_code))
             )
@@ -298,7 +298,7 @@ class Routers(NeutronBase):
 
 class FloatingIPs(NeutronBase):
     def __init__(self, projectID):
-        super(FloatingIPs, self).__init__()
+        super().__init__()
         self.projectID = projectID
         self.floatingIPsURL = self.neutronURL + "/floatingips?tenant_id="
         self.floatingIPsURL += self.projectID
@@ -333,7 +333,7 @@ class FloatingIPs(NeutronBase):
 
 class QoS(NeutronBase):
     def __init__(self):
-        super(QoS, self).__init__()
+        super().__init__()
         self.policyURL = self.neutronURL + "/qos/policies"
 
     def createPolicy(self, name, shared=False):

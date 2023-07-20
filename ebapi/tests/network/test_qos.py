@@ -4,9 +4,9 @@
 # (c) 2022 Edgebricks Inc
 
 
-import pytest
 import re
 import time
+import pytest
 
 from ebapi.common import utils as eutil
 from ebapi.common.commands import RemoteMachine
@@ -20,14 +20,14 @@ from ebapi.lib import neutron
 # set serUserPass or serKeyFileName, not both
 # set vmUserPass or vmKeyFileName, not both
 testConfig = ConfigParser("qos")
-iperfServerIP = testConfig.getConfig("iperfServerIP")
-serUserName = testConfig.getConfig("serUserName")
-serPassword = testConfig.getConfig("serPassword")
-serKeyFile = testConfig.getConfig("serKeyFile")
-iperfClientIP = testConfig.getConfig("iperfClientIP")
-vmUserName = testConfig.getConfig("vmUserName")
-vmPassword = testConfig.getConfig("vmPassword")
-vmKeyFile = testConfig.getConfig("vmKeyFile")
+iperfServerIP = testConfig.getConfig("iperfserverip")
+serUserName = testConfig.getConfig("serusername")
+serPassword = testConfig.getConfig("serpassword")
+serKeyFile = testConfig.getConfig("serkeyfile")
+iperfClientIP = testConfig.getConfig("iperfclientip")
+vmUserName = testConfig.getConfig("vmusername")
+vmPassword = testConfig.getConfig("vmpassword")
+vmKeyFile = testConfig.getConfig("vmkeyfile")
 policies = [
     # (maxBurst, maxBandwidth) in Kbps
     ("50", "500"),  # 500  Kbps throttling (10% fluctuation)
@@ -42,13 +42,11 @@ iperfClntCmd = "iperf3 " + clientCmdOpts
 # following test settings will be automatically populated
 iperfServer = None
 iperfClient = None
-iperfClientIP = None
 selectedVM = None
 
 
 @pytest.fixture(scope="module")
-def setup_test(request):
-
+def setup_test(request):  # pylint: disable=too-many-branches
     notset = False
     testParams = {
         "vmUserName": vmUserName,
@@ -56,12 +54,11 @@ def setup_test(request):
         "iperfServerIP": iperfServerIP,
     }
 
-    global iperfClientIP
-    global selectedVM
-    serverObj = nova.Servers(projectID)
+    serverObj = nova.VMs(projectID)
 
+    global iperfClientIP, iperfServer, iperfClient, selectedVM  # pylint: disable=global-statement
     if not iperfClientIP:
-        vms = serverObj.getAllServers()
+        vms = serverObj.getAllVMs()
         vmIDs = vms.keys()
         for vmID in vmIDs:
             floatingIP = serverObj.getFloatingIPFromVMID(vmID)
@@ -75,19 +72,17 @@ def setup_test(request):
     if not selectedVM:
         pytest.skip("failed to find any VMS with floating IP")
 
-    global iperfServer
     if serPassword:
         iperfServer = RemoteMachine(iperfServerIP, serUserName, serPassword)
     elif serKeyFile:
-        iperfServer = RemoteMachine(iperfServerIP, serUserName, keyFile=serKeyFile)
+        iperfServer = RemoteMachine(iperfServerIP, serUserName, keyfile=serKeyFile)
     else:
         pytest.skip("set test param serPassword or serKeyFile")
 
-    global iperfClient
     if vmPassword:
         iperfClient = RemoteMachine(iperfClientIP, vmUserName, vmPassword)
     elif vmKeyFile:
-        iperfClient = RemoteMachine(iperfClientIP, vmUserName, keyFile=vmKeyFile)
+        iperfClient = RemoteMachine(iperfClientIP, vmUserName, keyfile=vmKeyFile)
     else:
         pytest.skip("set test param vmPassword or vmKeyFile")
 
@@ -111,19 +106,19 @@ def setup_test(request):
             "iperf3 not installed on iperfClient: %s" % eutil.bcolor(iperfClientIP)
         )
 
-    iperfServer.sudo("killall iperf3; rm server.out", logging=False)
-    rc, _ = iperfServer.sudo(iperfServCmd)
+    iperfServer.run("killall iperf3; rm server.out")
+    rc, _ = iperfServer.run(iperfServCmd)
     if rc != 0:
         pytest.skip("failed to start iperf server")
 
-    rc, _ = iperfServer.sudo("netstat -anp | grep 5201")
+    rc, _ = iperfServer.run("netstat -anp | grep 5201")
     if rc != 0:
         pytest.skip("netstat output failed to show iperf server port 5201")
 
     elog.info("iperf3 running on server %s" % eutil.bcolor(iperfServerIP))
 
     def cleanup():
-        iperfServer.sudo("killall iperf3; rm server.out", logging=False)
+        iperfServer.run("killall iperf3; rm server.out")
 
     request.addfinalizer(cleanup)
 
@@ -143,8 +138,8 @@ def getBandwidth(output):
 
 
 @pytest.mark.parametrize("maxBurst, maxBandwidth", policies)
-def test_bandwidth(setup_test, maxBurst, maxBandwidth):
-    serverObj = nova.Servers(projectID)
+def test_bandwidth(maxBurst, maxBandwidth):
+    serverObj = nova.VMs(projectID)
     macAddr = serverObj.getMacAddrFromIP(selectedVM, iperfClientIP)
     assert macAddr
     elog.info(

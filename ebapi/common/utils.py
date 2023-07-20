@@ -22,8 +22,10 @@ def randomKey(length):
             eutil.randomKey(7)
     """
     key = ""
-    for i in range(length):
-        key += random.choice(string.lowercase + string.uppercase + string.digits)
+    for _ in range(length):
+        key += random.choice(
+            string.ascii_lowercase + string.ascii_uppercase + string.digits
+        )
     return key
 
 

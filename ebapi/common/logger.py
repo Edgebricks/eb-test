@@ -4,8 +4,8 @@
 # (c) 2022 Edgebricks Inc
 
 
-from colorlog import ColoredFormatter
 import logging
+from colorlog import ColoredFormatter
 
 
 def customLogger():

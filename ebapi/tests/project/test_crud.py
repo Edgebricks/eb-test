@@ -4,7 +4,8 @@
 # (c) 2022 Edgebricks Inc
 
 from ebapi.common.config import ConfigParser
-from ebapi.lib.keystone import Users, Roles
+
+# from ebapi.lib.keystone import Users, Roles
 from ebapi.lib.edgebricks import BUs, Projects
 
 
@@ -12,7 +13,6 @@ class TestProjectCRUD:
     testConfig = ConfigParser()
 
     def test_project_crud_001(cls):
-
         # create BU
         buObj = BUs()
         domainName = cls.testConfig.getDomainName()
@@ -81,3 +81,6 @@ class TestProjectCRUD:
 
         # wait for bu to be deleted
         assert buObj.waitForState(buID, state=BUs.BU_STATE_DELETED)
+
+    def test_project_crud_002(cls):
+        assert True

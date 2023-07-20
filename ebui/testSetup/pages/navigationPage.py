@@ -4,17 +4,16 @@
 # (c) 2021 Edgebricks Inc
 
 
-import pytest
 import logging
 
-from framework.base.basePage import BasePage
-import framework.utilities.customLogger as cl
+from ebui.framework.base.basePage import BasePage
+import ebui.framework.utilities.customLogger as cl
 
 
 class NavigationPage(BasePage):
     """
-      Class contains methods to navigate to the links common for all the pages
-      """
+    Class contains methods to navigate to the links common for all the pages
+    """
 
     log = cl.customLogger(logging.DEBUG)
 
@@ -64,10 +63,10 @@ class NavigationPage(BasePage):
         self.elementClick(locator=self.feedbackLocator, locatorType="xpath")
 
     def navigateToZSHelpHandler(self):
-        self.elementClick(locator=zsHelpHandlerIcon)
+        self.elementClick(locator=self.zsHelpHandlerIcon)
 
     def navigateToCloudServiceIcon(self):
-        self.elementClick(locator=goToCloudServiceIcon)
+        self.elementClick(locator=self.goToCloudServiceIcon)
 
     def navigateToRegionSelector(self):
         self.waitForElement(

@@ -4,18 +4,17 @@
 # (c) 2021 Edgebricks Inc
 
 
-import pytest
 import logging
 
-from framework.base.basePage import BasePage
-from testSetup.pages.navigationPage import NavigationPage
-import framework.utilities.customLogger as cl
+from ebui.framework.base.basePage import BasePage
+from ebui.testSetup.pages.navigationPage import NavigationPage
+import ebui.framework.utilities.customLogger as cl
 
 
 class BUPage(BasePage):
     """
-  Class contains all the web elements needed for creating a BU
-  """
+    Class contains all the web elements needed for creating a BU
+    """
 
     log = cl.customLogger(logging.DEBUG)
 
@@ -155,13 +154,13 @@ class BUPage(BasePage):
         if verifyElement:
             self.elementClick(verifyBUlocator, locatorType="xpath")
             self.log.info("BU CREATION WAS SUCCESSFUL")
-        else:
-            self.log.error("FAILED TO VERIFY BU CREATION")
+            return True
+        self.log.error("FAILED TO VERIFY BU CREATION")
+        return False
 
     def createLocalBuWithNoQuota(
         self, businessUnitName, username, email, password, confirmpassword
     ):
-
         self.np.navigateToBusinessUnit()
         self.createBusinessUnit()
         self.enterBusinessUnitName(businessUnitName)
