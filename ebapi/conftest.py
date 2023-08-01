@@ -62,8 +62,10 @@ def getAcctAndClusterID():
         return None, None
 
     data = json.loads(rsp.content)
-    acctID = data["clusters"][0]["acct_id"]
-    clusterID = data["clusters"][0]["id"]
+    for clusters in data["clusters"]:
+        if clusters["openstack_state"] == "created":
+            acctID = clusters["acct_id"]
+            clusterID = clusters["id"]
     return acctID, clusterID
 
 

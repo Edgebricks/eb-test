@@ -13,44 +13,73 @@ class TestBuCRUD:
     testConfig = ConfigParser()
 
     def test_bu_crud_001(cls):
-        # create bu using config
-        buObj = BUs()
-        domainName = cls.testConfig.getDomainName()
-        buID = buObj.create(buName=domainName)
-        assert buID
+        try:
+            # create bu using config
+            buObj = BUs()
+            domainName = cls.testConfig.getDomainName()
+            buID = buObj.create(buName=domainName)
+            assert buID
 
-        # get bu
-        buResp = buObj.get(buID)
-        assert buResp["name"] == domainName
+            # get bu
+            buResp = buObj.get(buID)
+            assert buResp["name"] == domainName
 
-        # wait for bu to be created
-        assert buObj.waitForState(buID, state=BUs.BU_STATE_CREATED)
+            # wait for bu to be created
+            assert buObj.waitForState(buID, state=BUs.BU_STATE_CREATED)
 
-        # update bu
-        newDesc = "ebtestDomain description updated"
-        updatedBuResp = buObj.update(buID, desc=newDesc, buName=domainName)
-        assert updatedBuResp["description"] == newDesc
+            # update bu description
+            newDesc = "ebtestDomain description updated"
+            updatedBuResp = buObj.update_desc(buID, desc=newDesc, buName=domainName)
+            assert updatedBuResp["description"] == newDesc
 
-        # delete bu
-        assert buObj.delete(buID)
+            # get bu quota
+            quotaURL = buID + "/quotas"
+            buResp = buObj.get(quotaURL)
+            assert bool(buResp)
 
-        # wait for bu to be deleted
-        assert buObj.waitForState(buID, state=BUs.BU_STATE_DELETED)
+            # update bu quota
+            quotaTemplate = "Medium"
+            updatedBuResp = buObj.update_quota(buID, quotaTemplate=quotaTemplate)
+            # assert buResp["quota_sets"]["selected_template"] == quotaTemplate
+
+            # get updated bu quota
+            quotaURL = buID + "/quotas"
+            buResp = buObj.get(quotaURL)
+            # assert buResp["quota_sets"]["selected_template"] == quotaTemplate
+
+        finally:
+            # delete bu
+            assert buObj.delete(buID)
+
+            # wait for bu to be deleted
+            assert buObj.waitForState(buID, state=BUs.BU_STATE_DELETED)
 
     @pytest.mark.parametrize(
         "buNames", ["ebtestDomainNew01", "ebtestDomainNew02", "ebtestDomainNew03"]
     )
     def test_bu_crud_002(cls, buNames):
-        # create bu
-        buObj = BUs()
-        buID = buObj.create(buName=buNames)
-        assert buID
+        try:
+            # create bu
+            buObj = BUs()
+            buID = buObj.create(buName=buNames)
+            assert buID
 
-        # wait for bu to be created
-        assert buObj.waitForState(buID, state=BUs.BU_STATE_CREATED)
+            # wait for bu to be created
+            assert buObj.waitForState(buID, state=BUs.BU_STATE_CREATED)
 
-        # delete bu
-        assert buObj.delete(buID)
+            # get bu aggregates
+            aggregateURL = buID + "?aggregates=true&quota=true"
+            buResp = buObj.get(aggregateURL)
+            assert buResp["name"] == buNames
 
-        # wait for bu to be deleted
-        assert buObj.waitForState(buID, state=BUs.BU_STATE_DELETED)
+            # reload bu
+            reloadURL = buID + "?aggregates=true&quota=true&nocache=true"
+            buResp = buObj.get(reloadURL)
+            assert buResp["name"] == buNames
+
+        finally:
+            # delete bu
+            assert buObj.delete(buID)
+
+            # wait for bu to be deleted
+            assert buObj.waitForState(buID, state=BUs.BU_STATE_DELETED)

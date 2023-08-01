@@ -138,7 +138,7 @@ class BUs(Token):
 
         return True
 
-    def delete(self, buID):
+    def delete(self, buID: str):
         elog.info("deleting business unit %s" % eutil.bcolor(buID))
 
         # send delete request
@@ -158,7 +158,7 @@ class BUs(Token):
 
         return True
 
-    def get(self, buID=""):
+    def get(self, buID: str = ""):
         elog.info("fetching business unit %s" % (eutil.bcolor(buID)))
 
         # send get request
@@ -176,10 +176,12 @@ class BUs(Token):
         elog.info(content)
         return content
 
-    def update(self, buID, buName, desc=None, enabled=True):
-        elog.info("updating business unit %s" % eutil.bcolor(buID))
+    def update_desc(
+        self, buID: str, buName: str, desc: str = None, enabled: bool = True
+    ):
+        elog.info("updating bu description %s" % eutil.bcolor(buID))
 
-        # prepare update payload
+        # prepare update description payload
         payload = {
             "description": desc,
             "enabled": enabled,
@@ -190,6 +192,43 @@ class BUs(Token):
 
         # send update request
         response = self.client.patch(self.buURL + "/" + buID, payload)
+        if not response.ok:
+            elog.error(
+                "failed to update business unit %s :: %s"
+                % (eutil.rcolor(buID), eutil.rcolor(response.status_code))
+            )
+            elog.error(response.text)
+            return False
+
+        elog.info(
+            "updating business unit %s: %s OK"
+            % (eutil.bcolor(buID), eutil.gcolor(response.status_code))
+        )
+
+        # display received response
+        content = json.loads(response.content)
+        elog.info(content)
+        return content
+
+    def update_quota(
+        self, buID: str, quotaTemplate: str = None, quotaLimit: bool = True
+    ):
+        elog.info("updating bu quota %s" % eutil.bcolor(buID))
+
+        # prepare update quota payload
+        payload = {
+            "acct_id": self.acctID,
+            "cluster_id": self.clusterID,
+            "entity_id": buID,
+            "entity_type": "domain",
+            "quota_sets": {
+                "quotaLimit": quotaLimit,
+                "selected_template": quotaTemplate,
+            },
+        }
+
+        # send update request
+        response = self.client.put(self.buURL + "/" + buID + "/quotas", payload)
         if not response.ok:
             elog.error(
                 "failed to update business unit %s :: %s"
