@@ -95,7 +95,7 @@ class BUs(Token):
                 eutil.gcolor(response.status_code),
             )
         )
-        return buID
+        return buID["resource id"]
 
     def waitForState(self, buID, state=None, timeoutInSec=None, sleepInSec=None):
         elog.info(
@@ -138,11 +138,13 @@ class BUs(Token):
 
         return True
 
-    def delete(self, buID: str):
+    def delete(self, buID: str, force_delete: str = "false"):
         elog.info("deleting business unit %s" % eutil.bcolor(buID))
 
         # send delete request
-        response = self.client.delete(self.buURL + "/" + buID)
+        response = self.client.delete(
+            self.buURL + "/" + buID + "?force_delete=" + force_delete
+        )
         if not response.ok:
             elog.error(
                 "failed to delete business unit %s :: %s"
@@ -176,9 +178,7 @@ class BUs(Token):
         elog.info(content)
         return content
 
-    def update_desc(
-        self, buID: str, buName: str, desc: str = None, enabled: bool = True
-    ):
+    def update(self, buID: str, buName: str, desc: str = None, enabled: bool = True):
         elog.info("updating bu description %s" % eutil.bcolor(buID))
 
         # prepare update description payload
@@ -210,7 +210,7 @@ class BUs(Token):
         elog.info(content)
         return content
 
-    def update_quota(
+    def updateQuota(
         self, buID: str, quotaTemplate: str = None, quotaLimit: bool = True
     ):
         elog.info("updating bu quota %s" % eutil.bcolor(buID))
@@ -283,7 +283,6 @@ class Projects(Token):
         self.clusterID = self.getClusterID()
         self.clusterURL = self.apiURL + "/v2/clusters/" + self.clusterID
         self.projectURL = self.clusterURL + "/projects"
-        self.projectNewURL = self.clusterURL + "/projectsnew"
 
     def create(
         self,
@@ -326,7 +325,7 @@ class Projects(Token):
             payload["quota"]["network_quota"] = netQuota
 
         # send create request
-        response = self.client.post(self.projectNewURL, payload)
+        response = self.client.post(self.projectURL, payload)
         if not response.ok:
             elog.error(
                 "failed to create project %s :: %s"
@@ -341,9 +340,9 @@ class Projects(Token):
             "project [%s,%s] created successfully"
             % (eutil.bcolor(projName), eutil.bcolor(projID))
         )
-        return projID
+        return projID["id"]
 
-    def waitForState(self, projID, state=None, timeoutInSec=None, sleepInSec=None):
+    def waitForState(self, projID: str, state=None, timeoutInSec=None, sleepInSec=None):
         elog.info(
             "waiting for project %s state to be %s"
             % (eutil.bcolor(projID), eutil.gcolor(state))
@@ -388,11 +387,19 @@ class Projects(Token):
 
         return True
 
-    def delete(self, projID):
+    def delete(self, projID: str, force_delete: bool = False):
         elog.info("deleting project %s" % eutil.bcolor(projID))
 
+        payload = None
+        if force_delete:
+            payload = {
+                "force": force_delete,
+            }
+
         # send delete request
-        response = self.client.deleteWithPayload(self.projectNewURL + "/" + projID)
+        response = self.client.deleteWithPayload(
+            self.projectURL + "/" + projID, payload=payload
+        )
         if not response.ok:
             elog.error(
                 "failed to delete project %s :: %s"
@@ -407,7 +414,7 @@ class Projects(Token):
         )
         return True
 
-    def list(self, buID):
+    def list(self, buID: str):
         elog.info("fetching projects in business unit %s" % eutil.bcolor(buID))
 
         # send list request
@@ -426,7 +433,7 @@ class Projects(Token):
         elog.info(content)
         return content
 
-    def get(self, projID):
+    def get(self, projID: str):
         elog.info("fetching project %s" % eutil.bcolor(projID))
 
         # send get request
@@ -439,6 +446,61 @@ class Projects(Token):
             )
             elog.error(response.text)
             return None
+
+        # display received response
+        content = json.loads(response.content)
+        elog.info(content)
+        return content
+
+    def update(
+        self,
+        buID: str,
+        projID: str,
+        projectName: str,
+        desc: str = None,
+        metadata="",
+        compQuota="",
+        strQuota="",
+        netQuota="",
+    ):
+        elog.info("updating project %s" % eutil.bcolor(projectName))
+
+        # prepare update payload
+        payload = {
+            "name": projectName,
+            "domain_id": buID,
+            "description": desc,
+        }
+        if metadata:
+            payload["metadata"] = metadata
+
+        if compQuota or strQuota or netQuota:
+            payload["quota"] = {}
+
+        if compQuota:
+            payload["quota"]["compute_quota"] = compQuota
+
+        if strQuota:
+            payload["quota"]["storage_quota"] = strQuota
+
+        if netQuota:
+            payload["quota"]["network_quota"] = netQuota
+
+        # send update request
+        requestURL = self.projectURL + "/%s" % projID
+        response = self.client.patch(requestURL, payload)
+        if not response.ok:
+            elog.error(
+                "failed to update project %s :: %s"
+                % (eutil.rcolor(projectName), eutil.rcolor(response.status_code))
+            )
+            elog.error(response.text)
+            return False
+
+        elog.info(
+            "updating project %s: %s OK"
+            % (eutil.bcolor(projectName), eutil.gcolor(response.status_code))
+        )
 
         # display received response
         content = json.loads(response.content)

@@ -1,7 +1,7 @@
 #! /usr/bin/python
 #
 # Author: ankit@edgebricks.com
-# (c) 2022 Edgebricks Inc
+# Copyright (c) 2021-2023 Edgebricks Inc.
 
 import pytest
 
@@ -29,7 +29,7 @@ class TestBuCRUD:
 
             # update bu description
             newDesc = "ebtestDomain description updated"
-            updatedBuResp = buObj.update_desc(buID, desc=newDesc, buName=domainName)
+            updatedBuResp = buObj.update(buID, desc=newDesc, buName=domainName)
             assert updatedBuResp["description"] == newDesc
 
             # get bu quota
@@ -39,13 +39,13 @@ class TestBuCRUD:
 
             # update bu quota
             quotaTemplate = "Medium"
-            updatedBuResp = buObj.update_quota(buID, quotaTemplate=quotaTemplate)
-            # assert buResp["quota_sets"]["selected_template"] == quotaTemplate
+            updatedBuResp = buObj.updateQuota(buID, quotaTemplate=quotaTemplate)
+            assert updatedBuResp["quota_sets"]["selected_template"] == quotaTemplate
 
             # get updated bu quota
             quotaURL = buID + "/quotas"
             buResp = buObj.get(quotaURL)
-            # assert buResp["quota_sets"]["selected_template"] == quotaTemplate
+            assert buResp["quota_sets"]["selected_template"] == quotaTemplate
 
         finally:
             # delete bu
