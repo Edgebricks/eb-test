@@ -138,7 +138,6 @@ class BUs(Token):
 
         return True
 
-
     def delete(self, buID: str, force_delete: str = "false"):
         elog.info("deleting business unit %s" % eutil.bcolor(buID))
 
@@ -179,7 +178,6 @@ class BUs(Token):
         elog.info(content)
         return content
 
-
     def update(self, buID: str, buName: str, desc: str = None, enabled: bool = True):
         elog.info("updating bu description %s" % eutil.bcolor(buID))
 
@@ -211,7 +209,6 @@ class BUs(Token):
         content = json.loads(response.content)
         elog.info(content)
         return content
-
 
     def updateQuota(
         self, buID: str, quotaTemplate: str = None, quotaLimit: bool = True
