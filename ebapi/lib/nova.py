@@ -5,6 +5,7 @@
 
 
 import json
+from time import sleep
 
 from ebapi.common import utils as eutil
 from ebapi.common.logger import elog
@@ -46,7 +47,50 @@ class VMs(NovaBase):
 
     def getVM(self, vmID):
         requestURL = self.clusterURL + "/vms/" + vmID
-        return self.client.get(requestURL)
+        response = self.client.get(requestURL)
+        # display received response
+        content = json.loads(response.content)
+        elog.info(content)
+        return content
+
+    def waitForState(self, vmID, state=None, timeoutInSec=None, sleepInSec=None):
+        elog.info(
+            "waiting for VM %s state to be %s"
+            % (eutil.bcolor(vmID), eutil.gcolor(state))
+        )
+
+        if timeoutInSec is None:
+            timeoutInSec = 150  # 2mins 30secs
+        if sleepInSec is None:
+            sleepInSec = 15  # 15secs
+
+        curIteration = 1
+        maxAllowedItr = timeoutInSec / sleepInSec
+        while True:
+            VMState = self.getStatus(vmID)
+            if VMState is None:
+                elog.error("VM [%s] not found" % eutil.rcolor(vmID))
+                return None
+
+            if VMState == state:
+                elog.info(
+                    "VM [%s] is in desired state [%s]"
+                    % (eutil.bcolor(vmID), eutil.gcolor(state))
+                )
+                break
+
+            # break after maximum allowed iterations and report failure
+            if curIteration > maxAllowedItr:
+                elog.error(
+                    "VM [%s] failed to get desired state %s"
+                    % (eutil.rcolor(vmID), eutil.rcolor(state))
+                )
+                return None
+
+            sleep(10)
+            curIteration = curIteration + 1
+
+        return True
 
     def getFloatingIPFromVMID(self, vmID):
         requestURL = self.novaURL + "/os-floating-ips"
@@ -149,7 +193,7 @@ class VMs(NovaBase):
         return content["host"]
 
     def createVM(self, vmName="", flavorID="", networkID="", imageID=""):
-        requestURL = self.vmsURL + "/" + self.projectID + "/vm"
+        requestURL = self.vmsURL + "/" + self.projectID + "/vms"
         payload = {
             "name": vmName,
             "resources": {
@@ -215,7 +259,7 @@ class VMs(NovaBase):
         return True
 
     def deleteVM(self, vmID):
-        requestURL = self.vmsURL + "/" + self.projectID + "/vm/" + vmID
+        requestURL = self.vmsURL + "/" + self.projectID + "/vms/" + vmID
         response = self.client.delete(requestURL)
         if not response.ok:
             elog.error(
