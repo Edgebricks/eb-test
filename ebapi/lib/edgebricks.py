@@ -133,7 +133,7 @@ class BUs(Token):
                 )
                 return None
 
-            sleep(10)
+            sleep(sleepInSec)
             curIteration = curIteration + 1
 
         return True
@@ -382,7 +382,7 @@ class Projects(Token):
                 )
                 return None
 
-            sleep(10)
+            sleep(sleepInSec)
             curIteration = curIteration + 1
 
         return True

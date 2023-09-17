@@ -3,7 +3,7 @@
 # Author: ankit@edgebricks.com
 # Copyright (c) 2021-2023 Edgebricks Inc.
 
-from time import sleep
+from time import sleep, time
 import pytest
 
 from ebapi.common.config import ConfigParser
@@ -18,10 +18,10 @@ class TestVMCRUD:
     testConfig = ConfigParser()
     # initialise bu and project
     buObj = BUs()
-    domainName = testConfig.getDomainName()
+    domainName = testConfig.getDomainName() + str(round(time()))
     userName = testConfig.getProjectAdmin()
     userPwd = testConfig.getProjectAdminPassword()
-    projectName = testConfig.getProjectName()
+    projectName = testConfig.getProjectName() + str(round(time()))
 
     @classmethod
     def setup_class(cls):
@@ -111,21 +111,22 @@ class TestVMCRUD:
             # create internal network
             networkObj = Networks(cls.projID)
             netID = networkObj.createInternalNetwork(
-                netName="Auto-Net1", subnetName="Auto-SubNet1"
+                netName="Auto-Net1" + str(round(time())),
+                subnetName="Auto-SubNet1" + str(round(time())),
             )
 
             # create vm
             vmObj = VMs(cls.projID)
+            vmName = "ebtestVM" + str(round(time()))
             vmObj.createVM(
-                vmName="ebtestVM",
+                vmName=vmName,
                 flavorID=cls.matchflavorID,
                 networkID=netID,
                 imageID=cls.actualImageID,
             )
-            sleep(30)
             content = vmObj.getAllVMs()
             for key, value in content.items():
-                if value == "ebtestVM":
+                if value == vmName:
                     vmID = key
                 break
             # wait for VM to be created
@@ -133,20 +134,24 @@ class TestVMCRUD:
 
         finally:
             assert vmObj.deleteVM(vmID)
-            sleep(30)
             assert networkObj.deleteInternalNetwork(netID)
             sleep(5)
 
     @pytest.mark.parametrize(
         "VMNames",
-        ["ebtestVMNew01", "ebtestVMNew02", "ebtestVMNew03"],
+        [
+            "ebtestVMNew01" + str(round(time())),
+            "ebtestVMNew02" + str(round(time())),
+            "ebtestVMNew03" + str(round(time())),
+        ],
     )
     def test_vm_crud_002(cls, VMNames):
         try:
             # create internal network
             networkObj = Networks(cls.projID)
             netID = networkObj.createInternalNetwork(
-                netName="Auto-Net2", subnetName="Auto-SubNet2"
+                netName="Auto-Net2" + str(round(time())),
+                subnetName="Auto-SubNet2" + str(round(time())),
             )
 
             # create vm
@@ -157,7 +162,6 @@ class TestVMCRUD:
                 networkID=netID,
                 imageID=cls.actualImageID,
             )
-            sleep(30)
             content = vmObj.getAllVMs()
             for key, value in content.items():
                 if value == VMNames:
@@ -168,6 +172,5 @@ class TestVMCRUD:
 
         finally:
             vmObj.deleteVM(vmID)
-            sleep(30)
             networkObj.deleteInternalNetwork(netID)
             sleep(5)

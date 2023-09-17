@@ -48,9 +48,25 @@ class VMs(NovaBase):
     def getVM(self, vmID):
         requestURL = self.clusterURL + "/vms/" + vmID
         response = self.client.get(requestURL)
+        if not response.ok:
+            elog.error(
+                "failed to get VM details: %s" % eutil.rcolor(response.status_code)
+            )
+            elog.error(response.text)
+            return None
+
         # display received response
         content = json.loads(response.content)
         elog.info(content)
+        return content
+
+    def _getVMResourceStatus(self):
+        response = self.client.get(
+            self.vmsURL + "/" + self.projectID + "/resource_status?type=vm"
+        )
+        content = json.loads(response.content)
+        elog.info(content)
+
         return content
 
     def waitForState(self, vmID, state=None, timeoutInSec=None, sleepInSec=None):
@@ -87,7 +103,7 @@ class VMs(NovaBase):
                 )
                 return None
 
-            sleep(10)
+            sleep(sleepInSec)
             curIteration = curIteration + 1
 
         return True
@@ -256,6 +272,25 @@ class VMs(NovaBase):
             "creating vm %s: %s OK"
             % (eutil.bcolor(vmName), eutil.gcolor(response.status_code))
         )
+
+        timeoutInSec = 150  # 2mins 30secs
+        sleepInSec = 15  # 15secs
+        curIteration = 1
+        maxAllowedItr = timeoutInSec / sleepInSec
+
+        while True:
+            VMRsp = self._getVMResourceStatus()
+            if VMRsp is None:
+                elog.info("VM %s creation is completed." % (eutil.bcolor(vmName)))
+                break
+
+            # break after maximum allowed iterations and report failure
+            if curIteration > maxAllowedItr:
+                elog.error("VM %s creation failed." % (eutil.rcolor(vmName)))
+                return False
+
+            sleep(sleepInSec)
+            curIteration = curIteration + 1
         return True
 
     def deleteVM(self, vmID):
@@ -273,6 +308,24 @@ class VMs(NovaBase):
             "deleting vm %s: %s OK"
             % (eutil.bcolor(vmID), eutil.gcolor(response.status_code))
         )
+        timeoutInSec = 150  # 2mins 30secs
+        sleepInSec = 15  # 15secs
+        curIteration = 1
+        maxAllowedItr = timeoutInSec / sleepInSec
+
+        while True:
+            VMRsp = self._getVMResourceStatus()
+            if VMRsp is None:
+                elog.info("VM %s deletion is completed." % (eutil.bcolor(vmID)))
+                break
+
+            # break after maximum allowed iterations and report failure
+            if curIteration > maxAllowedItr:
+                elog.error("VM %s deletion failed." % (eutil.rcolor(vmID)))
+                return False
+
+            sleep(sleepInSec)
+            curIteration = curIteration + 1
         return True
 
     def suspendVM(self, vmID):
