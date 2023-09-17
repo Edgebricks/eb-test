@@ -69,19 +69,19 @@ class VMs(NovaBase):
 
         return content
 
-    def waitForState(self, vmID, state=None, timeoutInSec=None, sleepInSec=None):
+    def waitForState(self, vmID, state=None, timeoutInSecs=None, sleepInSecs=None):
         elog.info(
             "waiting for VM %s state to be %s"
             % (eutil.bcolor(vmID), eutil.gcolor(state))
         )
 
-        if timeoutInSec is None:
-            timeoutInSec = 150  # 2mins 30secs
-        if sleepInSec is None:
-            sleepInSec = 15  # 15secs
+        if timeoutInSecs is None:
+            timeoutInSecs = 150  # 2mins 30secs
+        if sleepInSecs is None:
+            sleepInSecs = 15  # 15secs
 
         curIteration = 1
-        maxAllowedItr = timeoutInSec / sleepInSec
+        maxAllowedItr = timeoutInSecs / sleepInSecs
         while True:
             VMState = self.getStatus(vmID)
             if VMState is None:
@@ -103,7 +103,7 @@ class VMs(NovaBase):
                 )
                 return None
 
-            sleep(sleepInSec)
+            sleep(sleepInSecs)
             curIteration = curIteration + 1
 
         return True
@@ -257,10 +257,10 @@ class VMs(NovaBase):
             % (eutil.bcolor(vmName), eutil.gcolor(response.status_code))
         )
 
-        timeoutInSec = 150  # 2mins 30secs
-        sleepInSec = 15  # 15secs
+        timeoutInSecs = 150  # 2mins 30secs
+        sleepInSecs = 15  # 15secs
         curIteration = 1
-        maxAllowedItr = timeoutInSec / sleepInSec
+        maxAllowedItr = timeoutInSecs / sleepInSecs
 
         while True:
             VMRsp = self._getVMResourceStatus()
@@ -273,7 +273,7 @@ class VMs(NovaBase):
                 elog.error("VM %s creation failed." % (eutil.rcolor(vmName)))
                 return False
 
-            sleep(sleepInSec)
+            sleep(sleepInSecs)
             curIteration = curIteration + 1
         return True
 
@@ -292,10 +292,10 @@ class VMs(NovaBase):
             "deleting vm %s: %s OK"
             % (eutil.bcolor(vmID), eutil.gcolor(response.status_code))
         )
-        timeoutInSec = 150  # 2mins 30secs
-        sleepInSec = 15  # 15secs
+        timeoutInSecs = 150  # 2mins 30secs
+        sleepInSecs = 15  # 15secs
         curIteration = 1
-        maxAllowedItr = timeoutInSec / sleepInSec
+        maxAllowedItr = timeoutInSecs / sleepInSecs
 
         while True:
             VMRsp = self._getVMResourceStatus()
@@ -308,7 +308,7 @@ class VMs(NovaBase):
                 elog.error("VM %s deletion failed." % (eutil.rcolor(vmID)))
                 return False
 
-            sleep(sleepInSec)
+            sleep(sleepInSecs)
             curIteration = curIteration + 1
         return True
 
