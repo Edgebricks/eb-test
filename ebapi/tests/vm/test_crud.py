@@ -3,7 +3,7 @@
 # Author: ankit@edgebricks.com
 # Copyright (c) 2021-2023 Edgebricks Inc.
 
-from time import sleep, time
+from time import sleep
 import pytest
 
 from ebapi.common.config import ConfigParser
@@ -18,10 +18,10 @@ class TestVMCRUD:
     testConfig = ConfigParser()
     # initialise bu and project
     buObj = BUs()
-    domainName = testConfig.getDomainName() + str(round(time()))
+    domainName = testConfig.getDomainName()
     userName = testConfig.getProjectAdmin()
     userPwd = testConfig.getProjectAdminPassword()
-    projectName = testConfig.getProjectName() + str(round(time()))
+    projectName = testConfig.getProjectName()
 
     @classmethod
     def setup_class(cls):
@@ -111,13 +111,13 @@ class TestVMCRUD:
             # create internal network
             networkObj = Networks(cls.projID)
             netID = networkObj.createInternalNetwork(
-                netName="Auto-Net1" + str(round(time())),
-                subnetName="Auto-SubNet1" + str(round(time())),
+                netName="Auto-Net1",
+                subnetName="Auto-SubNet1",
             )
 
             # create vm
             vmObj = VMs(cls.projID)
-            vmName = "ebtestVM" + str(round(time()))
+            vmName = "ebtestVM"
             vmObj.createVM(
                 vmName=vmName,
                 flavorID=cls.matchflavorID,
@@ -140,9 +140,9 @@ class TestVMCRUD:
     @pytest.mark.parametrize(
         "VMNames",
         [
-            "ebtestVMNew01" + str(round(time())),
-            "ebtestVMNew02" + str(round(time())),
-            "ebtestVMNew03" + str(round(time())),
+            "ebtestVMNew01",
+            "ebtestVMNew02",
+            "ebtestVMNew03",
         ],
     )
     def test_vm_crud_002(cls, VMNames):
@@ -150,8 +150,8 @@ class TestVMCRUD:
             # create internal network
             networkObj = Networks(cls.projID)
             netID = networkObj.createInternalNetwork(
-                netName="Auto-Net2" + str(round(time())),
-                subnetName="Auto-SubNet2" + str(round(time())),
+                netName="Auto-Net2",
+                subnetName="Auto-SubNet2",
             )
 
             # create vm

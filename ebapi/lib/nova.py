@@ -148,17 +148,13 @@ class VMs(NovaBase):
 
     def getMacAddrFromIP(self, vmID, ipAddr):
         response = self.getVM(vmID)
-        if not response.ok:
-            elog.error(
-                "fetching vm details for %s: %s"
-                % (eutil.bcolor(vmID), eutil.rcolor(response.status_code))
-            )
-            elog.error(response.text)
+        if not response:
+            elog.error("fetching vm details for %s failed" % (eutil.bcolor(vmID)))
+            elog.error(response)
             return None
 
-        content = json.loads(response.content)
-        for netname in content["addresses"]:
-            for element in content["addresses"][netname]:
+        for netname in response["addresses"]:
+            for element in response["addresses"][netname]:
                 if element["Addr"] == ipAddr:
                     return element["OS-EXT-IPS-MAC:mac_addr"]
 
@@ -167,46 +163,34 @@ class VMs(NovaBase):
 
     def getVolumesAttached(self, vmID):
         response = self.getVM(vmID)
-        if not response.ok:
-            elog.error(
-                "fetching VM details for %s: %s"
-                % (eutil.bcolor(vmID), eutil.rcolor(response.status_code))
-            )
-            elog.error(response.text)
+        if not response:
+            elog.error("fetching VM details for %s failed" % (eutil.bcolor(vmID)))
+            elog.error(response)
             return None
 
-        content = json.loads(response.content)
         lvolumes = []
-        for vols in content["volumes"]:
+        for vols in response["volumes"]:
             lvolumes.append(vols["id"])
 
         return lvolumes
 
     def getStatus(self, vmID):
         response = self.getVM(vmID)
-        if not response.ok:
-            elog.error(
-                "fetching VM details for %s: %s"
-                % (eutil.bcolor(vmID), eutil.rcolor(response.status_code))
-            )
-            elog.error(response.text)
+        if not response:
+            elog.error("fetching VM details for %s failed" % (eutil.bcolor(vmID)))
+            elog.error(response)
             return None
 
-        content = json.loads(response.content)
-        return content["vm_state"]
+        return response["vm_state"]
 
     def getHost(self, vmID):
         response = self.getVM(vmID)
-        if not response.ok:
-            elog.error(
-                "fetching VM details for %s: %s"
-                % (eutil.bcolor(vmID), eutil.rcolor(response.status_code))
-            )
-            elog.error(response.text)
+        if not response:
+            elog.error("fetching VM details for %s failed" % (eutil.bcolor(vmID)))
+            elog.error(response)
             return None
 
-        content = json.loads(response.content)
-        return content["host"]
+        return response["host"]
 
     def createVM(self, vmName="", flavorID="", networkID="", imageID=""):
         requestURL = self.vmsURL + "/" + self.projectID + "/vms"
@@ -280,7 +264,7 @@ class VMs(NovaBase):
 
         while True:
             VMRsp = self._getVMResourceStatus()
-            if VMRsp is None:
+            if not VMRsp:
                 elog.info("VM %s creation is completed." % (eutil.bcolor(vmName)))
                 break
 
@@ -315,7 +299,7 @@ class VMs(NovaBase):
 
         while True:
             VMRsp = self._getVMResourceStatus()
-            if VMRsp is None:
+            if not VMRsp:
                 elog.info("VM %s deletion is completed." % (eutil.bcolor(vmID)))
                 break
 
