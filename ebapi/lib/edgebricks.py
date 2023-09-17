@@ -342,7 +342,9 @@ class Projects(Token):
         )
         return projID["id"]
 
-    def waitForState(self, projID: str, state=None, timeoutInSecs=None, sleepInSecs=None):
+    def waitForState(
+        self, projID: str, state=None, timeoutInSecs=None, sleepInSecs=None
+    ):
         elog.info(
             "waiting for project %s state to be %s"
             % (eutil.bcolor(projID), eutil.gcolor(state))
