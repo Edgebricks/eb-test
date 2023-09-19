@@ -105,6 +105,7 @@ run-api-tests:
 	@echo -e "* \e[0;33mRunning api tests\e[m"
 	python3 -m pytest ebapi/tests/bu
 	python3 -m pytest ebapi/tests/project
+	python3 -m pytest ebapi/tests/vm
 
 run-ui-tests:
 	@$(MAKE) -s clean-api

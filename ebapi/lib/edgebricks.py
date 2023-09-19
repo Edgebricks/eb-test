@@ -97,19 +97,19 @@ class BUs(Token):
         )
         return buID["resource id"]
 
-    def waitForState(self, buID, state=None, timeoutInSec=None, sleepInSec=None):
+    def waitForState(self, buID, state=None, timeoutInSecs=None, sleepInSecs=None):
         elog.info(
             "waiting for business unit %s state to be %s"
             % (eutil.bcolor(buID), eutil.gcolor(state))
         )
 
-        if timeoutInSec is None:
-            timeoutInSec = 150  # 2mins 30secs
-        if sleepInSec is None:
-            sleepInSec = 15  # 15secs
+        if timeoutInSecs is None:
+            timeoutInSecs = 150  # 2mins 30secs
+        if sleepInSecs is None:
+            sleepInSecs = 15  # 15secs
 
         curIteration = 1
-        maxAllowedItr = timeoutInSec / sleepInSec
+        maxAllowedItr = timeoutInSecs / sleepInSecs
         while True:
             buRsp = self.get(buID)
             if buRsp is None:
@@ -133,11 +133,10 @@ class BUs(Token):
                 )
                 return None
 
-            sleep(10)
+            sleep(sleepInSecs)
             curIteration = curIteration + 1
 
         return True
-
 
     def delete(self, buID: str, force_delete: str = "false"):
         elog.info("deleting business unit %s" % eutil.bcolor(buID))
@@ -179,7 +178,6 @@ class BUs(Token):
         elog.info(content)
         return content
 
-
     def update(self, buID: str, buName: str, desc: str = None, enabled: bool = True):
         elog.info("updating bu description %s" % eutil.bcolor(buID))
 
@@ -211,7 +209,6 @@ class BUs(Token):
         content = json.loads(response.content)
         elog.info(content)
         return content
-
 
     def updateQuota(
         self, buID: str, quotaTemplate: str = None, quotaLimit: bool = True
@@ -345,19 +342,21 @@ class Projects(Token):
         )
         return projID["id"]
 
-    def waitForState(self, projID: str, state=None, timeoutInSec=None, sleepInSec=None):
+    def waitForState(
+        self, projID: str, state=None, timeoutInSecs=None, sleepInSecs=None
+    ):
         elog.info(
             "waiting for project %s state to be %s"
             % (eutil.bcolor(projID), eutil.gcolor(state))
         )
 
-        if timeoutInSec is None:
-            timeoutInSec = 150  # 2mins 30secs
-        if sleepInSec is None:
-            sleepInSec = 15  # 15secs
+        if timeoutInSecs is None:
+            timeoutInSecs = 150  # 2mins 30secs
+        if sleepInSecs is None:
+            sleepInSecs = 15  # 15secs
 
         curIteration = 1
-        maxAllowedItr = timeoutInSec / sleepInSec
+        maxAllowedItr = timeoutInSecs / sleepInSecs
         while True:
             projRsp = self.get(projID)
             if projRsp is None:
@@ -385,7 +384,7 @@ class Projects(Token):
                 )
                 return None
 
-            sleep(10)
+            sleep(sleepInSecs)
             curIteration = curIteration + 1
 
         return True

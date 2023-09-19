@@ -5,6 +5,7 @@
 
 
 import json
+from time import sleep
 
 from ebapi.common import utils as eutil
 from ebapi.common.logger import elog
@@ -46,7 +47,66 @@ class VMs(NovaBase):
 
     def getVM(self, vmID):
         requestURL = self.clusterURL + "/vms/" + vmID
-        return self.client.get(requestURL)
+        response = self.client.get(requestURL)
+        if not response.ok:
+            elog.error(
+                "failed to get VM details: %s" % eutil.rcolor(response.status_code)
+            )
+            elog.error(response.text)
+            return None
+
+        # display received response
+        content = json.loads(response.content)
+        elog.info(content)
+        return content
+
+    def _getVMResourceStatus(self):
+        response = self.client.get(
+            self.vmsURL + "/" + self.projectID + "/resource_status?type=vm"
+        )
+        content = json.loads(response.content)
+        elog.info(content)
+
+        return content
+
+    def waitForState(self, vmID, state=None, timeoutInSecs=None, sleepInSecs=None):
+        elog.info(
+            "waiting for VM %s state to be %s"
+            % (eutil.bcolor(vmID), eutil.gcolor(state))
+        )
+
+        if timeoutInSecs is None:
+            timeoutInSecs = 150  # 2mins 30secs
+        if sleepInSecs is None:
+            sleepInSecs = 15  # 15secs
+
+        curIteration = 1
+        maxAllowedItr = timeoutInSecs / sleepInSecs
+        while True:
+            VMState = self.getStatus(vmID)
+            if VMState is None:
+                elog.error("VM [%s] not found" % eutil.rcolor(vmID))
+                return None
+
+            if VMState == state:
+                elog.info(
+                    "VM [%s] is in desired state [%s]"
+                    % (eutil.bcolor(vmID), eutil.gcolor(state))
+                )
+                break
+
+            # break after maximum allowed iterations and report failure
+            if curIteration > maxAllowedItr:
+                elog.error(
+                    "VM [%s] failed to get desired state %s"
+                    % (eutil.rcolor(vmID), eutil.rcolor(state))
+                )
+                return None
+
+            sleep(sleepInSecs)
+            curIteration = curIteration + 1
+
+        return True
 
     def getFloatingIPFromVMID(self, vmID):
         requestURL = self.novaURL + "/os-floating-ips"
@@ -88,17 +148,13 @@ class VMs(NovaBase):
 
     def getMacAddrFromIP(self, vmID, ipAddr):
         response = self.getVM(vmID)
-        if not response.ok:
-            elog.error(
-                "fetching vm details for %s: %s"
-                % (eutil.bcolor(vmID), eutil.rcolor(response.status_code))
-            )
-            elog.error(response.text)
+        if not response:
+            elog.error("fetching vm details for %s failed" % (eutil.bcolor(vmID)))
+            elog.error(response)
             return None
 
-        content = json.loads(response.content)
-        for netname in content["addresses"]:
-            for element in content["addresses"][netname]:
+        for netname in response["addresses"]:
+            for element in response["addresses"][netname]:
                 if element["Addr"] == ipAddr:
                     return element["OS-EXT-IPS-MAC:mac_addr"]
 
@@ -107,49 +163,37 @@ class VMs(NovaBase):
 
     def getVolumesAttached(self, vmID):
         response = self.getVM(vmID)
-        if not response.ok:
-            elog.error(
-                "fetching VM details for %s: %s"
-                % (eutil.bcolor(vmID), eutil.rcolor(response.status_code))
-            )
-            elog.error(response.text)
+        if not response:
+            elog.error("fetching VM details for %s failed" % (eutil.bcolor(vmID)))
+            elog.error(response)
             return None
 
-        content = json.loads(response.content)
         lvolumes = []
-        for vols in content["volumes"]:
+        for vols in response["volumes"]:
             lvolumes.append(vols["id"])
 
         return lvolumes
 
     def getStatus(self, vmID):
         response = self.getVM(vmID)
-        if not response.ok:
-            elog.error(
-                "fetching VM details for %s: %s"
-                % (eutil.bcolor(vmID), eutil.rcolor(response.status_code))
-            )
-            elog.error(response.text)
+        if not response:
+            elog.error("fetching VM details for %s failed" % (eutil.bcolor(vmID)))
+            elog.error(response)
             return None
 
-        content = json.loads(response.content)
-        return content["vm_state"]
+        return response["vm_state"]
 
     def getHost(self, vmID):
         response = self.getVM(vmID)
-        if not response.ok:
-            elog.error(
-                "fetching VM details for %s: %s"
-                % (eutil.bcolor(vmID), eutil.rcolor(response.status_code))
-            )
-            elog.error(response.text)
+        if not response:
+            elog.error("fetching VM details for %s failed" % (eutil.bcolor(vmID)))
+            elog.error(response)
             return None
 
-        content = json.loads(response.content)
-        return content["host"]
+        return response["host"]
 
     def createVM(self, vmName="", flavorID="", networkID="", imageID=""):
-        requestURL = self.vmsURL + "/" + self.projectID + "/vm"
+        requestURL = self.vmsURL + "/" + self.projectID + "/vms"
         payload = {
             "name": vmName,
             "resources": {
@@ -212,10 +256,29 @@ class VMs(NovaBase):
             "creating vm %s: %s OK"
             % (eutil.bcolor(vmName), eutil.gcolor(response.status_code))
         )
+
+        timeoutInSecs = 150  # 2mins 30secs
+        sleepInSecs = 15  # 15secs
+        curIteration = 1
+        maxAllowedItr = timeoutInSecs / sleepInSecs
+
+        while True:
+            VMRsp = self._getVMResourceStatus()
+            if not VMRsp:
+                elog.info("VM %s creation is completed." % (eutil.bcolor(vmName)))
+                break
+
+            # break after maximum allowed iterations and report failure
+            if curIteration > maxAllowedItr:
+                elog.error("VM %s creation failed." % (eutil.rcolor(vmName)))
+                return False
+
+            sleep(sleepInSecs)
+            curIteration = curIteration + 1
         return True
 
     def deleteVM(self, vmID):
-        requestURL = self.vmsURL + "/" + self.projectID + "/vm/" + vmID
+        requestURL = self.vmsURL + "/" + self.projectID + "/vms/" + vmID
         response = self.client.delete(requestURL)
         if not response.ok:
             elog.error(
@@ -229,6 +292,24 @@ class VMs(NovaBase):
             "deleting vm %s: %s OK"
             % (eutil.bcolor(vmID), eutil.gcolor(response.status_code))
         )
+        timeoutInSecs = 150  # 2mins 30secs
+        sleepInSecs = 15  # 15secs
+        curIteration = 1
+        maxAllowedItr = timeoutInSecs / sleepInSecs
+
+        while True:
+            VMRsp = self._getVMResourceStatus()
+            if not VMRsp:
+                elog.info("VM %s deletion is completed." % (eutil.bcolor(vmID)))
+                break
+
+            # break after maximum allowed iterations and report failure
+            if curIteration > maxAllowedItr:
+                elog.error("VM %s deletion failed." % (eutil.rcolor(vmID)))
+                return False
+
+            sleep(sleepInSecs)
+            curIteration = curIteration + 1
         return True
 
     def suspendVM(self, vmID):
