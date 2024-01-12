@@ -478,6 +478,9 @@ class Flavors(NovaBase):
         return self.client.get(requestURL)
 
     def getBestMatchingFlavor(self, numCPU, memMB):
+        elog.debug(
+            "fetching best matching flavor having cpu=%s, ram=%s" % (numCPU, memMB)
+        )
         response = self.getFlavorsDetail()
         if not response.ok:
             elog.error(

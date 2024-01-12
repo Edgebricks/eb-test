@@ -76,9 +76,6 @@ class TestVMCRUD:
         projResp = cls.projObj.get(cls.projID)
         assert projResp["name"] == cls.projectName
 
-        # wait for project to be created
-        assert cls.projObj.waitForState(cls.projID, state=Projects.PROJ_STATE_CREATED)
-
         # get vm flavor
         flavorObj = Flavors(cls.projID)
         cls.matchflavorID = flavorObj.getBestMatchingFlavor(numCPU=2, memMB=4096)
@@ -90,7 +87,10 @@ class TestVMCRUD:
             if images["os"] == "cirros" and images["status"] == "active":
                 cls.actualImageID = images["id"]
             break
-        sleep(5)
+
+        # wait for project to be created
+        assert cls.projObj.waitForState(cls.projID, state=Projects.PROJ_STATE_CREATED)
+        sleep(30)
 
     @classmethod
     def teardown_class(cls):

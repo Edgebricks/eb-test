@@ -143,6 +143,7 @@ class Token(KeystoneBase):
 
         payload = json.dumps(payload)
         headers = {"Accept": "application/json"}
+        elog.debug("token url:%s, paylod:%s", self.tokenURL, payload)
         response = requests.post(
             self.tokenURL, headers=headers, data=payload, timeout=30
         )

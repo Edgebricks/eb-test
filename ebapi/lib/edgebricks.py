@@ -340,7 +340,7 @@ class Projects(Token):
             "project [%s,%s] created successfully"
             % (eutil.bcolor(projName), eutil.bcolor(projID))
         )
-        return projID["id"]
+        return projID["resource id"]
 
     def waitForState(
         self, projID: str, state=None, timeoutInSecs=None, sleepInSecs=None

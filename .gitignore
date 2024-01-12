@@ -10,12 +10,12 @@ ebui/venv
 assets/
 test-result.html
 ebapi/assets/
-ebapi/test.conf
-ebapi/test-result.html
+ebapi/*.conf
+ebapi/*html
 ebapi/.pytest_cache
 ebui/assets/
-ebui/test.conf
-ebui/test-result.html
+ebui/*.conf
+ebui/*.html
 ebui/.pytest_cache
 
 # pycache files

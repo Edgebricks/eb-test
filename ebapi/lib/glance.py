@@ -132,6 +132,7 @@ class Images(GlanceBase):
                 ImageObj = Images(projectID)
                 response  = ImageObj.getImagesbyVisibility(visibility)
         """
+        elog.debug("fetching images with %s visibility" % (visibility))
         requestURL = self.imagesURL + "?visibility=%s" % visibility + "&status=active"
         response = self.client.get(requestURL)
         return json.loads(response.content)

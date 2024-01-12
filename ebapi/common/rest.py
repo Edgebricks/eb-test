@@ -61,7 +61,7 @@ class RestClient:
             elog.error("token not found")
             return None
 
-        elog.debug("URL = %s, Method = GET" % url)
+        elog.debug("URL = %s, Method = GET, Token = %s" % (url, self.token))
         return requests.get(url=url, headers=self.headers, timeout=timeout)
 
     def put(self, url, payload=None, timeout=30):

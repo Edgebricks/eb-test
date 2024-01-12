@@ -67,7 +67,15 @@ def getAcctAndClusterID():
             acctID = clusters["acct_id"]
             clusterID = clusters["id"]
             break
-    return acctID, clusterID
+
+    i_acctid = testConfig.getConfig("acctid")
+    if i_acctid is None:
+        i_acctid = acctID
+    i_clusterID = testConfig.getConfig("clusterid")
+    if i_clusterID is None:
+        i_clusterID = clusterID
+
+    return i_acctid, i_clusterID
 
 
 def getReleaseVersion():
