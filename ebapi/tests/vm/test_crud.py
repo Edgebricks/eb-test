@@ -78,7 +78,7 @@ class TestVMCRUD:
 
         # get vm flavor
         flavorObj = Flavors(cls.projID)
-        cls.matchflavorID = flavorObj.getBestMatchingFlavor(numCPU=2, memMB=4096)
+        cls.matchflavorID = flavorObj.getBestMatchingFlavor(numCPU=2, memMB=2048)
 
         # get vm image
         imageObj = Images(cls.projID)

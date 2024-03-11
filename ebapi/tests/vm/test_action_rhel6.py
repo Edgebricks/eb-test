@@ -1,7 +1,7 @@
 #! /usr/bin/python
 #
-# Author: ankit@edgebricks.com
-# Copyright (c) 2021-2023 Edgebricks Inc.
+# Author: nakul@edgebricks.com
+# Copyright (c) 2021-2024 Edgebricks Inc.
 
 from time import sleep
 
@@ -86,7 +86,7 @@ class TestVMAction:
         imageObj = Images(cls.projID)
         imgDetails = imageObj.getImagesbyVisibility(visibility="public")
         for images in imgDetails["images"]:
-            if images["os"] == "cirros" and images["status"] == "active":
+            if images["os"] == "rhel 6.10" and images["status"] == "active":
                 cls.actualImageID = images["id"]
             break
         sleep(5)
