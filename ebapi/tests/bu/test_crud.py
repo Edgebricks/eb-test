@@ -12,6 +12,8 @@ from ebapi.lib.edgebricks import BUs
 class TestBuCRUD:
     testConfig = ConfigParser()
 
+    
+
     def test_bu_crud_001(cls):
         try:
             # create bu using config
@@ -83,3 +85,51 @@ class TestBuCRUD:
 
             # wait for bu to be deleted
             assert buObj.waitForState(buID, state=BUs.BU_STATE_DELETED)
+
+      @pytest.mark.parametrize("quota_type", ["Small", "Large", "Custom"]) 
+     def test_bu_quota_management(cls, quota_type):
+
+def test_bu_quota_management(cls, quota_type):
+    try:
+        # Create a BU 
+        buObj = BUs()
+        buID = buObj.create(buName="ebtestDomainQuotaTest")  # Descriptive name
+        assert buID
+
+        # Wait for BU to be created
+        assert buObj.waitForState(buID, state=BUs.BU_STATE_CREATED)
+
+        # Update BU quota based on quota_type
+        updatedBuResp = buObj.updateQuota(buID, quotaTemplate=quota_type)
+        assert updatedBuResp["quota_sets"]["selected_template"] == quota_type
+
+        # Get and verify updated quota
+        quotaURL = buID + "/quotas"
+        buResp = buObj.get(quotaURL)
+        assert buResp["quota_sets"]["selected_template"] == quota_type
+
+    finally:
+        # Cleanup (delete the BU)
+        assert buObj.delete(buID)
+        assert buObj.waitForState(buID, state=BUs.BU_STATE_DELETED)
+
+
+
+        def test_bu_rename(cls):
+    try:
+        # Create a BU (code similar to existing tests)
+        ... 
+        
+        # Rename the BU
+        new_bu_name = "updated_bu_name"
+        buObj.update(buID, buName=new_bu_name)
+
+        # Assert the name has changed
+        buResp = buObj.get(buID)
+        assert buResp["name"] == new_bu_name
+
+    finally:
+        # Cleanup (delete the BU)
+        ... 
+
+
