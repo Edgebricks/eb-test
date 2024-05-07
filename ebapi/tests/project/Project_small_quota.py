@@ -45,28 +45,28 @@ class TestProjectCRUD:
         projObj = Projects(cls.domainName, cls.userName, cls.userPwd)
         metadata = {"templateId": "Large", "custom_template": "true"}
         compQuota = {
-            "cores": 64,
+            "cores": 16,
             "injected_file_content_bytes": -1,
             "injected_file_path_bytes": -1,
             "injected_files": -1,
-            "instances": 32,
+            "instances": 8,
             "key_pairs": -1,
             "metadata_items": -1,
-            "ram": 128144,
+            "ram": 32144,
         }
         strQuota = {
-            "snapshots": 320,
+            "snapshots": 80,
             "backup_gigabytes": -1,
             "backups": -1,
-            "volumes": 320,
-            "gigabytes": 1280,
+            "volumes": 80,
+            "gigabytes": 320,
         }
         netQuota = {
-            "router": 20,
+            "router": 10,
             "subnet": -1,
-            "network": 20,
+            "network": 10,
             "port": -1,
-            "floatingip": 31,
+            "floatingip": 8,
             "pool": -1,
         }
 
@@ -107,28 +107,28 @@ class TestProjectCRUD:
         projObj = Projects(cls.domainName, cls.userName, cls.userPwd)
         metadata = {"templateId": "Large", "custom_template": "true"}
         compQuota = {
-            "cores": 16,
+            "cores": 64,
             "injected_file_content_bytes": -1,
             "injected_file_path_bytes": -1,
             "injected_files": -1,
-            "instances": 8,
+            "instances": 32,
             "key_pairs": -1,
             "metadata_items": -1,
-            "ram": 32144,
+            "ram": 128144,
         }
         strQuota = {
-            "snapshots": 80,
+            "snapshots": 320,
             "backup_gigabytes": -1,
             "backups": -1,
-            "volumes": 80,
-            "gigabytes": 320,
+            "volumes": 320,
+            "gigabytes": 1280,
         }
         netQuota = {
-            "router": 10,
+            "router": 20,
             "subnet": -1,
-            "network": 10,
+            "network": 20,
             "port": -1,
-            "floatingip": 8,
+            "floatingip": 32,
             "pool": -1,
         }
 
